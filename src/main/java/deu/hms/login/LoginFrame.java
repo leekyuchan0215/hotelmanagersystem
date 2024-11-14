@@ -118,6 +118,7 @@ public class LoginFrame extends javax.swing.JFrame {
     }
 // 테스트 주석
 // 테스트 22
+// 마지막 테스트
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel idLabel;
     private javax.swing.JPasswordField jPasswordField1;
