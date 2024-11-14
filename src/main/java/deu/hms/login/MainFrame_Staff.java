@@ -1,5 +1,7 @@
 package deu.hms.login;
 
+import javax.swing.JOptionPane;
+
 public class MainFrame_Staff extends javax.swing.JFrame {
 
     public MainFrame_Staff() {
@@ -27,6 +29,11 @@ public class MainFrame_Staff extends javax.swing.JFrame {
         serviceBtn.setText("서비스");
 
         logoutBtn.setText("로그아웃");
+        logoutBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -69,7 +76,18 @@ public class MainFrame_Staff extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
+        // TODO add your handling code here:
+        int result = JOptionPane.showConfirmDialog(this, "로그아웃 하시겠습니까?", "로그아웃 확인", JOptionPane.YES_NO_OPTION);
 
+        // 사용자가 "예"를 클릭하면 로그아웃 처리
+        if (result == JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(this, "로그아웃 합니다.");
+            this.dispose();  // 현재 창 닫기
+            LoginFrame loginframe = new LoginFrame();  // 로그인 화면으로 돌아가기
+            loginframe.setVisible(true);
+        }
+    }//GEN-LAST:event_logoutBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

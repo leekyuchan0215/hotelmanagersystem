@@ -1,9 +1,9 @@
 package deu.hms.login;
 
+import deu.hms.management.ManagementFrame;
 import javax.swing.JOptionPane;
 
 public class MainFrame_Master extends javax.swing.JFrame {
-
 
     public MainFrame_Master() {
         initComponents();
@@ -39,6 +39,11 @@ public class MainFrame_Master extends javax.swing.JFrame {
         });
 
         managementBtn.setText("관리");
+        managementBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                managementBtnActionPerformed(evt);
+            }
+        });
 
         reportBtn.setText("보고서");
 
@@ -93,12 +98,28 @@ public class MainFrame_Master extends javax.swing.JFrame {
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         // TODO add your handling code here:
-         JOptionPane.showMessageDialog(this, "로그아웃 합니다.");
-        this.dispose();
-        LoginFrame loginframe = new LoginFrame();
-        loginframe.setVisible(true);
+        int result = JOptionPane.showConfirmDialog(this, "로그아웃 하시겠습니까?", "로그아웃 확인", JOptionPane.YES_NO_OPTION);
+
+        // 사용자가 "예"를 클릭하면 로그아웃 처리
+        if (result == JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(this, "로그아웃 합니다.");
+            this.dispose();  // 현재 창 닫기
+            LoginFrame loginframe = new LoginFrame();  // 로그인 화면으로 돌아가기
+            loginframe.setVisible(true);
+        }
     }//GEN-LAST:event_logoutBtnActionPerformed
 
+    private void managementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_managementBtnActionPerformed
+        // TODO add your handling code here:
+        int result = JOptionPane.showConfirmDialog(this, "관리 페이지로 이동 하시겠습니까?", "관리페이지로 이동", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(this, "관리 페이지로 이동합니다.");
+            this.dispose();
+            ManagementFrame managementFrame = new ManagementFrame();
+            managementFrame.setVisible(true);
+        }
+    }//GEN-LAST:event_managementBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
