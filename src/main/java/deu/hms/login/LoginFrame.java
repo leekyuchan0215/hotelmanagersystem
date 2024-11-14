@@ -98,7 +98,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
         try {
             if (validateLogin(id, pw)) {
-                JOptionPane.showMessageDialog(this, "ID : " + id + " 확인되었습니다.");
+
             } else {
                 JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 다시 확인해주세요.");
             }
@@ -119,17 +119,21 @@ public class LoginFrame extends javax.swing.JFrame {
                 String role = parts[3];
 
                 if (storedId.equals(id) && storedPw.equals(pw)) {
-                    reader.close();
-                    this.dispose(); // 로그인 창 닫기
+                    
+                   JOptionPane.showMessageDialog(this, "ID : " + id + " 확인되었습니다.");
                     if (role.equals("M")) {
+                        
                         JOptionPane.showMessageDialog(this, "관리자 페이지로 이동합니다.");
+                         this.dispose(); // 로그인 창 닫기
                         MainFrame_Master masterFrame = new MainFrame_Master();
                         masterFrame.setVisible(true);
                     } else if (role.equals("S")) {
                         JOptionPane.showMessageDialog(this, "직원 페이지로 이동합니다.");
+                         this.dispose(); // 로그인 창 닫기
                         MainFrame_Staff staffFrame = new MainFrame_Staff();
                         staffFrame.setVisible(true);
                     }
+                    reader.close();
                     return true;
                 }
             }
