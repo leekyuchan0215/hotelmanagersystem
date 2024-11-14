@@ -1,5 +1,10 @@
 package deu.hms.login;
 
+import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class LoginFrame extends javax.swing.JFrame {
 
     public LoginFrame() {
@@ -25,7 +30,6 @@ public class LoginFrame extends javax.swing.JFrame {
 
         pwLabel.setText("PW : ");
 
-        jPasswordField1.setText("jPasswordField1");
         jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordField1ActionPerformed(evt);
@@ -33,6 +37,11 @@ public class LoginFrame extends javax.swing.JFrame {
         });
 
         loginBtn.setText("로그인");
+        loginBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -82,9 +91,53 @@ public class LoginFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordField1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
+        // TODO add your handling code here:
+        String id = jTextField1.getText();
+        String pw = new String(jPasswordField1.getPassword());
+
+        try {
+            if (validateLogin(id, pw)) {
+                JOptionPane.showMessageDialog(this, "ID : " + id + " 확인되었습니다.");
+            } else {
+                JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 다시 확인해주세요.");
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "파일을 읽는 중 오류가 발생했습니다.");
+        }
+    }//GEN-LAST:event_loginBtnActionPerformed
+
+    private boolean validateLogin(String id, String pw) throws IOException {
+         BufferedReader reader = new BufferedReader(new FileReader("id_pw.txt"));
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length == 4) {
+                String storedId = parts[1];
+                String storedPw = parts[2];
+                String role = parts[3];
+
+                if (storedId.equals(id) && storedPw.equals(pw)) {
+                    reader.close();
+                    this.dispose(); // 로그인 창 닫기
+                    if (role.equals("M")) {
+                        JOptionPane.showMessageDialog(this, "관리자 페이지로 이동합니다.");
+                        MainFrame_Master masterFrame = new MainFrame_Master();
+                        masterFrame.setVisible(true);
+                    } else if (role.equals("S")) {
+                        JOptionPane.showMessageDialog(this, "직원 페이지로 이동합니다.");
+                        MainFrame_Staff staffFrame = new MainFrame_Staff();
+                        staffFrame.setVisible(true);
+                    }
+                    return true;
+                }
+            }
+        }
+        reader.close();
+        return false;
+    }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -116,9 +169,8 @@ public class LoginFrame extends javax.swing.JFrame {
             }
         });
     }
-// 테스트 주석
-// 테스트 22
-// 마지막 테스트
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel idLabel;
     private javax.swing.JPasswordField jPasswordField1;
