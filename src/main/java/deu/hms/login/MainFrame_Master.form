@@ -190,8 +190,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="checkinoutBtn1" min="-2" pref="100" max="-2" attributes="0"/>
-                          <Component id="checkinoutBtn" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="checkoutBtn1" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="checkinBtn" min="-2" pref="100" max="-2" attributes="0"/>
                           <Component id="reservationBtn" min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="18" max="32767" attributes="0"/>
@@ -204,35 +204,38 @@
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       <Component id="reservationBtn" min="-2" pref="43" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="checkinoutBtn" min="-2" pref="43" max="-2" attributes="0"/>
+                      <Component id="checkinBtn" min="-2" pref="43" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="checkinoutBtn1" min="-2" pref="43" max="-2" attributes="0"/>
+                      <Component id="checkoutBtn1" min="-2" pref="43" max="-2" attributes="0"/>
                       <EmptySpace pref="18" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="checkinoutBtn">
+            <Component class="javax.swing.JButton" name="checkinBtn">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#xccb4;&#xd06c;&#xc778;"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkinoutBtnActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkinBtnActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="checkinoutBtn1">
+            <Component class="javax.swing.JButton" name="checkoutBtn1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#xccb4;&#xd06c;&#xc544;&#xc6c3;"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkinoutBtn1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkoutBtn1ActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="reservationBtn">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#xc608;&#xc57d;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="reservationBtnActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

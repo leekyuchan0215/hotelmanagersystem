@@ -1,5 +1,6 @@
 package deu.hms.login;
 
+import deu.hms.reservation.ReservationFrame;
 import deu.hms.management.ManagementFrame;
 import javax.swing.JOptionPane;
 
@@ -21,8 +22,8 @@ public class MainFrame_Master extends javax.swing.JFrame {
         serviceBtn1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        checkinoutBtn = new javax.swing.JButton();
-        checkinoutBtn1 = new javax.swing.JButton();
+        checkinBtn = new javax.swing.JButton();
+        checkoutBtn1 = new javax.swing.JButton();
         reservationBtn = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         managementBtn = new javax.swing.JButton();
@@ -74,21 +75,26 @@ public class MainFrame_Master extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
-        checkinoutBtn.setText("체크인");
-        checkinoutBtn.addActionListener(new java.awt.event.ActionListener() {
+        checkinBtn.setText("체크인");
+        checkinBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkinoutBtnActionPerformed(evt);
+                checkinBtnActionPerformed(evt);
             }
         });
 
-        checkinoutBtn1.setText("체크아웃");
-        checkinoutBtn1.addActionListener(new java.awt.event.ActionListener() {
+        checkoutBtn1.setText("체크아웃");
+        checkoutBtn1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkinoutBtn1ActionPerformed(evt);
+                checkoutBtn1ActionPerformed(evt);
             }
         });
 
         reservationBtn.setText("예약");
+        reservationBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reservationBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -97,8 +103,8 @@ public class MainFrame_Master extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(checkinoutBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(checkinoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(checkoutBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(checkinBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(reservationBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
@@ -108,9 +114,9 @@ public class MainFrame_Master extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(reservationBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(checkinoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(checkinBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(checkinoutBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(checkoutBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -239,13 +245,13 @@ public class MainFrame_Master extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_logoutBtnActionPerformed
 
-    private void checkinoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkinoutBtnActionPerformed
+    private void checkinBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkinBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_checkinoutBtnActionPerformed
+    }//GEN-LAST:event_checkinBtnActionPerformed
 
-    private void checkinoutBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkinoutBtn1ActionPerformed
+    private void checkoutBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutBtn1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_checkinoutBtn1ActionPerformed
+    }//GEN-LAST:event_checkoutBtn1ActionPerformed
 
     private void managementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_managementBtnActionPerformed
         // TODO add your handling code here:
@@ -263,10 +269,15 @@ public class MainFrame_Master extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_serviceBtnActionPerformed
 
+    private void reservationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationBtnActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_reservationBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton checkinoutBtn;
-    private javax.swing.JButton checkinoutBtn1;
+    private javax.swing.JButton checkinBtn;
+    private javax.swing.JButton checkoutBtn1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
