@@ -1,3 +1,5 @@
+package deu.hms.reservation;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;

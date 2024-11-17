@@ -2,7 +2,7 @@
 package deu.hms.management;
 import deu.hms.login.MainFrame_Master;
 import deu.hms.login.MainFrame_Staff;
-
+import deu.hms.management.account.AccountManagementFrame;
 public class ManagementFrame extends javax.swing.JFrame {
 
     /**
@@ -111,6 +111,9 @@ public class ManagementFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        AccountManagementFrame accountframe = new AccountManagementFrame();
+        accountframe.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
