@@ -92,8 +92,8 @@
                       </Group>
                       <EmptySpace pref="33" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jPasswordField1" min="-2" pref="140" max="-2" attributes="0"/>
-                          <Component id="jTextField1" min="-2" pref="140" max="-2" attributes="0"/>
+                          <Component id="pwText" min="-2" pref="140" max="-2" attributes="0"/>
+                          <Component id="idText" min="-2" pref="140" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                   </Group>
@@ -110,12 +110,12 @@
                       <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="idLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextField1" alignment="3" pref="30" max="32767" attributes="0"/>
+                          <Component id="idText" alignment="3" pref="30" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="pwLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jPasswordField1" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                          <Component id="pwText" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                       <Component id="loginBtn" min="-2" pref="31" max="-2" attributes="0"/>
@@ -133,7 +133,7 @@
                 <Property name="text" type="java.lang.String" value="ID  "/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="jTextField1">
+            <Component class="javax.swing.JTextField" name="idText">
             </Component>
             <Component class="javax.swing.JLabel" name="pwLabel">
               <Properties>
@@ -143,9 +143,9 @@
                 <Property name="text" type="java.lang.String" value="PW  "/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JPasswordField" name="jPasswordField1">
+            <Component class="javax.swing.JPasswordField" name="pwText">
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jPasswordField1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pwTextActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="loginBtn">
