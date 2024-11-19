@@ -21,9 +21,9 @@ public class LoginFrame extends javax.swing.JFrame {
         loginLabel = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         idLabel = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        idText = new javax.swing.JTextField();
         pwLabel = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        pwText = new javax.swing.JPasswordField();
         loginBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -39,9 +39,9 @@ public class LoginFrame extends javax.swing.JFrame {
         pwLabel.setFont(new java.awt.Font("맑은 고딕", 0, 18)); // NOI18N
         pwLabel.setText("PW  ");
 
-        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
+        pwText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordField1ActionPerformed(evt);
+                pwTextActionPerformed(evt);
             }
         });
 
@@ -63,8 +63,8 @@ public class LoginFrame extends javax.swing.JFrame {
                     .addComponent(pwLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pwText, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(idText, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(45, 45, 45))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -77,11 +77,11 @@ public class LoginFrame extends javax.swing.JFrame {
                 .addGap(38, 38, 38)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(idLabel)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
+                    .addComponent(idText, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pwLabel)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pwText, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17))
@@ -128,49 +128,53 @@ public class LoginFrame extends javax.swing.JFrame {
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
         // TODO add your handling code here:
-        String id = jTextField1.getText();
-        String pw = new String(jPasswordField1.getPassword());
+        String id = idText.getText();     // 텍스트 필드에 id를 입력받아 변수 id에 저장
+        String pw = new String(pwText.getPassword());  // 패스워드 필드에 pw를 입력받아 변수 pw에 저장
 
         try {
-            if (validateLogin(id, pw)) {
-
+            if (validateLogin(id, pw)) {     // id,pw 비교하는 메서드 호출
+                // 로그인 성공
             } else {
+                //로그인 실패
                 JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 다시 확인해주세요.");
             }
         } catch (IOException e) {
+            // 파일 입출력 과정에서 오류 발생
             JOptionPane.showMessageDialog(this, "파일을 읽는 중 오류가 발생했습니다.");
         }
     }//GEN-LAST:event_loginBtnActionPerformed
 
-    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordField1ActionPerformed
+    private void pwTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pwTextActionPerformed
+
+    }//GEN-LAST:event_pwTextActionPerformed
 
     private boolean validateLogin(String id, String pw) throws IOException {
-         BufferedReader reader = new BufferedReader(new FileReader("id_pw.txt"));
+         BufferedReader reader = new BufferedReader(new FileReader("id_pw.txt"));   // "id_pw.txt"를 읽어 reader 변수에 저장
         String line;
 
-        while ((line = reader.readLine()) != null) {
-            String[] parts = line.split(",");
-            if (parts.length == 4) {
-                String storedId = parts[1];
-                String storedPw = parts[2];
-                String role = parts[3];
+        while ((line = reader.readLine()) != null) {    // line변수에 reader를 한줄씩 저장하고 null이 아니라면 while문 수행
+            String[] parts = line.split(",");    // 한 행에 있는 데이터들은 "," 로 나눔
+            if (parts.length == 4) {      // 배열의 길이 4 ( 고유번호, ID, PW, 권한)
+                String storedId = parts[1];  // 배열 두번째 인덱스에 있는 아이디를 storedId 변수에 저장
+                String storedPw = parts[2]; // 배열 세 번째 인덱스에 있는 비밀번호를 storedPw 변수에 저장
+                String role = parts[3];  // 배열 네 번째 인덱스에 있는 권한(M or S)을 role 변수에 저장
 
-                if (storedId.equals(id) && storedPw.equals(pw)) {
+                if (storedId.equals(id) && storedPw.equals(pw)) {   // 입력한 id,pw와 텍스트 파일에 있던 storedId, storedPw가 일치한다면
                     
-                   JOptionPane.showMessageDialog(this, "ID : " + id + " 확인되었습니다.");
-                    if (role.equals("M")) {
-                        
+                   JOptionPane.showMessageDialog(this, "ID : " + id + " 확인되었습니다.");  
+                    if (role.equals("M")) {  
+                        // 권한이 "M" ,즉 관리자라면
                         JOptionPane.showMessageDialog(this, "관리자 페이지로 이동합니다.");
                          this.dispose(); // 로그인 창 닫기
-                        MainFrame_Master masterFrame = new MainFrame_Master();
-                        masterFrame.setVisible(true);
+                        MainFrame_Master masterFrame = new MainFrame_Master(); 
+                        masterFrame.setVisible(true); //관리자 전용 페이지 띄우기
+                        
                     } else if (role.equals("S")) {
+                        // 권한이 "S" ,즉 일반 직원이라면
                         JOptionPane.showMessageDialog(this, "직원 페이지로 이동합니다.");
                          this.dispose(); // 로그인 창 닫기
                         MainFrame_Staff staffFrame = new MainFrame_Staff();
-                        staffFrame.setVisible(true);
+                        staffFrame.setVisible(true); // 일반 직원 전용 페이지 띄우기
                     }
                     reader.close();
                     return true;
@@ -182,30 +186,7 @@ public class LoginFrame extends javax.swing.JFrame {
     }
 
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new LoginFrame().setVisible(true);
@@ -213,16 +194,15 @@ public class LoginFrame extends javax.swing.JFrame {
         });
     }
 
- //// 테스트1
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel idLabel;
+    private javax.swing.JTextField idText;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton loginBtn;
     private javax.swing.JLabel loginLabel;
     private javax.swing.JLabel pwLabel;
+    private javax.swing.JPasswordField pwText;
     // End of variables declaration//GEN-END:variables
 }
-//테스트2

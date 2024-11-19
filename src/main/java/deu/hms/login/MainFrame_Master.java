@@ -2,6 +2,7 @@ package deu.hms.login;
 
 //import deu.hms.reservation.ReservationGUI;
 import deu.hms.management.ManagementFrame;
+import deu.hms.reservation.ReservationGUI;
 import javax.swing.JOptionPane;
 
 public class MainFrame_Master extends javax.swing.JFrame {
@@ -233,15 +234,15 @@ public class MainFrame_Master extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
-        // TODO add your handling code here:
+        // 로그아웃 버튼 클릭시 행동 처리
         int result = JOptionPane.showConfirmDialog(this, "로그아웃 하시겠습니까?", "로그아웃 확인", JOptionPane.YES_NO_OPTION);
 
-        // 사용자가 "예"를 클릭하면 로그아웃 처리
         if (result == JOptionPane.YES_OPTION) {
+        // 사용자가 "예"를 클릭하면 
             JOptionPane.showMessageDialog(this, "로그아웃 합니다.");
             this.dispose();  // 현재 창 닫기
-            LoginFrame loginframe = new LoginFrame();  // 로그인 화면으로 돌아가기
-            loginframe.setVisible(true);
+            LoginFrame loginframe = new LoginFrame();  
+            loginframe.setVisible(true); // 로그인 화면으로 돌아가기
         }
     }//GEN-LAST:event_logoutBtnActionPerformed
 
@@ -254,14 +255,15 @@ public class MainFrame_Master extends javax.swing.JFrame {
     }//GEN-LAST:event_checkoutBtn1ActionPerformed
 
     private void managementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_managementBtnActionPerformed
-        // TODO add your handling code here:
+        // 관리 버튼 클릭시 행동 처리
         int result = JOptionPane.showConfirmDialog(this, "관리 페이지로 이동 하시겠습니까?", "관리페이지로 이동", JOptionPane.YES_NO_OPTION);
 
         if (result == JOptionPane.YES_OPTION) {
+            //사용자가 "예"를 선택하면
             JOptionPane.showMessageDialog(this, "관리 페이지로 이동합니다.");
             this.dispose();
             ManagementFrame managementFrame = new ManagementFrame();
-            managementFrame.setVisible(true);
+            managementFrame.setVisible(true);  // 관리 페이지로 이동 
         }
     }//GEN-LAST:event_managementBtnActionPerformed
 
@@ -270,8 +272,16 @@ public class MainFrame_Master extends javax.swing.JFrame {
     }//GEN-LAST:event_serviceBtnActionPerformed
 
     private void reservationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationBtnActionPerformed
-        // TODO add your handling code here:
-        
+        // 예약버튼 클릭시 행동처리
+         int result = JOptionPane.showConfirmDialog(this, "예약 페이지로 이동 하시겠습니까?", "예약 페이지로 이동", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            // 사용자가 "예"를 선택하면
+            JOptionPane.showMessageDialog(this, "예약 페이지로 이동합니다.");
+            this.dispose();
+            ReservationGUI reservationFrame = new ReservationGUI();
+            reservationFrame.setVisible(true);  //예약 페이지로 이동
+        }      
     }//GEN-LAST:event_reservationBtnActionPerformed
 
 
