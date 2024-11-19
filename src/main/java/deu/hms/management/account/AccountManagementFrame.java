@@ -178,17 +178,11 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         registrationDialog.getContentPane().setLayout(registrationDialogLayout);
         registrationDialogLayout.setHorizontalGroup(
             registrationDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(registrationDialogLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(registrationFrame2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(registrationFrame2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         registrationDialogLayout.setVerticalGroup(
             registrationDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(registrationDialogLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(registrationFrame2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(registrationFrame2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -281,7 +275,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void storageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storageBtnActionPerformed
-        // TODO add your handling code here:
+        // 저장 버튼 눌렀을 때 동작:
         storageBtn.addActionListener((e) -> {
             try {
                 //JTable의 데이터를 읽어올 TableModel
