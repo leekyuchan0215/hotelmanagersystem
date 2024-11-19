@@ -214,43 +214,34 @@ public class ReservationGUI extends javax.swing.JFrame {
 
     // 예약 수정 기능
     private void updateReservationActionPerformed(java.awt.event.ActionEvent evt) {
-    String uniqueID = uniqueIDField.getText();
+        String uniqueID = uniqueIDField.getText();
     
-    // 고유번호가 비었거나, 해당 고유번호 예약이 없으면 경고 메시지
-    if (uniqueID.isEmpty() || !reservations.containsKey(uniqueID)) {
-        JOptionPane.showMessageDialog(this, "올바른 고유번호를 입력해주세요.");
-        return;
-    }
+        if (uniqueID.isEmpty() || !reservations.containsKey(uniqueID)) {
+            JOptionPane.showMessageDialog(this, "올바른 고유번호를 입력해주세요.");
+            return;
+        }
 
-    // 고유번호에 해당하는 예약 정보 수정
-    Reservation reservation = reservations.get(uniqueID);
-    
-    // 사용자 입력으로 예약 정보 수정
+        Reservation reservation = reservations.get(uniqueID);
         reservation.setName(NameField.getText());
         reservation.setNumPeople(Integer.parseInt(numPeopleField.getText()));
         reservation.setPhone(phoneNumField.getText());
-        reservation.setFloor(Integer.parseInt((String) floorCom.getSelectedItem()));
-        reservation.setRoom(Integer.parseInt((String) roomCom.getSelectedItem()));
+        reservation.setFloor(floorCom.getSelectedIndex() + 1); // 1층, 2층, 3층
+        reservation.setRoom(Integer.parseInt(roomCom.getSelectedItem().toString().replaceAll("[^0-9]", ""))); // 숫자 추출
+    
+        saveReservationsToFile(); // 수정된 내용 저장
 
-    // 수정된 예약 정보 화면에 표시
-        StringBuilder sb = new StringBuilder();
-        sb.append("고유번호: ").append(uniqueID).append("\n")
-        .append("이름: ").append(reservation.getName()).append("\n")
-        .append("인원: ").append(reservation.getNumPeople()).append("\n")
-        .append("전화번호: ").append(reservation.getPhone()).append("\n")
-        .append("층수: ").append(reservation.getFloor()).append("\n")
-        .append("호수: ").append(reservation.getRoom()).append("\n\n");
+        displayInfo.setText(""); // 기존 텍스트 지우기
+        displayInfo.append("수정된 예약 정보:\n" +
+                "고유번호: " + uniqueID + "\n" +
+                "이름: " + reservation.getName() + "\n" +
+                "인원: " + reservation.getNumPeople() + "\n" +
+                "전화번호: " + reservation.getPhone() + "\n" +
+                "층수: " + reservation.getFloor() + "\n" +
+                "호수: " + reservation.getRoom() + "\n\n");
 
-    // 텍스트 영역에 수정된 예약 정보 출력
-        displayInfo.setText("");  // 기존 내용 지우고
-        displayInfo.append(sb.toString());  // 수정된 내용 추가
-
-    // 수정된 예약 정보를 파일에 저장
-        saveReservationsToFile();
-
-    // "수정되었습니다" 메시지
         JOptionPane.showMessageDialog(this, "예약이 수정되었습니다.");
     }
+
 
 
 
