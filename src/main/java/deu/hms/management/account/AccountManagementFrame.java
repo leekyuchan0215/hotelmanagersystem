@@ -4,19 +4,49 @@
  */
 package deu.hms.management.account;
 
+import deu.hms.login.MainFrame_Master;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author rbcks
  */
-public class AccountManagementFrame extends javax.swing.JFrame {
 
+public class AccountManagementFrame extends javax.swing.JFrame {
     /**
      * Creates new form AccountManagementFrame
      */
+    int num;
+    String id,pw;
     public AccountManagementFrame() {
         initComponents();
+        loadTableData(); // JTable 초기화 시 데이터 로드
     }
+    
+     // 테이블의 값들을 채우는 메서드
+    private void loadTableData() { 
+        DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
+        model.setRowCount(0); // 기존 데이터 초기화
 
+        try (BufferedReader br = new BufferedReader(new FileReader("id_pw.txt"))) {    // "id_pw.txt"파일 가져와 읽기
+            String line;
+            while ((line = br.readLine()) != null) {  //읽어들인 행이 비어있지 않다면 반복 
+                // 데이터 형식: 고유번호, ID, PW, 관리자 권한
+                String[] rowData = line.split(",");    // ','로 구분된 데이터
+                if (rowData.length == 4) {
+                    model.addRow(rowData);     // JTable에 행 추가
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("파일을 읽는 중 문제가 발생했습니다.");
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,6 +57,19 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        registrationDialog = new javax.swing.JDialog();
+        registrationFrame2 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        numberText = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        rightList = new javax.swing.JList<>();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        pwText = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        idText = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         accountTable = new javax.swing.JTable();
@@ -35,6 +78,126 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         changeBtn = new javax.swing.JButton();
         deleteBtn = new javax.swing.JButton();
         storageBtn = new javax.swing.JButton();
+
+        registrationFrame2.setBackground(new java.awt.Color(200, 200, 200));
+
+        jLabel6.setFont(new java.awt.Font("맑은 고딕", 1, 14)); // NOI18N
+        jLabel6.setText("고유 번호");
+
+        numberText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                numberTextActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setFont(new java.awt.Font("맑은 고딕", 1, 14)); // NOI18N
+        jLabel7.setText("ID");
+
+        rightList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "M", "S" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane3.setViewportView(rightList);
+
+        jButton3.setText("취소");
+
+        jButton4.setText(" 등록");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        pwText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pwTextActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("맑은 고딕", 1, 14)); // NOI18N
+        jLabel10.setText("PW");
+
+        idText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idTextActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setFont(new java.awt.Font("맑은 고딕", 1, 14)); // NOI18N
+        jLabel11.setText("권한");
+
+        javax.swing.GroupLayout registrationFrame2Layout = new javax.swing.GroupLayout(registrationFrame2);
+        registrationFrame2.setLayout(registrationFrame2Layout);
+        registrationFrame2Layout.setHorizontalGroup(
+            registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(registrationFrame2Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(registrationFrame2Layout.createSequentialGroup()
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(registrationFrame2Layout.createSequentialGroup()
+                        .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(numberText, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addGap(30, 30, 30)
+                        .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(idText, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(36, 36, 36)
+                        .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, registrationFrame2Layout.createSequentialGroup()
+                                .addComponent(pwText, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(44, 44, 44))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, registrationFrame2Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(154, 154, 154)))
+                        .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(11, 11, 11)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        registrationFrame2Layout.setVerticalGroup(
+            registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(registrationFrame2Layout.createSequentialGroup()
+                .addGap(54, 54, 54)
+                .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(numberText)
+                    .addComponent(idText)
+                    .addComponent(pwText))
+                .addGap(64, 64, 64)
+                .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(46, 46, 46))
+        );
+
+        javax.swing.GroupLayout registrationDialogLayout = new javax.swing.GroupLayout(registrationDialog.getContentPane());
+        registrationDialog.getContentPane().setLayout(registrationDialogLayout);
+        registrationDialogLayout.setHorizontalGroup(
+            registrationDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(registrationDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(registrationFrame2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        registrationDialogLayout.setVerticalGroup(
+            registrationDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(registrationDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(registrationFrame2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -140,11 +303,21 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_storageBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
-        // TODO add your handling code here:
+        // 뒤로 버튼 눌렀을 때 동작
+        JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
+        this.dispose();
+        MainFrame_Master mainframe = new MainFrame_Master();
+        mainframe.setVisible(true);
     }//GEN-LAST:event_backBtnActionPerformed
 
     private void registrationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationBtnActionPerformed
-        // TODO add your handling code here:
+        //  등록 버튼 눌렀을 때 동작
+        registrationDialog.setSize(700, 300);  // 다이얼로그 크기 설정
+        registrationDialog.setLocationRelativeTo(this);  // 부모 컴포넌트를 기준으로 중앙에 배치
+        registrationDialog.setTitle("계정 등록");  // 다이얼로그 제목 설정
+        registrationDialog.setModal(false);  // 비모달로 설정 (부모 창과 상호작용 가능)
+        registrationDialog.setVisible(true);  // 다이얼로그 표시
+        registrationDialog.toFront();  // 다이얼로그를 화면 최상위로 가져오기
     }//GEN-LAST:event_registrationBtnActionPerformed
 
     private void changeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeBtnActionPerformed
@@ -155,49 +328,91 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteBtnActionPerformed
 
+    private void numberTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberTextActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_numberTextActionPerformed
+
+    private void pwTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pwTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pwTextActionPerformed
+
+    private void idTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTextActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_idTextActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+      
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    public  static void main(String args[]) {
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+     */
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AccountManagementFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AccountManagementFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AccountManagementFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AccountManagementFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AccountManagementFrame().setVisible(true);
-            }
-        });
+    } catch (ClassNotFoundException ex) {
+        java.util.logging.Logger.getLogger(AccountManagementFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (InstantiationException ex) {
+        java.util.logging.Logger.getLogger(AccountManagementFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (IllegalAccessException ex) {
+        java.util.logging.Logger.getLogger(AccountManagementFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        java.util.logging.Logger.getLogger(AccountManagementFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    //</editor-fold>
+
+    /* Create and display the form */
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+            new AccountManagementFrame().setVisible(true);
+        }
+    });
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable accountTable;
     private javax.swing.JButton backBtn;
     private javax.swing.JButton changeBtn;
     private javax.swing.JButton deleteBtn;
+    private javax.swing.JTextField idText;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextField numberText;
+    private javax.swing.JTextField pwText;
     private javax.swing.JButton registrationBtn;
+    private javax.swing.JDialog registrationDialog;
+    private javax.swing.JPanel registrationFrame2;
+    private javax.swing.JList<String> rightList;
     private javax.swing.JButton storageBtn;
     // End of variables declaration//GEN-END:variables
+
+    private void initializeOtherFrames() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    /*private void loadTableData() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }*/
 }
+
