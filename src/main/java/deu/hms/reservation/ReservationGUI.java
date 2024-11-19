@@ -10,6 +10,7 @@ public class ReservationGUI extends javax.swing.JFrame {
     public ReservationGUI() {
         initComponents();
         loadReservationsFromFile();
+        initializeFloorOptions();
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -32,6 +33,11 @@ public class ReservationGUI extends javax.swing.JFrame {
         checkReservationInfo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         displayInfo = new javax.swing.JTextArea();
+        deleteReservation = new javax.swing.JButton();
+        checkInTime = new javax.swing.JLabel();
+        checkOutTime = new javax.swing.JLabel();
+        checkInTimeField = new javax.swing.JTextField();
+        checkOutTimeField = new javax.swing.JTextField();
 
         jButton2.setText("jButton2");
 
@@ -69,6 +75,13 @@ public class ReservationGUI extends javax.swing.JFrame {
         displayInfo.setRows(5);
         jScrollPane1.setViewportView(displayInfo);
 
+        deleteReservation.addActionListener(evt -> deleteReservationActionPerformed(evt));
+        deleteReservation.setText("예약취소");
+
+        checkInTime.setText("체크인 시간");
+
+        checkOutTime.setText("체크아웃 시간 ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -77,33 +90,43 @@ public class ReservationGUI extends javax.swing.JFrame {
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(uniqueID)
-                            .addGap(18, 18, 18)
-                            .addComponent(uniqueIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(numPeople)
-                                .addComponent(Name))
-                            .addGap(42, 42, 42)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(numPeopleField, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-                                .addComponent(NameField)))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(phoneNum)
-                                .addComponent(floor)
-                                .addComponent(room))
-                            .addGap(18, 18, 18)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(phoneNumField)
-                                .addComponent(floorCom, 0, 270, Short.MAX_VALUE)
-                                .addComponent(roomCom, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addComponent(reserveRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(reserveRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(checkReservationInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(updateReservation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(checkReservationInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(22, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(deleteReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(numPeople)
+                            .addComponent(Name))
+                        .addGap(42, 42, 42)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(numPeopleField, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                            .addComponent(NameField))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(checkInTime)
+                            .addComponent(checkOutTime))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(checkOutTimeField, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                            .addComponent(checkInTimeField)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(uniqueID)
+                        .addGap(18, 18, 18)
+                        .addComponent(uniqueIDField))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(phoneNum)
+                            .addComponent(floor)
+                            .addComponent(room))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(phoneNumField)
+                            .addComponent(roomCom, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(floorCom, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,11 +134,15 @@ public class ReservationGUI extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Name)
-                    .addComponent(NameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(NameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(checkInTime)
+                    .addComponent(checkInTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(numPeople)
-                    .addComponent(numPeopleField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(numPeopleField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(checkOutTime)
+                    .addComponent(checkOutTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(phoneNum)
@@ -135,7 +162,9 @@ public class ReservationGUI extends javax.swing.JFrame {
                     .addComponent(uniqueID)
                     .addComponent(uniqueIDField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(updateReservation)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(updateReservation)
+                    .addComponent(deleteReservation))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(checkReservationInfo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -150,7 +179,12 @@ public class ReservationGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Name;
     private javax.swing.JTextField NameField;
+    private javax.swing.JLabel checkInTime;
+    private javax.swing.JTextField checkInTimeField;
+    private javax.swing.JLabel checkOutTime;
+    private javax.swing.JTextField checkOutTimeField;
     private javax.swing.JButton checkReservationInfo;
+    private javax.swing.JButton deleteReservation;
     private javax.swing.JTextArea displayInfo;
     private javax.swing.JLabel floor;
     private javax.swing.JComboBox<String> floorCom;
@@ -168,22 +202,46 @@ public class ReservationGUI extends javax.swing.JFrame {
     private javax.swing.JButton updateReservation;
     // End of variables declaration//GEN-END:variables
  
-    private void floorComActionPerformed(java.awt.event.ActionEvent evt) {
-    updateRoomOptions();
-    }
-    private void updateRoomOptions() {
-        roomCom.removeAllItems();
-        int selectedFloor = floorCom.getSelectedIndex() + 1; // 1층, 2층, 3층
-        for (int i = 1; i <= 3; i++) {
-            roomCom.addItem(selectedFloor + "0" + i + "호");
+    // 층 선택 시 동작하는 메소드
+    // 층별 가격을 ComboBox에 추가하는 초기화 메소드
+    private void initializeFloorOptions() {
+        floorCom.removeAllItems(); // 기존 층 옵션 제거
+
+        for (int i = 1; i <= 20; i++) { // 1층부터 20층까지
+            int roomPrice = 50000 + (i - 1) * 10000; // 1층: 50,000원, 한 층 올라갈수록 10,000원 추가
+            String floorOption = i + "층 - " + roomPrice / 10000 + "만원";
+            floorCom.addItem(floorOption);
         }
     }
+
+// 층 선택 시 동작하는 메소드
+    private void floorComActionPerformed(java.awt.event.ActionEvent evt) {
+        updateRoomOptions();
+    }
+
+// 객실 옵션을 업데이트하는 메소드
+    private void updateRoomOptions() {
+        roomCom.removeAllItems(); // 기존 객실 옵션 제거
+
+        int floor = floorCom.getSelectedIndex() + 1; // 선택된 층 번호 (1층부터 시작)
+
+    // 선택된 층에 해당하는 5개의 객실 추가 (호수 형식: 층번호 + 01 ~ 05)
+        for (int i = 1; i <= 5; i++) {
+            String roomNumber = floor + "0" + i + "호"; // 예: 101호, 102호, ...
+            roomCom.addItem(roomNumber);
+        }
+    }
+
+
     private void reserveRegisterActionPerformed(java.awt.event.ActionEvent evt) {
         String name = NameField.getText();
         int numPeople = Integer.parseInt(numPeopleField.getText());
         String phoneNum = phoneNumField.getText();
         int floor = Integer.parseInt(floorCom.getSelectedItem().toString().substring(0, 1));
         int room = Integer.parseInt(roomCom.getSelectedItem().toString().replaceAll("[^0-9]", ""));
+        String checkInTime = checkInTimeField.getText(); // 체크인 시간 입력값
+        String checkOutTime = checkOutTimeField.getText();
+        
         
         if (name.isEmpty() || phoneNum.isEmpty()) {
             JOptionPane.showMessageDialog(this, "모든 정보를 입력해 주세요.");
@@ -194,19 +252,21 @@ public class ReservationGUI extends javax.swing.JFrame {
          String uniqueID = String.format("%03d", new Random().nextInt(1000));
 
         // 예약 객체 생성 및 예약 정보 추가
-        Reservation reservation = new Reservation(name, numPeople, phoneNum, floor, room);
+        Reservation reservation = new Reservation(name, numPeople, phoneNum, floor, room, checkInTime, checkOutTime);
         reservations.put(uniqueID, reservation);
         
         // 예약 정보를 파일에 저장
         saveReservationsToFile();
         
-        displayInfo.append("예약 완료:\n" + 
+        displayInfo.append("예약 완료\n" + 
             "고유번호: " + uniqueID + "\n" +  // 고유번호
             "이름: " + name + "\n" +  // 이름
             "인원: " + numPeople + "\n" +  // 인원수
             "전화번호: " + phoneNum + "\n" +  // 전화번호
             "층수: " + floor + "\n" +  // 층수
-            "호수: " + room + "\n\n");  // 호수
+            "호수: " + room + "\n"+  // 호수
+            "체크인 시간: " + checkInTime + "\n" + // 체크인 시간
+            "체크아웃 시간: " + checkOutTime + "\n\n");  // 체크아웃 시간
 
         
         JOptionPane.showMessageDialog(this, "예약이 완료되었습니다.");
@@ -227,6 +287,8 @@ public class ReservationGUI extends javax.swing.JFrame {
         reservation.setPhone(phoneNumField.getText());
         reservation.setFloor(floorCom.getSelectedIndex() + 1); // 1층, 2층, 3층
         reservation.setRoom(Integer.parseInt(roomCom.getSelectedItem().toString().replaceAll("[^0-9]", ""))); // 숫자 추출
+        reservation.setcheckInTime(checkInTimeField.getText());
+        reservation.setcheckOutTime(checkOutTimeField.getText());
     
         saveReservationsToFile(); // 수정된 내용 저장
 
@@ -237,7 +299,9 @@ public class ReservationGUI extends javax.swing.JFrame {
                 "인원: " + reservation.getNumPeople() + "\n" +
                 "전화번호: " + reservation.getPhone() + "\n" +
                 "층수: " + reservation.getFloor() + "\n" +
-                "호수: " + reservation.getRoom() + "\n\n");
+                "호수: " + reservation.getRoom() + "\n" +
+                "체크인 시간: " + reservation.getcheckInTime() + "\n" +
+                "체크아웃 시간: " + reservation.getcheckOutTime() + "\n\n");
 
         JOptionPane.showMessageDialog(this, "예약이 수정되었습니다.");
     }
@@ -270,7 +334,9 @@ public class ReservationGUI extends javax.swing.JFrame {
         .append("인원: ").append(reservation.getNumPeople()).append("\n")
         .append("전화번호: ").append(reservation.getPhone()).append("\n")
         .append("층수: ").append(reservation.getFloor()).append("\n")
-        .append("호수: ").append(reservation.getRoom()).append("\n");
+        .append("호수: ").append(reservation.getRoom()).append("\n")
+        .append("체크인 시간: ").append(reservation.getcheckInTime()).append("\n")
+        .append("체크아웃 시간: ").append(reservation.getcheckOutTime()).append("\n");
 
         displayInfo.setText(sb.toString());
     }
@@ -283,7 +349,7 @@ public class ReservationGUI extends javax.swing.JFrame {
             for (Map.Entry<String, Reservation> entry : reservations.entrySet()) {
                 Reservation res = entry.getValue();
                 writer.write(entry.getKey() + "," + res.getName() + "," + res.getNumPeople() + "," 
-                    + res.getPhone() + "," + res.getFloor() + "," + res.getRoom());
+                    + res.getPhone() + "," + res.getFloor() + "," + res.getRoom() + "," + res.getcheckInTime() + "," + res.getcheckOutTime());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -298,15 +364,17 @@ public class ReservationGUI extends javax.swing.JFrame {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 6) { // 데이터 형식 확인
+                if (data.length == 8) { // 데이터 형식 확인
                     String uniqueID = data[0];
                     String name = data[1];
                     int numPeople = Integer.parseInt(data[2]);
                     String phone = data[3];
                     int floor = Integer.parseInt(data[4]);
                     int room = Integer.parseInt(data[5]);
+                    String checkInTime = data[6];
+                    String checkOutTime = data[7];
 
-                    reservations.put(uniqueID, new Reservation(name, numPeople, phone, floor, room));
+                    reservations.put(uniqueID, new Reservation(name, numPeople, phone, floor, room, checkInTime, checkOutTime));
                 }
             }
         } catch (IOException e) {
@@ -314,6 +382,36 @@ public class ReservationGUI extends javax.swing.JFrame {
         }
     }
 
+    // 예약 취소 기능 추가
+    private void deleteReservationActionPerformed(java.awt.event.ActionEvent evt) {
+    // 고유번호 입력 확인
+        String uniqueID = uniqueIDField.getText();
+        if (uniqueID.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "고유번호를 입력해 주세요.");
+            return;
+        }
+
+    // 해당 고유번호 예약 정보 삭제
+        if (!reservations.containsKey(uniqueID)) {
+            JOptionPane.showMessageDialog(this, "입력한 고유번호에 해당하는 예약이 없습니다.");
+            return;
+        }
+
+    // 예약 삭제
+        reservations.remove(uniqueID);
+
+    // 파일에 변경된 예약 정보 저장
+        saveReservationsToFile();
+
+    // 화면에 삭제된 예약 정보를 출력
+        displayInfo.setText(""); // 기존 텍스트 지우기
+        displayInfo.append("예약이 취소되었습니다.\n" +
+                "고유번호: " + uniqueID + "\n");
+
+        JOptionPane.showMessageDialog(this, "예약이 취소되었습니다.");
+    }
+    
+    
 
     // Reservation 클래스가 필요합니다.
     public static class Reservation {
@@ -322,13 +420,17 @@ public class ReservationGUI extends javax.swing.JFrame {
         private String phone;
         private int floor;
         private int room;
+        private String checkInTime;    // 체크인 시간
+        private String checkOutTime;
 
-        public Reservation(String name, int numPeople, String phone, int floor, int room) {
+        public Reservation(String name, int numPeople, String phone, int floor, int room, String checkInTime, String checkOutTime) {
             this.name = name;
             this.numPeople = numPeople;
             this.phone = phone;
             this.floor = floor;
             this.room = room;
+            this.checkInTime = checkInTime;
+            this.checkOutTime = checkOutTime;
         }
 
         public String getName() {
@@ -369,6 +471,18 @@ public class ReservationGUI extends javax.swing.JFrame {
 
         public void setRoom(int room) {
             this.room = room;
+        }
+        public void setcheckInTime(String checkInTime) {
+            this.checkInTime = checkInTime;
+        }
+        public String getcheckInTime() {
+            return checkInTime;
+        }
+        public void setcheckOutTime(String checkOutTime) {
+            this.checkOutTime = checkOutTime;
+        }
+        public String getcheckOutTime() {
+            return checkOutTime;
         }
     }
     public static void main(String args[]) {

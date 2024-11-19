@@ -34,40 +34,54 @@
               <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jScrollPane1" max="32767" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <Component id="uniqueID" min="-2" max="-2" attributes="0"/>
+                  <Component id="reserveRegister" alignment="0" max="32767" attributes="0"/>
+                  <Component id="checkReservationInfo" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="updateReservation" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="uniqueIDField" min="-2" pref="270" max="-2" attributes="0"/>
+                      <Component id="deleteReservation" min="-2" pref="166" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="numPeople" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="Name" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="numPeopleField" pref="270" max="32767" attributes="0"/>
+                          <Component id="numPeopleField" pref="107" max="32767" attributes="0"/>
                           <Component id="NameField" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="checkInTime" min="-2" max="-2" attributes="0"/>
+                          <Component id="checkOutTime" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="checkOutTimeField" pref="85" max="32767" attributes="0"/>
+                          <Component id="checkInTimeField" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="uniqueID" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="uniqueIDField" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="phoneNum" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="floor" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="room" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="phoneNumField" max="32767" attributes="0"/>
-                          <Component id="floorCom" pref="270" max="32767" attributes="0"/>
-                          <Component id="roomCom" max="32767" attributes="0"/>
+                          <Component id="roomCom" alignment="0" max="32767" attributes="0"/>
+                          <Component id="floorCom" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="reserveRegister" alignment="0" max="32767" attributes="0"/>
-                  <Component id="updateReservation" max="32767" attributes="0"/>
-                  <Component id="checkReservationInfo" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="22" max="32767" attributes="0"/>
+              <EmptySpace pref="20" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -78,11 +92,15 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="Name" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="NameField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="checkInTime" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="checkInTimeField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="numPeople" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="numPeopleField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="checkOutTime" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="checkOutTimeField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -107,7 +125,10 @@
                   <Component id="uniqueIDField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="updateReservation" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="updateReservation" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="deleteReservation" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="checkReservationInfo" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -217,5 +238,27 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="deleteReservation">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#xc608;&#xc57d;&#xcde8;&#xc18c;"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="deleteReservation.addActionListener(evt -&gt; deleteReservationActionPerformed(evt));"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="checkInTime">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#xccb4;&#xd06c;&#xc778; &#xc2dc;&#xac04;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="checkOutTime">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#xccb4;&#xd06c;&#xc544;&#xc6c3; &#xc2dc;&#xac04; "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="checkInTimeField">
+    </Component>
+    <Component class="javax.swing.JTextField" name="checkOutTimeField">
+    </Component>
   </SubComponents>
 </Form>
