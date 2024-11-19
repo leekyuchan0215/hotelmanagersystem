@@ -1,4 +1,3 @@
-
 package deu.hms.management.account;
 
 import deu.hms.login.MainFrame_Master;
@@ -14,22 +13,21 @@ import javax.swing.table.DefaultTableModel;
 
 public class AccountManagementFrame extends javax.swing.JFrame {
 
-    int num;
-    String id, pw;
-
     public AccountManagementFrame() {
         initComponents();
         loadTableData(); // JTable 초기화 시 데이터 로드
     }
 
-    // 테이블의 값들을 채우는 메서드
+
     private void loadTableData() {
+    // 테이블의 값들을 채우는 메서드
+    
         DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
         model.setRowCount(0); // 기존 데이터 초기화
 
-        try (BufferedReader br = new BufferedReader(new FileReader("id_pw.txt"))) {    // "id_pw.txt"파일 가져와 읽기
+        try (BufferedReader br = new BufferedReader(new FileReader("id_pw.txt"))) {     // "id_pw.txt"파일 가져와 읽기
             String line;
-            while ((line = br.readLine()) != null) {  //읽어들인 행이 비어있지 않다면 반복 
+            while ((line = br.readLine()) != null) {   //읽어들인 행이 비어있지 않다면 반복 
                 // 데이터 형식: 고유번호, ID, PW, 관리자 권한
                 String[] rowData = line.split(",");    // ','로 구분된 데이터
                 if (rowData.length == 4) {
@@ -288,15 +286,15 @@ public class AccountManagementFrame extends javax.swing.JFrame {
             try {
                 //JTable의 데이터를 읽어올 TableModel
                 DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
-                int rowCount = model.getRowCount();
-                int columnCount = model.getColumnCount();
+                int rowCount = model.getRowCount();   // 행의 개수를 rowCount 변수에 저장
+                int columnCount = model.getColumnCount();  // 열의 개수를 columnCount 변수에 저장
 
                 //파일에 내용 저장
-                FileWriter writer = new FileWriter("id_pw.txt", false); //파일 덮어쓰기
+                FileWriter writer = new FileWriter("id_pw.txt", false);   // 파일 덮어쓰기
                 BufferedWriter bufferedWriter = new BufferedWriter(writer);
 
                 //JTable 데이터를 파일에 저장
-                for (int i = 0; i < rowCount; i++) {
+                for (int i = 0; i < rowCount; i++) {  
                     StringBuilder rowBuilder = new StringBuilder();
                     for (int j = 0; j < columnCount; j++) {
                         rowBuilder.append(model.getValueAt(i, j).toString());
@@ -337,7 +335,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_registrationBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        // TODO add your handling code here:
+        // 삭제 버튼을 눌렀을 때 동작
         deleteBtn.addActionListener(e -> {
             int selectedRow = accountTable.getSelectedRow();  //선택된 행의 인덱스 가져오기
 
@@ -345,12 +343,13 @@ public class AccountManagementFrame extends javax.swing.JFrame {
              * if(selectedRow == -1) { // 선택된 행이 없으면 -1 반환
              * JOptionPane.showMessageDialog(this,"삭제할 행을선택하세요!","오류",JOptionPane.ERROR_MESSAGE); return; }
              */
+            
             //JTable 의 모델 가져오기
             DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
 
             //행 삭제
             model.removeRow(selectedRow);
-
+            
             JOptionPane.showMessageDialog(this, "선택된 계정이 삭제되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
         });
     }//GEN-LAST:event_deleteBtnActionPerformed
@@ -373,24 +372,25 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         // 새로운 계정 등록할 수 있는 창
         registrationDialogBtn.addActionListener(e -> {
             // 입력값 가져오기
-            String number = numberText.getText().trim();
-            String id = idText.getText().trim();
-            String pw = pwText.getText().trim();
-            String role = rightList.getSelectedValue(); // 선택된 값 가져오기
+            String number = numberText.getText().trim();  // numberText에 입력한 값을 number 변수에 저장
+            String id = idText.getText().trim();  // idText 에 입력한 값을 id 변수에 저장
+            String pw = pwText.getText().trim();  // pwText에 입력한 값을 pw 변수에 저장
+            String role = rightList.getSelectedValue(); // rightList에서 선택한 값을 role 변수에 저장
             // 유효성 검사
-            if (number.isEmpty() || id.isEmpty() || pw.isEmpty() || role == null) {
+            if (number.isEmpty() || id.isEmpty() || pw.isEmpty() || role == null) { // 4개중 하나라도 입력하지 않았다면
                 JOptionPane.showMessageDialog(this, "모든 필드를 채워주세요!", "오류", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             // "id_pw.txt" 파일에 데이터 추가
             try (BufferedWriter writer = new BufferedWriter(new FileWriter("id_pw.txt", true))) {
-                writer.write(number + "," + id + "," + pw + "," + role); // 데이터를 "number,id,pw,role" 형식으로 저장
+                writer.write(number + "," + id + "," + pw + "," + role);  // 데이터를 "number,id,pw,role" 형식으로 저장
                 writer.newLine(); // 줄바꿈 추가
             } catch (IOException ex) {
                 Logger.getLogger(AccountManagementFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
             // 성공 메시지
             JOptionPane.showMessageDialog(this, "등록이 완료되었습니다!", "성공", JOptionPane.INFORMATION_MESSAGE);
+            
             registrationDialog.dispose();
             // 입력 필드 초기화
             numberText.setText("");

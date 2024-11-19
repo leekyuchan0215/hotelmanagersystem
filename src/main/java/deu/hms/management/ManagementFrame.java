@@ -23,28 +23,28 @@ public class ManagementFrame extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        roomManagementBtn = new javax.swing.JButton();
+        serviceManagementBtn = new javax.swing.JButton();
+        accountManagementBtn = new javax.swing.JButton();
         backBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("관리 페이지");
 
-        jButton2.setText("객실 관리");
+        roomManagementBtn.setText("객실 관리");
 
-        jButton3.setText("서비스 관리");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        serviceManagementBtn.setText("서비스 관리");
+        serviceManagementBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                serviceManagementBtnActionPerformed(evt);
             }
         });
 
-        jButton1.setText("계정 관리");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        accountManagementBtn.setText("계정 관리");
+        accountManagementBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                accountManagementBtnActionPerformed(evt);
             }
         });
 
@@ -55,20 +55,20 @@ public class ManagementFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(51, 51, 51)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(serviceManagementBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(roomManagementBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(accountManagementBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(60, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(accountManagementBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(roomManagementBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(serviceManagementBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
 
@@ -109,22 +109,22 @@ public class ManagementFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-        AccountManagementFrame accountframe = new AccountManagementFrame();
-        accountframe.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void accountManagementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accountManagementBtnActionPerformed
+        // 계정 관리 버튼을 눌렀을 때 동작
+        this.dispose();  //현재 창 닫기
+        AccountManagementFrame accountframe = new AccountManagementFrame(); 
+        accountframe.setVisible(true);  //계정 관리 페이지로 이동
+    }//GEN-LAST:event_accountManagementBtnActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void serviceManagementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceManagementBtnActionPerformed
+        // 서비스 관리 버튼을 눌렀을 때 동작
+    }//GEN-LAST:event_serviceManagementBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
-        // TODO add your handling code here:
+        // 이전 버튼을 눌렀을 때 동작:
         this.dispose(); // 로그인 창 닫기
          MainFrame_Master mainframe = new MainFrame_Master();
-         mainframe.setVisible(true);
+         mainframe.setVisible(true);  // 메인 화면 띄우기
     }//GEN-LAST:event_backBtnActionPerformed
 
     /**
@@ -163,11 +163,11 @@ public class ManagementFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton accountManagementBtn;
     private javax.swing.JButton backBtn;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton roomManagementBtn;
+    private javax.swing.JButton serviceManagementBtn;
     // End of variables declaration//GEN-END:variables
 }
