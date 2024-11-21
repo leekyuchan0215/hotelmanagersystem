@@ -9,6 +9,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import deu.hms.checkIn.Customer;
+
 
 public class CheckoutFrame extends javax.swing.JFrame {
     
@@ -27,6 +32,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
     checkOutDateTime = null; // 체크아웃 시간 초기화
     extraFee = 0; // 추가 요금 초기화
 }
+    
 private void saveFeedbackToFile(String feedback) {
     String filePath = "feedback.txt"; // 저장할 파일 경로
     try (FileWriter writer = new FileWriter(filePath, true)) { // true로 파일에 내용 추가
@@ -191,24 +197,55 @@ private void saveFeedbackToFile(String feedback) {
     }//GEN-LAST:event_idFieldActionPerformed
 
     private void RoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RoomButtonActionPerformed
-        // TODO add your handling code here:
-        checkOutDateTime = LocalDateTime.now(); // 현재 시간 저장
-        String nameOrID = idField.getText().trim();
+       String nameOrID = idField.getText().trim();
 
-        if (nameOrID.equals("12345") || nameOrID.equalsIgnoreCase("홍길동")) {
-            LocalTime checkOutLimit = LocalTime.of(11, 0); // 기준 체크아웃 시간 (오전 11시)
+        if (nameOrID.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "이름 또는 고유 번호를 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 체크인된 고객 정보 검색
+        Customer customer = findCheckInCustomer(nameOrID);
+
+        if (customer != null) {
+            checkOutDateTime = LocalDateTime.now(); // 현재 시간 저장
+            LocalTime checkOutLimit = LocalTime.of(11, 0); // 기준 체크아웃 시간
             LocalTime actualCheckOutTime = checkOutDateTime.toLocalTime();
 
             extraFee = actualCheckOutTime.isAfter(checkOutLimit) ? 20000 : 0;
+            totalAmount = customer.getPaymentAmount(); // 기본 결제 금액
+
             String roomInfo = String.format(
-                "객실: 101호\n금액: 100,000원\n추가 요금: %d원\n총 금액: %d원",
-                extraFee, (totalAmount + extraFee)
+                    "이름: %s\n객실: %s\n기본 요금: %d원\n추가 요금: %d원\n총 금액: %d원",
+                    customer.getName(), customer.getRoomNumber(), totalAmount, extraFee, totalAmount + extraFee
             );
             RoomArea.setText(roomInfo);
         } else {
-            JOptionPane.showMessageDialog(this, "잘못된 이름 또는 고유 번호입니다.", "오류", JOptionPane.ERROR_MESSAGE);
-            RoomArea.setText(""); // 입력 초기화
+            JOptionPane.showMessageDialog(this, "해당 고객의 체크인 정보를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private Customer findCheckInCustomer(String nameOrID) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("checked_in_customers.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // 저장된 데이터: 고객 이름: ..., 예약 번호: ..., 객실 번호: ...
+                if (line.contains("고객 이름:") && line.contains("예약 번호:") && line.contains("객실 번호:")) {
+                    String[] parts = line.split(", ");
+                    String name = parts[0].split(": ")[1].trim(); // "고객 이름: 홍길동" -> "홍길동"
+                    String reservationId = parts[1].split(": ")[1].trim(); // "예약 번호: 12345" -> "12345"
+                    String roomNumber = parts[2].split(": ")[1].trim(); // "객실 번호: 101호" -> "101호"
+
+                    // 입력값(고유번호 또는 이름)과 비교
+                    if (reservationId.equalsIgnoreCase(nameOrID) || name.equalsIgnoreCase(nameOrID)) {
+                        return new Customer(name, reservationId, roomNumber, 100000); // 기본 결제 금액
+                    }
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "체크인 정보를 읽는 중 오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+        }
+        return null; // 일치하는 고객 정보가 없을 경우
     }//GEN-LAST:event_RoomButtonActionPerformed
 
     private void CheckOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckOutButtonActionPerformed
