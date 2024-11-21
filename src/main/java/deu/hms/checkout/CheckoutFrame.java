@@ -97,6 +97,11 @@ private void saveFeedbackToFile(String feedback) {
         PaymentLabel.setText("결제 유형 선택 :");
 
         ChooseComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "카드", "현금" }));
+        ChooseComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ChooseComboBoxActionPerformed(evt);
+            }
+        });
 
         FeedbackLabel.setText("고객 피드백 :");
 
@@ -259,7 +264,7 @@ private void saveFeedbackToFile(String feedback) {
         // 결제 방식, 피드백, 객실 번호 및 고객 정보 가져오기
         String paymentType = (String) ChooseComboBox.getSelectedItem();
         String feedback = FeedbackArea.getText().trim();
-        String roomNumber = "101호"; // 예시, 실제 로직에 따라 설정 가능
+        String roomNumber = "101호"; // 예시, 실제 로직에 따라 설정 가능   ///// 이거 수
         String customerNameOrID = idField.getText().trim(); // 고객 이름 또는 ID
 
         // 체크아웃 완료 메시지 생성
@@ -302,6 +307,10 @@ private void saveFeedbackToFile(String feedback) {
         // TODO add your handling code here:
         System.exit(0); // 프로그램 종료
     }//GEN-LAST:event_closeButtonActionPerformed
+
+    private void ChooseComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChooseComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ChooseComboBoxActionPerformed
 
     /**
      * @param args the command line arguments
