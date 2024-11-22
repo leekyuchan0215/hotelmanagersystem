@@ -36,5 +36,4 @@ phoneNum          : String        // 예약 등록 시 사용자가 입력한 �
 floor             : int           // 예약 등록 시 사용자가 선택한 층수.
 room              : int           // 예약 등록 시 사용자가 선택한 호수.
 uniqueID          : String        // 예약 등록 시 생성된 고유번호.
-
 */
