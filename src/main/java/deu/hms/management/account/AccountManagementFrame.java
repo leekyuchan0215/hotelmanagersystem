@@ -18,10 +18,9 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         loadTableData(); // JTable 초기화 시 데이터 로드
     }
 
-
     private void loadTableData() {
-    // 테이블의 값들을 채우는 메서드
-    
+        // 테이블의 값들을 채우는 메서드
+
         DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
         model.setRowCount(0); // 기존 데이터 초기화
 
@@ -40,7 +39,6 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         }
     }
 
- 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -58,6 +56,13 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         idText = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        editDialog = new javax.swing.JDialog();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        editTable = new javax.swing.JTable();
+        backDialogBtn = new javax.swing.JButton();
+        editDialogBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         accountTable = new javax.swing.JTable();
@@ -65,6 +70,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         registrationBtn = new javax.swing.JButton();
         deleteBtn = new javax.swing.JButton();
         storageBtn = new javax.swing.JButton();
+        editBtn = new javax.swing.JButton();
 
         registrationFrame2.setBackground(new java.awt.Color(200, 200, 200));
 
@@ -119,55 +125,69 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("맑은 고딕", 1, 14)); // NOI18N
         jLabel11.setText("권한");
 
+        jLabel2.setFont(new java.awt.Font("맑은 고딕", 1, 24)); // NOI18N
+        jLabel2.setText("계정 등록");
+
         javax.swing.GroupLayout registrationFrame2Layout = new javax.swing.GroupLayout(registrationFrame2);
         registrationFrame2.setLayout(registrationFrame2Layout);
         registrationFrame2Layout.setHorizontalGroup(
             registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(registrationFrame2Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(registrationFrame2Layout.createSequentialGroup()
-                        .addComponent(registrationCancelDialog, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(registrationDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(22, 22, 22)
+                        .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(registrationFrame2Layout.createSequentialGroup()
+                                .addComponent(registrationCancelDialog, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(registrationDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(registrationFrame2Layout.createSequentialGroup()
+                                .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(numberText, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6))
+                                .addGap(30, 30, 30)
+                                .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(idText, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(36, 36, 36)
+                                .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, registrationFrame2Layout.createSequentialGroup()
+                                        .addComponent(pwText, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(44, 44, 44))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, registrationFrame2Layout.createSequentialGroup()
+                                        .addComponent(jLabel10)
+                                        .addGap(154, 154, 154)))
+                                .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel11)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(11, 11, 11))))
                     .addGroup(registrationFrame2Layout.createSequentialGroup()
-                        .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(numberText, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))
-                        .addGap(30, 30, 30)
-                        .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(idText, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(36, 36, 36)
-                        .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, registrationFrame2Layout.createSequentialGroup()
-                                .addComponent(pwText, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(44, 44, 44))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, registrationFrame2Layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addGap(154, 154, 154)))
-                        .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(11, 11, 11)))
+                        .addGap(247, 247, 247)
+                        .addComponent(jLabel2)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         registrationFrame2Layout.setVerticalGroup(
             registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(registrationFrame2Layout.createSequentialGroup()
-                .addGap(54, 54, 54)
-                .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(29, 29, 29)
+                .addComponent(jLabel2)
+                .addGap(26, 26, 26)
                 .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(numberText)
-                    .addComponent(idText)
-                    .addComponent(pwText))
-                .addGap(64, 64, 64)
+                    .addGroup(registrationFrame2Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(registrationFrame2Layout.createSequentialGroup()
+                        .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(numberText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(idText)
+                            .addComponent(pwText))))
+                .addGap(46, 46, 46)
                 .addGroup(registrationFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(registrationCancelDialog, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(registrationDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -183,6 +203,68 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         registrationDialogLayout.setVerticalGroup(
             registrationDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(registrationFrame2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jLabel3.setFont(new java.awt.Font("맑은 고딕", 1, 24)); // NOI18N
+        jLabel3.setText("계정 수정");
+
+        editTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "고유번호", "ID", "PW", "권한"
+            }
+        ));
+        jScrollPane2.setViewportView(editTable);
+
+        backDialogBtn.setText("취소");
+        backDialogBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backDialogBtnActionPerformed(evt);
+            }
+        });
+
+        editDialogBtn.setText("수정");
+        editDialogBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editDialogBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout editDialogLayout = new javax.swing.GroupLayout(editDialog.getContentPane());
+        editDialog.getContentPane().setLayout(editDialogLayout);
+        editDialogLayout.setHorizontalGroup(
+            editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editDialogLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(editDialogLayout.createSequentialGroup()
+                        .addGap(199, 199, 199)
+                        .addComponent(jLabel3))
+                    .addGroup(editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(editDialogLayout.createSequentialGroup()
+                            .addComponent(backDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(27, Short.MAX_VALUE))
+        );
+        editDialogLayout.setVerticalGroup(
+            editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addGroup(editDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(backDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -231,6 +313,13 @@ public class AccountManagementFrame extends javax.swing.JFrame {
             }
         });
 
+        editBtn.setText("수정");
+        editBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -247,7 +336,9 @@ public class AccountManagementFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(registrationBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(31, 31, 31)
+                                .addGap(18, 18, 18)
+                                .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(storageBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -267,7 +358,8 @@ public class AccountManagementFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(registrationBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(storageBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(storageBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(43, Short.MAX_VALUE))
         );
 
@@ -288,7 +380,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
                 BufferedWriter bufferedWriter = new BufferedWriter(writer);
 
                 //JTable 데이터를 파일에 저장
-                for (int i = 0; i < rowCount; i++) {  
+                for (int i = 0; i < rowCount; i++) {
                     StringBuilder rowBuilder = new StringBuilder();
                     for (int j = 0; j < columnCount; j++) {
                         rowBuilder.append(model.getValueAt(i, j).toString());
@@ -335,15 +427,15 @@ public class AccountManagementFrame extends javax.swing.JFrame {
 
             /**
              * if(selectedRow == -1) { // 선택된 행이 없으면 -1 반환
-             * JOptionPane.showMessageDialog(this,"삭제할 행을선택하세요!","오류",JOptionPane.ERROR_MESSAGE); return; }
+             * JOptionPane.showMessageDialog(this,"삭제할
+             * 행을선택하세요!","오류",JOptionPane.ERROR_MESSAGE); return; }
              */
-            
             //JTable 의 모델 가져오기
             DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
 
             //행 삭제
             model.removeRow(selectedRow);
-            
+
             JOptionPane.showMessageDialog(this, "선택된 계정이 삭제되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
         });
     }//GEN-LAST:event_deleteBtnActionPerformed
@@ -384,7 +476,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
             }
             // 성공 메시지
             JOptionPane.showMessageDialog(this, "등록이 완료되었습니다!", "성공", JOptionPane.INFORMATION_MESSAGE);
-            
+
             registrationDialog.dispose();
             // 입력 필드 초기화
             numberText.setText("");
@@ -398,9 +490,72 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_registrationDialogBtnActionPerformed
 
     private void registrationCancelDialogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationCancelDialogActionPerformed
-        
+
         registrationDialog.dispose();
     }//GEN-LAST:event_registrationCancelDialogActionPerformed
+
+    private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = accountTable.getSelectedRow(); // 선택된 행 인덱스
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.");
+            return;
+        }
+
+        DefaultTableModel editModel = (DefaultTableModel) editTable.getModel();
+        editModel.setRowCount(0); // 기존 데이터를 초기화
+        String[] rowData = new String[4];
+        for (int i = 0; i < 4; i++) {
+            rowData[i] = accountTable.getValueAt(selectedRow, i).toString();
+        }
+        editModel.addRow(rowData); // 선택한 행 데이터를 editTable에 추가
+
+        editDialog.setSize(562, 300);  // 다이얼로그 크기 설정
+        editDialog.setLocationRelativeTo(this);  // 부모 컴포넌트를 기준으로 중앙에 배치
+        editDialog.setTitle("계정 수정");  // 다이얼로그 제목 설정
+        editDialog.setModal(false);  // 비모달로 설정 (부모 창과 상호작용 가능)
+        editDialog.setVisible(true);  // 다이얼로그 표시
+        editDialog.toFront();  // 다이얼로그를 화면 최상위로 가져오기
+    }//GEN-LAST:event_editBtnActionPerformed
+
+    private void backDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backDialogBtnActionPerformed
+        // TODO add your handling code here:
+        editDialog.dispose();
+    }//GEN-LAST:event_backDialogBtnActionPerformed
+
+    private void editDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDialogBtnActionPerformed
+        // editTable 및 accountTable의 모델 가져오기
+        DefaultTableModel editModel = (DefaultTableModel) editTable.getModel();
+        DefaultTableModel accountModel = (DefaultTableModel) accountTable.getModel();
+
+        // editTable이 비어있는지 확인
+        if (editModel.getRowCount() > 0) {
+            // 첫 번째 행 데이터 가져오기
+            String[] updatedRowData = new String[editModel.getColumnCount()];
+            for (int i = 0; i < updatedRowData.length; i++) {
+                Object cellValue = editModel.getValueAt(0, i);
+                updatedRowData[i] = cellValue != null ? cellValue.toString() : ""; // null 방지
+            }
+
+            // accountTable에서 선택된 행 확인
+            int selectedRow = accountTable.getSelectedRow();
+            if (selectedRow != -1) {
+                // 선택된 행에 데이터를 적용
+                for (int i = 0; i < updatedRowData.length; i++) {
+                    accountModel.setValueAt(updatedRowData[i], selectedRow, i);
+                }
+                // 성공 메시지 표시
+                JOptionPane.showMessageDialog(this, "데이터가 성공적으로 수정되었습니다.");
+            } else {
+                JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "수정할 데이터가 없습니다.");
+        }
+
+        // 다이얼로그 닫기
+        editDialog.dispose();
+    }//GEN-LAST:event_editDialogBtnActionPerformed
 
     public static void main(String args[]) {
 
@@ -415,14 +570,22 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable accountTable;
     private javax.swing.JButton backBtn;
+    private javax.swing.JButton backDialogBtn;
     private javax.swing.JButton deleteBtn;
+    private javax.swing.JButton editBtn;
+    private javax.swing.JDialog editDialog;
+    private javax.swing.JButton editDialogBtn;
+    private javax.swing.JTable editTable;
     private javax.swing.JTextField idText;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField numberText;
     private javax.swing.JTextField pwText;

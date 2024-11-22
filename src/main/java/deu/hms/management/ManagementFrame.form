@@ -93,6 +93,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="&#xac1d;&#xc2e4; &#xad00;&#xb9ac;"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="roomManagementBtnActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="serviceManagementBtn">
           <Properties>

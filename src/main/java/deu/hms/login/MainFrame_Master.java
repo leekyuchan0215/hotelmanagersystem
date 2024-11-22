@@ -260,7 +260,6 @@ public class MainFrame_Master extends javax.swing.JFrame {
 
         if (result == JOptionPane.YES_OPTION) {
             //사용자가 "예"를 선택하면
-            JOptionPane.showMessageDialog(this, "관리 페이지로 이동합니다.");
             this.dispose();
             ManagementFrame managementFrame = new ManagementFrame();
             managementFrame.setVisible(true);  // 관리 페이지로 이동 
@@ -277,7 +276,6 @@ public class MainFrame_Master extends javax.swing.JFrame {
 
         if (result == JOptionPane.YES_OPTION) {
             // 사용자가 "예"를 선택하면
-            JOptionPane.showMessageDialog(this, "예약 페이지로 이동합니다.");
             this.dispose();
             ReservationGUI reservationFrame = new ReservationGUI();
             reservationFrame.setVisible(true);  //예약 페이지로 이동
