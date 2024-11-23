@@ -1,8 +1,8 @@
 package deu.hms.login;
 
-//import deu.hms.reservation.ReservationGUI;
 import deu.hms.management.ManagementFrame;
 import deu.hms.reservation.ReservationGUI;
+import deu.hms.serviceroom.Service_RoomFrame;
 import javax.swing.JOptionPane;
 
 public class MainFrame_Master extends javax.swing.JFrame {
@@ -19,8 +19,8 @@ public class MainFrame_Master extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        serviceBtn = new javax.swing.JButton();
-        serviceBtn1 = new javax.swing.JButton();
+        roomServiceBtn = new javax.swing.JButton();
+        restaurantserviceBtn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         checkinBtn = new javax.swing.JButton();
@@ -42,14 +42,19 @@ public class MainFrame_Master extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
 
-        serviceBtn.setText("룸");
-        serviceBtn.addActionListener(new java.awt.event.ActionListener() {
+        roomServiceBtn.setText("룸");
+        roomServiceBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                serviceBtnActionPerformed(evt);
+                roomServiceBtnActionPerformed(evt);
             }
         });
 
-        serviceBtn1.setText("식당");
+        restaurantserviceBtn.setText("식당");
+        restaurantserviceBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                restaurantserviceBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -57,9 +62,9 @@ public class MainFrame_Master extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(serviceBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(roomServiceBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(serviceBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, Short.MAX_VALUE)
+                .addComponent(restaurantserviceBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 61, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -67,8 +72,8 @@ public class MainFrame_Master extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(serviceBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(serviceBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(roomServiceBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(restaurantserviceBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -238,10 +243,10 @@ public class MainFrame_Master extends javax.swing.JFrame {
         int result = JOptionPane.showConfirmDialog(this, "로그아웃 하시겠습니까?", "로그아웃 확인", JOptionPane.YES_NO_OPTION);
 
         if (result == JOptionPane.YES_OPTION) {
-        // 사용자가 "예"를 클릭하면 
+            // 사용자가 "예"를 클릭하면 
             JOptionPane.showMessageDialog(this, "로그아웃 합니다.");
             this.dispose();  // 현재 창 닫기
-            LoginFrame loginframe = new LoginFrame();  
+            LoginFrame loginframe = new LoginFrame();
             loginframe.setVisible(true); // 로그인 화면으로 돌아가기
         }
     }//GEN-LAST:event_logoutBtnActionPerformed
@@ -266,23 +271,43 @@ public class MainFrame_Master extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_managementBtnActionPerformed
 
-    private void serviceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceBtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_serviceBtnActionPerformed
+    private void roomServiceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomServiceBtnActionPerformed
+        // 룸 서비스 버튼 눌렀을 때 
+        int result = JOptionPane.showConfirmDialog(this, "룸 서비스 페이지로 이동 하시겠습니까?", "관리페이지로 이동", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            // 사용자가 "예"를 선택하면
+            this.dispose();
+            Service_RoomFrame rframe = new Service_RoomFrame("master");
+            rframe.setVisible(true);
+        }
+
+    }//GEN-LAST:event_roomServiceBtnActionPerformed
 
     private void reservationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationBtnActionPerformed
         // 예약버튼 클릭시 행동처리
-         int result = JOptionPane.showConfirmDialog(this, "예약 페이지로 이동 하시겠습니까?", "예약 페이지로 이동", JOptionPane.YES_NO_OPTION);
+        int result = JOptionPane.showConfirmDialog(this, "예약 페이지로 이동 하시겠습니까?", "예약 페이지로 이동", JOptionPane.YES_NO_OPTION);
 
         if (result == JOptionPane.YES_OPTION) {
             // 사용자가 "예"를 선택하면
             this.dispose();
             ReservationGUI reservationFrame = new ReservationGUI();
             reservationFrame.setVisible(true);  //예약 페이지로 이동
-        }      
+        }
     }//GEN-LAST:event_reservationBtnActionPerformed
 
+    private void restaurantserviceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restaurantserviceBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_restaurantserviceBtnActionPerformed
 
+    public static void main(String args[]) {
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new MainFrame_Master().setVisible(true);
+            }
+        });
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton checkinBtn;
     private javax.swing.JButton checkoutBtn1;
@@ -299,7 +324,7 @@ public class MainFrame_Master extends javax.swing.JFrame {
     private javax.swing.JButton managementBtn;
     private javax.swing.JButton reportBtn;
     private javax.swing.JButton reservationBtn;
-    private javax.swing.JButton serviceBtn;
-    private javax.swing.JButton serviceBtn1;
+    private javax.swing.JButton restaurantserviceBtn;
+    private javax.swing.JButton roomServiceBtn;
     // End of variables declaration//GEN-END:variables
 }

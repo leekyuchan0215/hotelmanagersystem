@@ -1,5 +1,6 @@
 package deu.hms.login;
 
+import deu.hms.serviceroom.Service_RoomFrame;
 import javax.swing.JOptionPane;
 
 public class MainFrame_Staff extends javax.swing.JFrame {
@@ -16,8 +17,8 @@ public class MainFrame_Staff extends javax.swing.JFrame {
         logoutBtn = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        serviceBtn = new javax.swing.JButton();
-        serviceBtn1 = new javax.swing.JButton();
+        roomServiceBtn = new javax.swing.JButton();
+        restaurantServiceBtn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         checkinoutBtn = new javax.swing.JButton();
@@ -40,14 +41,14 @@ public class MainFrame_Staff extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
 
-        serviceBtn.setText("룸");
-        serviceBtn.addActionListener(new java.awt.event.ActionListener() {
+        roomServiceBtn.setText("룸");
+        roomServiceBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                serviceBtnActionPerformed(evt);
+                roomServiceBtnActionPerformed(evt);
             }
         });
 
-        serviceBtn1.setText("식당");
+        restaurantServiceBtn.setText("식당");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -55,20 +56,20 @@ public class MainFrame_Staff extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(serviceBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(roomServiceBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(serviceBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(restaurantServiceBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addComponent(serviceBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(roomServiceBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addComponent(serviceBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(restaurantServiceBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26))
         );
 
@@ -191,9 +192,18 @@ public class MainFrame_Staff extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_logoutBtnActionPerformed
 
-    private void serviceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceBtnActionPerformed
+    private void roomServiceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomServiceBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_serviceBtnActionPerformed
+        // 룸 서비스 버튼 눌렀을 때
+        int result = JOptionPane.showConfirmDialog(this, "룸 서비스 페이지로 이동 하시겠습니까?", "일반 직원 페이지로 이동", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            // 사용자가 "예"를 선택하면
+            this.dispose();
+            Service_RoomFrame rframe = new Service_RoomFrame("staff");  // 사용자 유형 전달
+            rframe.setVisible(true);
+        }
+    }//GEN-LAST:event_roomServiceBtnActionPerformed
 
     private void checkinoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkinoutBtnActionPerformed
         // TODO add your handling code here:
@@ -202,7 +212,14 @@ public class MainFrame_Staff extends javax.swing.JFrame {
     private void checkinoutBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkinoutBtn1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_checkinoutBtn1ActionPerformed
+    public static void main(String args[]) {
 
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new MainFrame_Staff().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton checkinoutBtn;
@@ -215,7 +232,7 @@ public class MainFrame_Staff extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JButton logoutBtn;
     private javax.swing.JButton reservationBtn;
-    private javax.swing.JButton serviceBtn;
-    private javax.swing.JButton serviceBtn1;
+    private javax.swing.JButton restaurantServiceBtn;
+    private javax.swing.JButton roomServiceBtn;
     // End of variables declaration//GEN-END:variables
 }

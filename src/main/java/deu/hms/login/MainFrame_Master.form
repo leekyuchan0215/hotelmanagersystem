@@ -136,9 +136,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="serviceBtn" min="-2" pref="59" max="-2" attributes="0"/>
+                      <Component id="roomServiceBtn" min="-2" pref="59" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="serviceBtn1" pref="61" max="32767" attributes="0"/>
+                      <Component id="restaurantserviceBtn" pref="61" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -148,8 +148,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="serviceBtn" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
-                          <Component id="serviceBtn1" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
+                          <Component id="roomServiceBtn" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
+                          <Component id="restaurantserviceBtn" alignment="3" min="-2" pref="43" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -157,18 +157,21 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="serviceBtn">
+            <Component class="javax.swing.JButton" name="roomServiceBtn">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#xb8f8;"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="serviceBtnActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="roomServiceBtnActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="serviceBtn1">
+            <Component class="javax.swing.JButton" name="restaurantserviceBtn">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#xc2dd;&#xb2f9;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="restaurantserviceBtnActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
