@@ -265,7 +265,7 @@ public class MainFrame_Master extends javax.swing.JFrame {
 
         if (result == JOptionPane.YES_OPTION) {
             //사용자가 "예"를 선택하면
-            this.dispose();
+            //this.dispose();
             ManagementFrame managementFrame = new ManagementFrame();
             managementFrame.setVisible(true);  // 관리 페이지로 이동 
         }
