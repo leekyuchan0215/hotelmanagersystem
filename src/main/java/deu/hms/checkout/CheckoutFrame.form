@@ -161,7 +161,7 @@
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="2">
             <StringItem index="0" value="&#xce74;&#xb4dc;"/>
-            <StringItem index="1" value="&#xd604;&#xae08;"/>
+            <StringItem index="1" value="&#xd604;&#xc7a5; &#xacb0;&#xc81c;"/>
           </StringArray>
         </Property>
       </Properties>
