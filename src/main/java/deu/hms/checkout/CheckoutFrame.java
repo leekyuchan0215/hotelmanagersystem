@@ -13,13 +13,20 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import deu.hms.checkIn.Customer;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.File;
+import java.io.IOException;
 
 
 public class CheckoutFrame extends javax.swing.JFrame {
     
     private LocalDateTime checkOutDateTime;
     private int extraFee = 0; // 추가 요금
-    private int totalAmount = 100000; // 기본 요금
+    private int totalAmount = 0; // 총 금액, 기본 값 제거  
+    private Customer currentCustomer; // 현재 고객 정보를 저장하는 전역 변수
  
     public CheckoutFrame() {
         initComponents();
@@ -34,8 +41,10 @@ public class CheckoutFrame extends javax.swing.JFrame {
 }
     
 private void saveFeedbackToFile(String feedback) {
-    String filePath = "feedback.txt"; // 저장할 파일 경로
-    try (FileWriter writer = new FileWriter(filePath, true)) { // true로 파일에 내용 추가
+    // 저장할 파일 경로 업데이트
+    String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\feedback_list.txt";
+    
+    try (FileWriter writer = new FileWriter(filePath, true)) { // append 모드로 파일 열기
         String contentToSave = String.format("피드백 시간: %s\n%s\n\n", 
                                              LocalDateTime.now().toString(), feedback);
         writer.write(contentToSave); // 파일에 피드백 내용 저장
@@ -44,6 +53,20 @@ private void saveFeedbackToFile(String feedback) {
         JOptionPane.showMessageDialog(this, "파일 저장 중 오류 발생: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
     }
 }
+private boolean isCheckedOut(String nameOrID) {
+    try (BufferedReader reader = new BufferedReader(new FileReader("checked_out_customers.txt"))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (line.contains("예약 번호: " + nameOrID) || line.contains("고객 이름: " + nameOrID)) {
+                return true; // 체크아웃된 고객 발견
+            }
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "체크아웃 정보를 읽는 중 오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+    }
+    return false; // 체크아웃되지 않은 고객
+}
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -96,7 +119,7 @@ private void saveFeedbackToFile(String feedback) {
 
         PaymentLabel.setText("결제 유형 선택 :");
 
-        ChooseComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "카드", "현금" }));
+        ChooseComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "카드", "현장 결제" }));
         ChooseComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ChooseComboBoxActionPerformed(evt);
@@ -202,105 +225,143 @@ private void saveFeedbackToFile(String feedback) {
     }//GEN-LAST:event_idFieldActionPerformed
 
     private void RoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RoomButtonActionPerformed
-       String nameOrID = idField.getText().trim();
+      String nameOrID = idField.getText().trim();
 
-        if (nameOrID.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "이름 또는 고유 번호를 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // 체크인된 고객 정보 검색
-        Customer customer = findCheckInCustomer(nameOrID);
-
-        if (customer != null) {
-            checkOutDateTime = LocalDateTime.now(); // 현재 시간 저장
-            LocalTime checkOutLimit = LocalTime.of(11, 0); // 기준 체크아웃 시간
-            LocalTime actualCheckOutTime = checkOutDateTime.toLocalTime();
-
-            extraFee = actualCheckOutTime.isAfter(checkOutLimit) ? 20000 : 0;
-            totalAmount = customer.getPaymentAmount(); // 기본 결제 금액
-
-            String roomInfo = String.format(
-                    "이름: %s\n객실: %s\n기본 요금: %d원\n추가 요금: %d원\n총 금액: %d원",
-                    customer.getName(), customer.getRoomNumber(), totalAmount, extraFee, totalAmount + extraFee
-            );
-            RoomArea.setText(roomInfo);
-        } else {
-            JOptionPane.showMessageDialog(this, "해당 고객의 체크인 정보를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
-        }
+    if (nameOrID.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "이름 또는 고유 번호를 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
+        return;
     }
 
-    private Customer findCheckInCustomer(String nameOrID) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("checked_in_customers.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // 저장된 데이터: 고객 이름: ..., 예약 번호: ..., 객실 번호: ...
-                if (line.contains("고객 이름:") && line.contains("예약 번호:") && line.contains("객실 번호:")) {
-                    String[] parts = line.split(", ");
-                    String name = parts[0].split(": ")[1].trim(); // "고객 이름: 홍길동" -> "홍길동"
-                    String reservationId = parts[1].split(": ")[1].trim(); // "예약 번호: 12345" -> "12345"
-                    String roomNumber = parts[2].split(": ")[1].trim(); // "객실 번호: 101호" -> "101호"
+    // 체크아웃된 고객인지 확인
+    if (isCheckedOut(nameOrID)) {
+        JOptionPane.showMessageDialog(this, "해당 고객은 이미 체크아웃되었습니다.", "오류", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-                    // 입력값(고유번호 또는 이름)과 비교
-                    if (reservationId.equalsIgnoreCase(nameOrID) || name.equalsIgnoreCase(nameOrID)) {
-                        return new Customer(name, reservationId, roomNumber, 100000); // 기본 결제 금액
-                    }
+    // 체크인된 고객 정보 검색
+    currentCustomer = findCheckInCustomer(nameOrID);
+
+    if (currentCustomer != null) {
+        checkOutDateTime = LocalDateTime.now(); // 현재 시간 저장
+        LocalTime checkOutLimit = LocalTime.of(01, 0); // 기준 체크아웃 시간
+        LocalTime actualCheckOutTime = checkOutDateTime.toLocalTime();
+
+        // 추가 요금 계산
+        extraFee = actualCheckOutTime.isAfter(checkOutLimit) ? 20000 : 0;
+        totalAmount = currentCustomer.getPaymentAmount() + extraFee; // 체크인 요금 + 추가 요금
+
+        String roomInfo = String.format(
+                "이름: %s\n객실: %s\n기본 요금: %d원\n추가 요금: %d원\n총 금액: %d원",
+                currentCustomer.getName(), currentCustomer.getRoomNumber(),
+                currentCustomer.getPaymentAmount(), extraFee, totalAmount
+        );
+        RoomArea.setText(roomInfo);
+    } else {
+        JOptionPane.showMessageDialog(this, "해당 고객의 체크인 정보를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+    }
+}
+    
+    private Customer findCheckInCustomer(String nameOrID) {
+    try (BufferedReader reader = new BufferedReader(new FileReader("checked_in_customers.txt"))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            // 데이터 파싱: 고객 이름, 고유 번호, 객실 번호, 요금을 분리
+            if (line.contains("고객 이름:") && line.contains("예약 번호:") && line.contains("객실 요금:")) {
+                String[] parts = line.split(", ");
+                String name = parts[0].split(": ")[1].trim(); // "고객 이름: 홍길동" -> "홍길동"
+                String reservationId = parts[1].split(": ")[1].trim(); // "예약 번호: 12345" -> "12345"
+                String roomNumber = parts[2].split(": ")[1].trim(); // "객실 번호: 101호" -> "101호"
+                int paymentAmount = Integer.parseInt(parts[3].split(": ")[1].replace("원", "").trim()); // "객실 요금: 100000원" -> 100000
+
+                // 입력값(고유번호 또는 이름)과 비교
+                if (reservationId.equalsIgnoreCase(nameOrID) || name.equalsIgnoreCase(nameOrID)) {
+                    return new Customer(name, reservationId, roomNumber, paymentAmount); // 객실 요금 포함
                 }
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "체크인 정보를 읽는 중 오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
         }
-        return null; // 일치하는 고객 정보가 없을 경우
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "체크인 정보를 읽는 중 오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+    }
+    return null; // 일치하는 고객 정보가 없을 경우
     }//GEN-LAST:event_RoomButtonActionPerformed
 
     private void CheckOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckOutButtonActionPerformed
-        // TODO add your handling code here:
-        // 체크아웃 처리 코드
-        if (checkOutDateTime == null) {
-            JOptionPane.showMessageDialog(this, "먼저 객실 정보를 불러오세요.", "오류", JOptionPane.WARNING_MESSAGE);
-            return;
+     if (checkOutDateTime == null || currentCustomer == null) {
+        JOptionPane.showMessageDialog(this, "먼저 객실 정보를 불러오세요.", "오류", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    String paymentType = (String) ChooseComboBox.getSelectedItem();
+    String feedback = FeedbackArea.getText().trim();
+    String roomNumber = currentCustomer.getRoomNumber();
+    String customerNameOrID = idField.getText().trim();
+
+    // 체크아웃 완료 메시지
+    String message = String.format(
+        "체크아웃 완료!\n결제 방식: %s\n추가 요금: %d원\n총 결제 금액: %d원",
+        paymentType, extraFee, (totalAmount + extraFee)
+    );
+    JOptionPane.showMessageDialog(this, message, "체크아웃", JOptionPane.INFORMATION_MESSAGE);
+
+    // 체크아웃 고객 기록
+    saveCheckedOutCustomer(currentCustomer);
+
+    // 체크인 고객 목록에서 제거
+    removeCheckedInCustomer(currentCustomer);
+
+    // 피드백 저장
+    saveFeedbackToFile("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\feedback_list.txt",
+            feedback, roomNumber, customerNameOrID);
+
+    resetFields();
+}
+    private void saveCheckedOutCustomer(Customer customer) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_out_customers.txt", true))) {
+        writer.write("고객 이름: " + customer.getName()
+                + ", 예약 번호: " + customer.getReservationId()
+                + ", 객실 번호: " + customer.getRoomNumber());
+        writer.newLine();
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "체크아웃 정보를 저장하는 중 오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+    }
+}
+    private void removeCheckedInCustomer(Customer customer) {
+    try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt"));
+         BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\temp_checked_in_customers.txt"))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (!line.contains("예약 번호: " + customer.getReservationId())) {
+                writer.write(line);
+                writer.newLine();
+            }
         }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "체크인 고객 목록 업데이트 중 오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+    }
 
-        // 결제 방식, 피드백, 객실 번호 및 고객 정보 가져오기
-        String paymentType = (String) ChooseComboBox.getSelectedItem();
-        String feedback = FeedbackArea.getText().trim();
-        String roomNumber = "101호"; // 예시, 실제 로직에 따라 설정 가능   ///// 이거 수
-        String customerNameOrID = idField.getText().trim(); // 고객 이름 또는 ID
+    // 기존 파일을 새로운 파일로 대체
+    new File("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\temp_checked_in_customers.txt")
+        .renameTo(new File("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt"));
+}
 
-        // 체크아웃 완료 메시지 생성
-        String message = String.format(
-            "체크아웃 완료!\n결제 방식: %s\n추가 요금: %d원\n총 결제 금액: %d원",
-            paymentType, extraFee, (totalAmount + extraFee), feedback.isEmpty() ? "없음" : feedback
-        );
-        JOptionPane.showMessageDialog(this, message, "체크아웃", JOptionPane.INFORMATION_MESSAGE);
-
-        // 피드백 내용을 파일로 저장
-        String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\feedback.txt";
-        saveFeedbackToFile(filePath, feedback, roomNumber, customerNameOrID);
-
-        resetFields();
-        }
-
-        // 파일에 피드백 저장하는 메서드
         private void saveFeedbackToFile(String filePath, String feedback, String roomNumber, String customerNameOrID) {
-            // 피드백이 비어 있으면 저장하지 않음
-            if (feedback.isEmpty()) {
-                return; // 메서드 종료
-            }
-            try {
-                FileWriter writer = new FileWriter(filePath, true); // append 모드로 파일 열기
-                writer.write("=== 고객 피드백 ===\n");
-                writer.write("시간: " + LocalDateTime.now() + "\n");
-                writer.write("객실 번호: " + roomNumber + "\n");
-                writer.write("고객 이름/ID: " + customerNameOrID + "\n");
-                writer.write("피드백: " + (feedback.isEmpty() ? "없음" : feedback) + "\n");
-                writer.write("\n--------------------\n\n");
-                writer.close();
-                JOptionPane.showMessageDialog(this, "피드백이 성공적으로 저장되었습니다!", "저장 성공", JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "피드백 저장 중 오류가 발생했습니다.", "저장 오류", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-            }
+    if (feedback.isEmpty()) {
+        return; // 피드백이 없으면 저장하지 않음
+    }
+    try {
+        FileWriter writer = new FileWriter(filePath, true); // append 모드로 파일 열기
+        writer.write("=== 고객 피드백 ===\n");
+        writer.write("시간: " + LocalDateTime.now() + "\n");
+        writer.write("객실 번호: " + roomNumber + "\n");
+        writer.write("고객 이름/ID: " + customerNameOrID + "\n");
+        writer.write("피드백: " + feedback + "\n");
+        writer.write("\n--------------------\n\n");
+        writer.close();
+        JOptionPane.showMessageDialog(this, "피드백이 성공적으로 저장되었습니다!", "저장 성공", JOptionPane.INFORMATION_MESSAGE);
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "피드백 저장 중 오류가 발생했습니다.", "저장 오류", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
     }//GEN-LAST:event_CheckOutButtonActionPerformed
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed

@@ -408,6 +408,8 @@ public class ReservationGUI extends javax.swing.JFrame {
         String phoneNum = phoneNumField.getText();
         int floor = Integer.parseInt(floorCom.getSelectedItem().toString().substring(0, 1));
         int room = Integer.parseInt(roomCom.getSelectedItem().toString().replaceAll("[^0-9]", ""));
+        Map<Integer, String[]> floorData = loadRoomData();
+        String[] roomInfo = floorData.get(floor); 
         // 체크인 날짜 및 체크아웃 날짜
         String checkInYear = checkInY.getSelectedItem().toString();
         String checkInMonth = checkInM.getSelectedItem().toString();
