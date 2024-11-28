@@ -369,10 +369,7 @@ public class ReservationGUI extends javax.swing.JFrame {
 
     // 층별 객실 정보 읽기
      Map<Integer, String[]> floorData = loadRoomData();
-        if (!floorData.containsKey(floor)) {
-            JOptionPane.showMessageDialog(this, "해당 층의 정보를 찾을 수 없습니다.");
-            return;
-        }
+
 
     // 해당 층의 예약된 방 번호 확인
         Set<Integer> reservedRooms = new HashSet<>();
