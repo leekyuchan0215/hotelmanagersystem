@@ -28,7 +28,7 @@ public class Service_RoomFrame extends javax.swing.JFrame {
         reservationDialog = new javax.swing.JDialog();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        reservationTable = new javax.swing.JTable();
         jLabel17 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
@@ -66,9 +66,9 @@ public class Service_RoomFrame extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         backBtn = new javax.swing.JButton();
         resetBtn = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        roomComboBox = new javax.swing.JComboBox<>();
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        reservationTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -79,7 +79,7 @@ public class Service_RoomFrame extends javax.swing.JFrame {
                 "메뉴", "가격", "수량"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(reservationTable);
 
         jPanel5.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -248,7 +248,7 @@ public class Service_RoomFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("맑은 고딕", 1, 24)); // NOI18N
-        jLabel1.setText("룸서비스 예약");
+        jLabel1.setText("룸서비스 이용");
 
         jLabel2.setFont(new java.awt.Font("맑은 고딕", 0, 18)); // NOI18N
         jLabel2.setText("호수");
@@ -390,7 +390,7 @@ public class Service_RoomFrame extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "101 ", "102 ", "103 ", "104 ", "105", "201 ", "202 ", "203 ", "204 ", "205", "301 ", "302 ", "303 ", "304 ", "305", "401 ", "402 ", "403 ", "404 ", "405", "501 ", "502 ", "503 ", "504 ", "505", "601 ", "602 ", "603 ", "604 ", "605", "701 ", "702 ", "703 ", "704 ", "705", "801 ", "802 ", "803 ", "804 ", "805", "901 ", "902 ", "903 ", "904 ", "905", "1001 ", "1002 ", "1003 ", "1004 ", "1005", "1101 ", "1102 ", "1103 ", "1104 ", "1105", "1201 ", "1202 ", "1203 ", "1204 ", "1205", "1301 ", "1302 ", "1303 ", "1304 ", "1305", "1401 ", "1402 ", "1403 ", "1404 ", "1405", "1501 ", "1502 ", "1503", "1504 ", "1505", "1601 ", "1602 ", "1603 ", "1604 ", "1605", "1701 ", "1702 ", "1703 ", "1704 ", "1705", "1801 ", "1802 ", "1803 ", "1804 ", "1805", "1901 ", "1902 ", "1903 ", "1904 ", "1905", "2001 ", "2002 ", "2003 ", "2004 ", "2005" }));
+        roomComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "101 ", "102 ", "103 ", "104 ", "105", "201 ", "202 ", "203 ", "204 ", "205", "301 ", "302 ", "303 ", "304 ", "305", "401 ", "402 ", "403 ", "404 ", "405", "501 ", "502 ", "503 ", "504 ", "505", "601 ", "602 ", "603 ", "604 ", "605", "701 ", "702 ", "703 ", "704 ", "705", "801 ", "802 ", "803 ", "804 ", "805", "901 ", "902 ", "903 ", "904 ", "905", "1001 ", "1002 ", "1003 ", "1004 ", "1005", "1101 ", "1102 ", "1103 ", "1104 ", "1105", "1201 ", "1202 ", "1203 ", "1204 ", "1205", "1301 ", "1302 ", "1303 ", "1304 ", "1305", "1401 ", "1402 ", "1403 ", "1404 ", "1405", "1501 ", "1502 ", "1503", "1504 ", "1505", "1601 ", "1602 ", "1603 ", "1604 ", "1605", "1701 ", "1702 ", "1703 ", "1704 ", "1705", "1801 ", "1802 ", "1803 ", "1804 ", "1805", "1901 ", "1902 ", "1903 ", "1904 ", "1905", "2001 ", "2002 ", "2003 ", "2004 ", "2005" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -420,7 +420,7 @@ public class Service_RoomFrame extends javax.swing.JFrame {
                                 .addGap(70, 70, 70)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(95, 95, 95)
                                 .addComponent(jLabel7)))
@@ -448,7 +448,7 @@ public class Service_RoomFrame extends javax.swing.JFrame {
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel2)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(26, 26, 26)
                         .addComponent(jLabel7))
                     .addComponent(jLabel8))
@@ -482,7 +482,7 @@ public class Service_RoomFrame extends javax.swing.JFrame {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(","); // ','로 분리
-                if (data.length >= 3) { // 두 번째와 세 번째 값 확인
+                if (data.length >= 3 && "룸서비스".equals(data[0])) { // 첫 번째 값이 "룸서비스"인지 확인
                     String menu = data[1]; // 두 번째 값
                     String price = data[2]; // 세 번째 값
                     model.addRow(new Object[]{menu, price}); // 테이블에 추가
@@ -492,8 +492,9 @@ public class Service_RoomFrame extends javax.swing.JFrame {
             e.printStackTrace(); // 파일 읽기 오류 처리
         }
     }
+
     private void priceTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceTextActionPerformed
-        // TODO add your handling code here:        
+        // TODO add your handling code here:     
     }//GEN-LAST:event_priceTextActionPerformed
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
@@ -545,39 +546,40 @@ public class Service_RoomFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void minusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minusBtnActionPerformed
-        // TODO add your handling code here:
-        minusBtn.addActionListener(e -> {
-            int selectedRow = orderListTable.getSelectedRow();  // 선택된 행의 인덱스 가져오기
+        // 선택된 행의 인덱스를 가져오기
+        int selectedRow = orderListTable.getSelectedRow();
 
-            /*  if (selectedRow == -1) { // 선택된 행이 없으면 -1 반환
-                JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요!", "오류", JOptionPane.ERROR_MESSAGE);
-                return;
-            }*/
-            // JTable의 모델 가져오기
-            DefaultTableModel model = (DefaultTableModel) orderListTable.getModel();
+        // 선택된 행이 없으면 경고 메시지 표시 후 종료
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요!", "오류", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-            // 3번째 열 (수량) 값 가져오기 (인덱스는 0부터 시작하므로 열 인덱스는 2)
-            int quantity = (int) model.getValueAt(selectedRow, 2);
+        // JTable의 모델 가져오기
+        DefaultTableModel model = (DefaultTableModel) orderListTable.getModel();
 
-            if (quantity == 1) {
-                // 수량이 1이면 행 삭제
-                model.removeRow(selectedRow);
-            } else if (quantity > 1) {
-                // 수량이 2 이상이면 1 감소
-                model.setValueAt(quantity - 1, selectedRow, 2);
-            }
-            // 총 금액 계산하여 priceText에 설정
-            int totalprice = 0;
-            for (int i = 0; i < orderListTable.getRowCount(); i++) {
-                String money = (String) orderListTable.getValueAt(i, 1);  // orderTableList에 2번째 열 값 money에 저장
-                int count = (int) orderListTable.getValueAt(i, 2);  // 수량 값 가져오기
+        // 3번째 열 (수량) 값 가져오기 (인덱스는 0부터 시작하므로 열 인덱스는 2)
+        int quantity = (int) model.getValueAt(selectedRow, 2);
 
-                int a = Integer.parseInt(money);   // String을 int로 변경
-                totalprice += a * count;  // 총 금액 계산
-            }
+        if (quantity == 1) {
+            // 수량이 1이면 행 삭제
+            model.removeRow(selectedRow);
+        } else if (quantity > 1) {
+            // 수량이 2 이상이면 1 감소
+            model.setValueAt(quantity - 1, selectedRow, 2);
+        }
 
-            priceText.setText(String.valueOf(totalprice)); // 계산된 총 금액을 priceText에 설정
-        });
+        // 총 금액 계산하여 priceText에 설정
+        int totalprice = 0;
+        for (int i = 0; i < orderListTable.getRowCount(); i++) {
+            String money = (String) orderListTable.getValueAt(i, 1);  // orderTableList에 2번째 열 값 money에 저장
+            int count = (int) orderListTable.getValueAt(i, 2);  // 수량 값 가져오기
+
+            int a = Integer.parseInt(money);   // String을 int로 변경
+            totalprice += a * count;  // 총 금액 계산
+        }
+
+        priceText.setText(String.valueOf(totalprice)); // 계산된 총 금액을 priceText에 설정
     }//GEN-LAST:event_minusBtnActionPerformed
 
     private void howPayComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_howPayComboBoxActionPerformed
@@ -609,6 +611,7 @@ public class Service_RoomFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) orderListTable.getModel();
         model.setRowCount(0);
+        priceText.setText("0");
     }//GEN-LAST:event_resetBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
@@ -628,12 +631,32 @@ public class Service_RoomFrame extends javax.swing.JFrame {
 
     private void reservationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationBtnActionPerformed
         // TODO add your handling code here:
+
+        // 다이얼로그 설정
         reservationDialog.setSize(700, 500);  // 다이얼로그 크기 설정
         reservationDialog.setLocationRelativeTo(this);  // 부모 컴포넌트를 기준으로 중앙에 배치
-        reservationDialog.setTitle("서비스 수정");  // 다이얼로그 제목 설정
+        reservationDialog.setTitle("룸 서비스 예약");  // 다이얼로그 제목 설정
         reservationDialog.setModal(false);  // 비모달로 설정 (부모 창과 상호작용 가능)
         reservationDialog.setVisible(true);  // 다이얼로그 표시
-        reservationDialog.toFront();  // 다이얼로그를 화면 최상위로 가져오기F
+        reservationDialog.toFront();  // 다이얼로그를 화면 최상위로 가져오기
+
+        // orderListTable의 모델 가져오기
+        DefaultTableModel orderModel = (DefaultTableModel) orderListTable.getModel();
+
+        // reservationTable의 모델 가져오기
+        DefaultTableModel reservationModel = (DefaultTableModel) reservationTable.getModel();
+
+        // 기존 데이터 제거 (필요한 경우)
+        reservationModel.setRowCount(0);
+
+        // orderListTable의 데이터를 reservationTable로 복사
+        for (int i = 0; i < orderModel.getRowCount(); i++) {
+            Object[] rowData = new Object[orderModel.getColumnCount()];
+            for (int j = 0; j < orderModel.getColumnCount(); j++) {
+                rowData[j] = orderModel.getValueAt(i, j);
+            }
+            reservationModel.addRow(rowData);
+        }
     }//GEN-LAST:event_reservationBtnActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
@@ -655,7 +678,6 @@ public class Service_RoomFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> howPayComboBox;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JComboBox<String> jComboBox7;
     private javax.swing.JComboBox<String> jComboBox8;
@@ -682,7 +704,6 @@ public class Service_RoomFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTable menuListTable;
     private javax.swing.JButton minusBtn;
@@ -691,6 +712,8 @@ public class Service_RoomFrame extends javax.swing.JFrame {
     private javax.swing.JTextField priceText;
     private javax.swing.JButton reservationBtn;
     private javax.swing.JDialog reservationDialog;
+    private javax.swing.JTable reservationTable;
     private javax.swing.JButton resetBtn;
+    private javax.swing.JComboBox<String> roomComboBox;
     // End of variables declaration//GEN-END:variables
 }
