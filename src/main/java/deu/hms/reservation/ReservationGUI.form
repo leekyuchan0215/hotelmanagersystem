@@ -7,6 +7,8 @@
         <Property name="text" type="java.lang.String" value="jButton2"/>
       </Properties>
     </Component>
+    <Component class="javax.swing.ButtonGroup" name="paymentGroup">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -100,9 +102,9 @@
                               <Component id="updateReservation" min="-2" pref="114" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
-                              <Component id="payRadiobutton" min="-2" max="-2" attributes="0"/>
+                              <Component id="payRadioButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cardRadionbutton" min="-2" max="-2" attributes="0"/>
+                              <Component id="cardRadioButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="CreditCardButton" max="32767" attributes="0"/>
                           </Group>
@@ -155,8 +157,8 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="reserveRegister" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="cardRadionbutton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="payRadiobutton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cardRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="payRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="CreditCardButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -348,12 +350,15 @@
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JRadioButton" name="cardRadionbutton">
+    <Component class="javax.swing.JRadioButton" name="cardRadioButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#xce74;&#xb4dc; &#xc120;&#xacb0;&#xc81c;"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="paymentGroup.add(payRadioButton);&#xa;paymentGroup.add(cardRadioButton);"/>
+      </AuxValues>
     </Component>
-    <Component class="javax.swing.JRadioButton" name="payRadiobutton">
+    <Component class="javax.swing.JRadioButton" name="payRadioButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#xd604;&#xc7a5;&#xacb0;&#xc81c;"/>
       </Properties>
