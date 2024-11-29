@@ -34,18 +34,6 @@
               <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="uniqueID" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="uniqueIDField" min="-2" pref="101" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="updateReservation" min="-2" pref="114" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="deleteReservation" min="-2" pref="121" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="checkReservationInfo" min="-2" pref="127" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="reserveRegister" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="phoneNum" min="-2" max="-2" attributes="0"/>
@@ -102,6 +90,33 @@
                       </Group>
                   </Group>
                   <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="uniqueID" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="uniqueIDField" min="-2" pref="101" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="updateReservation" min="-2" pref="114" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="payRadiobutton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="cardRadionbutton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="CreditCardButton" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="reserveRegister" alignment="1" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="deleteReservation" min="-2" pref="121" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="checkReservationInfo" min="-2" pref="127" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
               </Group>
               <EmptySpace pref="34" max="32767" attributes="0"/>
           </Group>
@@ -138,7 +153,12 @@
                   <Component id="roomCom" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="reserveRegister" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="reserveRegister" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cardRadionbutton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="payRadiobutton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="CreditCardButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="uniqueID" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -327,6 +347,21 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="cardRadionbutton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#xce74;&#xb4dc; &#xc120;&#xacb0;&#xc81c;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="payRadiobutton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#xd604;&#xc7a5;&#xacb0;&#xc81c;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="CreditCardButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#xce74;&#xb4dc;&#xb4f1;&#xb85d;"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

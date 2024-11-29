@@ -82,6 +82,9 @@ public class ReservationGUI extends javax.swing.JFrame {
         checkOutY = new javax.swing.JComboBox<>();
         checkOutM = new javax.swing.JComboBox<>();
         checkOutD = new javax.swing.JComboBox<>();
+        cardRadionbutton = new javax.swing.JRadioButton();
+        payRadiobutton = new javax.swing.JRadioButton();
+        CreditCardButton = new javax.swing.JButton();
 
         jButton2.setText("jButton2");
 
@@ -125,6 +128,12 @@ public class ReservationGUI extends javax.swing.JFrame {
 
         checkOutTime.setText("체크아웃 날짜 ");
 
+        cardRadionbutton.setText("카드 선결제");
+
+        payRadiobutton.setText("현장결제");
+
+        CreditCardButton.setText("카드등록");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,17 +141,6 @@ public class ReservationGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(uniqueID)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(uniqueIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(updateReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(checkReservationInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(reserveRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
@@ -185,7 +183,28 @@ public class ReservationGUI extends javax.swing.JFrame {
                                 .addComponent(room)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(roomCom, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(uniqueID)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(uniqueIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(updateReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(payRadiobutton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cardRadionbutton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(CreditCardButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(reserveRegister, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(deleteReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(checkReservationInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(34, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -216,7 +235,11 @@ public class ReservationGUI extends javax.swing.JFrame {
                     .addComponent(room)
                     .addComponent(roomCom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(reserveRegister)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(reserveRegister)
+                    .addComponent(cardRadionbutton)
+                    .addComponent(payRadiobutton)
+                    .addComponent(CreditCardButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(uniqueID)
@@ -235,8 +258,10 @@ public class ReservationGUI extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton CreditCardButton;
     private javax.swing.JLabel Name;
     private javax.swing.JTextField NameField;
+    private javax.swing.JRadioButton cardRadionbutton;
     private javax.swing.JComboBox<String> checkInD;
     private javax.swing.JComboBox<String> checkInM;
     private javax.swing.JLabel checkInTime;
@@ -254,6 +279,7 @@ public class ReservationGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel numPeople;
     private javax.swing.JTextField numPeopleField;
+    private javax.swing.JRadioButton payRadiobutton;
     private javax.swing.JLabel phoneNum;
     private javax.swing.JTextField phoneNumField;
     private javax.swing.JButton reserveRegister;
@@ -424,6 +450,17 @@ public class ReservationGUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "모든 정보를 입력해 주세요.");
             return;
         }
+        String paymentType = "현장 결제"; // 기본값
+
+    // payRadioButton 또는 cardRadioButton이 선택되었는지 확인
+        if (payRadioButton.isSelected() && cardRadioButton.isSelected()) {
+            JOptionPane.showMessageDialog(this, "결제 유형은 하나만 선택 가능합니다.");
+            return; // 둘 다 선택되면 진행하지 않음
+        } else if (cardRadioButton.isSelected()) {
+            paymentType = "카드 선결제";
+        } else if (payRadioButton.isSelected()) {
+            paymentType = "현장 결제";
+        }
         
         // 고유 번호 생성 (예시로 UUID 사용)
          String uniqueID = String.format("%03d", new Random().nextInt(1000));
@@ -443,7 +480,8 @@ public class ReservationGUI extends javax.swing.JFrame {
             "층수: " + floor + "\n" +  // 층수
             "호수: " + room + "\n"+  // 호수
             "체크인 시간: " + checkInTime + "\n" + // 체크인 시간
-            "체크아웃 시간: " + checkOutTime + "\n\n");  // 체크아웃 시간
+            "체크아웃 시간: " + checkOutTime + "\n" +  // 체크아웃 시간
+            "결제 유형: " + paymentType + "\n\n");
 
         
         JOptionPane.showMessageDialog(this, "예약이 완료되었습니다.");
@@ -490,7 +528,8 @@ public class ReservationGUI extends javax.swing.JFrame {
                 "층수: " + reservation.getFloor() + "\n" +
                 "호수: " + reservation.getRoom() + "\n" +
                 "체크인 시간: " + reservation.getcheckInTime() + "\n" +
-                "체크아웃 시간: " + reservation.getcheckOutTime() + "\n\n");
+                "체크아웃 시간: " + reservation.getcheckOutTime() + "\n" +
+                "결제 유형: " + reservation.getPaymentType() + "\n");
 
         JOptionPane.showMessageDialog(this, "예약이 수정되었습니다.");
     }
