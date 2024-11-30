@@ -135,6 +135,8 @@ public class ReservationGUI extends javax.swing.JFrame {
 
         payRadioButton.setText("현장결제");
 
+        // 이벤트 리스너 추가 코드
+        CreditCardButton.addActionListener(e -> openCreditCardGUI());
         CreditCardButton.setText("카드등록");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -295,6 +297,13 @@ public class ReservationGUI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     
+
+    private void openCreditCardGUI() {
+    // CreditCardGUI 창 열기
+        java.awt.EventQueue.invokeLater(() -> {
+            new CreditCardGUI().setVisible(true); // CreditCardGUI 인스턴스 생성 및 표시
+        });
+    }
 
     private void updateDayOptions(int year, int month) {
     // 월별 최대 일수 계산
@@ -457,19 +466,29 @@ public class ReservationGUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "모든 정보를 입력해 주세요.");
             return;
         }
-        String PaymentType = "현장 결제"; // 기본값
+        String PaymentType = ""; // 결제 유형 초기화
 
     // payRadioButton 또는 cardRadioButton이 선택되었는지 확인
-        String paymentType = "현장 결제"; // 기본값으로 현장 결제를 설정
+
 
 // 라디오 버튼 선택 여부에 따라 결제 유형 변경
-    if (cardRadioButton.isSelected()) {
-        PaymentType = "카드 선결제";
-    } else if (payRadioButton.isSelected()) {
+        if (cardRadioButton.isSelected()) {
+            PaymentType = "카드 선결제";
+
+        // CreditCardGUI의 isCardInfoValid 값 확인
+            if (CreditCardGUI.isCardInfoValid() == 0) {
+                JOptionPane.showMessageDialog(this, "카드 등록을 해주십시오.");
+                return; // 예약 진행 중단
+            }
+        // 결제 완료 후 isCardInfoValid 값을 0으로 초기화
+            CreditCardGUI.resetCardInfoValid();
+        }
+
+    if (payRadioButton.isSelected()) {
         PaymentType = "현장 결제";
-    } else {
+    } else if (!cardRadioButton.isSelected()) {
         JOptionPane.showMessageDialog(this, "결제 유형을 선택해 주세요.");
-        return; // 결제 유형이 선택되지 않았을 경우 예약 진행 중단
+        return;
     }
         
         // 고유 번호 생성 (예시로 UUID 사용)
@@ -526,6 +545,32 @@ public class ReservationGUI extends javax.swing.JFrame {
     // 예약 날짜 업데이트
         reservation.setcheckInTime(checkInTime);
         reservation.setcheckOutTime(checkOutTime);
+
+        String PaymentType = "현장 결제"; // 기본값
+
+    // payRadioButton 또는 cardRadioButton이 선택되었는지 확인
+        if (cardRadioButton.isSelected()) {
+            PaymentType = "카드 선결제";
+
+        // CreditCardGUI의 isCardInfoValid 값 확인
+            if (CreditCardGUI.isCardInfoValid() == 0) {
+                JOptionPane.showMessageDialog(this, "카드 등록을 해주십시오.");
+                return; // 예약 진행 중단
+            }
+
+        // 결제 완료 후 isCardInfoValid 값을 0으로 초기화
+            CreditCardGUI.resetCardInfoValid();
+        } 
+    
+        if (payRadioButton.isSelected()) {
+            PaymentType = "현장 결제";
+        } else if (!cardRadioButton.isSelected()) {
+            JOptionPane.showMessageDialog(this, "결제 유형을 선택해 주세요.");
+            return; // 결제 유형 미선택 시 예약 진행 중단
+        }
+
+    // 결제 유형 업데이트
+        reservation.setPaymentType(PaymentType);
     
         saveReservationsToFile(); // 수정된 내용 저장
 
@@ -666,7 +711,7 @@ public class ReservationGUI extends javax.swing.JFrame {
 
         
 
-        public Reservation(String name, int numPeople, String phone, int floor, int room, String checkInTime, String checkOutTime, String getPaymentType) {
+        public Reservation(String name, int numPeople, String phone, int floor, int room, String checkInTime, String checkOutTime, String PaymentType) {
             this.name = name;
             this.numPeople = numPeople;
             this.phone = phone;
