@@ -367,6 +367,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&#xce74;&#xb4dc;&#xb4f1;&#xb85d;"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="// &#xc774;&#xbca4;&#xd2b8; &#xb9ac;&#xc2a4;&#xb108; &#xcd94;&#xac00; &#xcf54;&#xb4dc;&#xa;CreditCardButton.addActionListener(e -&gt; openCreditCardGUI());"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

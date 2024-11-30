@@ -6,7 +6,19 @@ import java.awt.event.KeyEvent;
 
 public class CreditCardGUI extends javax.swing.JFrame {
 
-    private int isCardInfoValid = 0;
+    private static int cardInfoValid = 0; // 카드 정보 유효 여부를 나타내는 변수
+
+    public static int isCardInfoValid() {
+        return cardInfoValid;
+    }
+
+    public static void setCardInfoValid(int value) {
+        cardInfoValid = value;
+    }
+
+    public static void resetCardInfoValid() {
+        cardInfoValid = 0;
+    }
     public CreditCardGUI() {
         initComponents();
         setUpInputValidation();
@@ -213,7 +225,7 @@ public class CreditCardGUI extends javax.swing.JFrame {
 
     private void payComActionPerformed(java.awt.event.ActionEvent evt) {
         if (isInputValid()) {
-            isCardInfoValid = 1;
+            setCardInfoValid(1);
             JOptionPane.showMessageDialog(this, "결제가 완료되었습니다.");
             dispose();
         } else {
@@ -232,9 +244,6 @@ public class CreditCardGUI extends javax.swing.JFrame {
                yyField.getText().length() == 2;
     }
 
-    public int getIsCardInfoValid() {
-        return isCardInfoValid;
-    }
 
      public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> new CreditCardGUI().setVisible(true));
