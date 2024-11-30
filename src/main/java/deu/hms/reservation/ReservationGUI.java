@@ -27,7 +27,7 @@ public class ReservationGUI extends javax.swing.JFrame {
     // 연도 설정 (현재 연도부터 5년 후까지)
         checkInY.addItem(String.valueOf(now.getYear()));
         checkOutY.addItem(String.valueOf(now.getYear()));
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= 3; i++) {
             checkInY.addItem(String.valueOf(now.getYear() + i));
             checkOutY.addItem(String.valueOf(now.getYear() + i));
         }
@@ -56,6 +56,7 @@ public class ReservationGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton2 = new javax.swing.JButton();
+        paymentGroup = new javax.swing.ButtonGroup();
         Name = new javax.swing.JLabel();
         numPeople = new javax.swing.JLabel();
         phoneNum = new javax.swing.JLabel();
@@ -82,6 +83,9 @@ public class ReservationGUI extends javax.swing.JFrame {
         checkOutY = new javax.swing.JComboBox<>();
         checkOutM = new javax.swing.JComboBox<>();
         checkOutD = new javax.swing.JComboBox<>();
+        cardRadioButton = new javax.swing.JRadioButton();
+        payRadioButton = new javax.swing.JRadioButton();
+        CreditCardButton = new javax.swing.JButton();
 
         jButton2.setText("jButton2");
 
@@ -125,6 +129,16 @@ public class ReservationGUI extends javax.swing.JFrame {
 
         checkOutTime.setText("체크아웃 날짜 ");
 
+        paymentGroup.add(payRadioButton);
+        paymentGroup.add(cardRadioButton);
+        cardRadioButton.setText("카드 선결제");
+
+        payRadioButton.setText("현장결제");
+
+        // 이벤트 리스너 추가 코드
+        CreditCardButton.addActionListener(e -> openCreditCardGUI());
+        CreditCardButton.setText("카드등록");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,17 +146,6 @@ public class ReservationGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(uniqueID)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(uniqueIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(updateReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(checkReservationInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(reserveRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
@@ -185,7 +188,28 @@ public class ReservationGUI extends javax.swing.JFrame {
                                 .addComponent(room)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(roomCom, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(uniqueID)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(uniqueIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(updateReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(payRadioButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cardRadioButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(CreditCardButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(reserveRegister, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(deleteReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(checkReservationInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(34, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -216,7 +240,11 @@ public class ReservationGUI extends javax.swing.JFrame {
                     .addComponent(room)
                     .addComponent(roomCom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(reserveRegister)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(reserveRegister)
+                    .addComponent(cardRadioButton)
+                    .addComponent(payRadioButton)
+                    .addComponent(CreditCardButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(uniqueID)
@@ -235,8 +263,10 @@ public class ReservationGUI extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton CreditCardButton;
     private javax.swing.JLabel Name;
     private javax.swing.JTextField NameField;
+    private javax.swing.JRadioButton cardRadioButton;
     private javax.swing.JComboBox<String> checkInD;
     private javax.swing.JComboBox<String> checkInM;
     private javax.swing.JLabel checkInTime;
@@ -254,6 +284,8 @@ public class ReservationGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel numPeople;
     private javax.swing.JTextField numPeopleField;
+    private javax.swing.JRadioButton payRadioButton;
+    private javax.swing.ButtonGroup paymentGroup;
     private javax.swing.JLabel phoneNum;
     private javax.swing.JTextField phoneNumField;
     private javax.swing.JButton reserveRegister;
@@ -264,6 +296,14 @@ public class ReservationGUI extends javax.swing.JFrame {
     private javax.swing.JButton updateReservation;
     // End of variables declaration//GEN-END:variables
 
+    
+
+    private void openCreditCardGUI() {
+    // CreditCardGUI 창 열기
+        java.awt.EventQueue.invokeLater(() -> {
+            new CreditCardGUI().setVisible(true); // CreditCardGUI 인스턴스 생성 및 표시
+        });
+    }
 
     private void updateDayOptions(int year, int month) {
     // 월별 최대 일수 계산
@@ -310,6 +350,7 @@ public class ReservationGUI extends javax.swing.JFrame {
     return LocalDate.of(year, month, day);
 }
 
+    
 
 
     private Map<Integer, String[]> loadRoomData() {
@@ -414,6 +455,7 @@ public class ReservationGUI extends javax.swing.JFrame {
         String checkOutYear = checkOutY.getSelectedItem().toString();
         String checkOutMonth = checkOutM.getSelectedItem().toString();
         String checkOutDay = checkOutD.getSelectedItem().toString();
+        // 라디오 버튼 초기화
 
     // 체크인 및 체크아웃 시간 결합 (년-월-일 형식으로)
         String checkInTime = checkInYear + "-" + checkInMonth + "-" + checkInDay;
@@ -424,12 +466,36 @@ public class ReservationGUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "모든 정보를 입력해 주세요.");
             return;
         }
+        String PaymentType = ""; // 결제 유형 초기화
+
+    // payRadioButton 또는 cardRadioButton이 선택되었는지 확인
+
+
+// 라디오 버튼 선택 여부에 따라 결제 유형 변경
+        if (cardRadioButton.isSelected()) {
+            PaymentType = "카드 선결제";
+
+        // CreditCardGUI의 isCardInfoValid 값 확인
+            if (CreditCardGUI.isCardInfoValid() == 0) {
+                JOptionPane.showMessageDialog(this, "카드 등록을 해주십시오.");
+                return; // 예약 진행 중단
+            }
+        // 결제 완료 후 isCardInfoValid 값을 0으로 초기화
+            CreditCardGUI.resetCardInfoValid();
+        }
+
+    if (payRadioButton.isSelected()) {
+        PaymentType = "현장 결제";
+    } else if (!cardRadioButton.isSelected()) {
+        JOptionPane.showMessageDialog(this, "결제 유형을 선택해 주세요.");
+        return;
+    }
         
         // 고유 번호 생성 (예시로 UUID 사용)
          String uniqueID = String.format("%03d", new Random().nextInt(1000));
 
         // 예약 객체 생성 및 예약 정보 추가
-        Reservation reservation = new Reservation(name, numPeople, phoneNum, floor, room, checkInTime, checkOutTime);
+        Reservation reservation = new Reservation(name, numPeople, phoneNum, floor, room, checkInTime, checkOutTime, PaymentType);
         reservations.put(uniqueID, reservation);
         
         // 예약 정보를 파일에 저장
@@ -443,7 +509,8 @@ public class ReservationGUI extends javax.swing.JFrame {
             "층수: " + floor + "\n" +  // 층수
             "호수: " + room + "\n"+  // 호수
             "체크인 시간: " + checkInTime + "\n" + // 체크인 시간
-            "체크아웃 시간: " + checkOutTime + "\n\n");  // 체크아웃 시간
+            "체크아웃 시간: " + checkOutTime + "\n" +  // 체크아웃 시간
+            "결제 유형: " + PaymentType + "\n\n");
 
         
         JOptionPane.showMessageDialog(this, "예약이 완료되었습니다.");
@@ -478,6 +545,32 @@ public class ReservationGUI extends javax.swing.JFrame {
     // 예약 날짜 업데이트
         reservation.setcheckInTime(checkInTime);
         reservation.setcheckOutTime(checkOutTime);
+
+        String PaymentType = "현장 결제"; // 기본값
+
+    // payRadioButton 또는 cardRadioButton이 선택되었는지 확인
+        if (cardRadioButton.isSelected()) {
+            PaymentType = "카드 선결제";
+
+        // CreditCardGUI의 isCardInfoValid 값 확인
+            if (CreditCardGUI.isCardInfoValid() == 0) {
+                JOptionPane.showMessageDialog(this, "카드 등록을 해주십시오.");
+                return; // 예약 진행 중단
+            }
+
+        // 결제 완료 후 isCardInfoValid 값을 0으로 초기화
+            CreditCardGUI.resetCardInfoValid();
+        } 
+    
+        if (payRadioButton.isSelected()) {
+            PaymentType = "현장 결제";
+        } else if (!cardRadioButton.isSelected()) {
+            JOptionPane.showMessageDialog(this, "결제 유형을 선택해 주세요.");
+            return; // 결제 유형 미선택 시 예약 진행 중단
+        }
+
+    // 결제 유형 업데이트
+        reservation.setPaymentType(PaymentType);
     
         saveReservationsToFile(); // 수정된 내용 저장
 
@@ -490,7 +583,8 @@ public class ReservationGUI extends javax.swing.JFrame {
                 "층수: " + reservation.getFloor() + "\n" +
                 "호수: " + reservation.getRoom() + "\n" +
                 "체크인 시간: " + reservation.getcheckInTime() + "\n" +
-                "체크아웃 시간: " + reservation.getcheckOutTime() + "\n\n");
+                "체크아웃 시간: " + reservation.getcheckOutTime() + "\n" +
+                "결제 유형: " + reservation.getPaymentType() + "\n");
 
         JOptionPane.showMessageDialog(this, "예약이 수정되었습니다.");
     }
@@ -525,7 +619,8 @@ public class ReservationGUI extends javax.swing.JFrame {
         .append("층수: ").append(reservation.getFloor()).append("\n")
         .append("호수: ").append(reservation.getRoom()).append("\n")
         .append("체크인 시간: ").append(reservation.getcheckInTime()).append("\n")
-        .append("체크아웃 시간: ").append(reservation.getcheckOutTime()).append("\n");
+        .append("체크아웃 시간: ").append(reservation.getcheckOutTime()).append("\n")
+        .append("결제유형: ").append(reservation.getPaymentType()).append("\n");
 
         displayInfo.setText(sb.toString());
     }
@@ -538,7 +633,7 @@ public class ReservationGUI extends javax.swing.JFrame {
             for (Map.Entry<String, Reservation> entry : reservations.entrySet()) {
                 Reservation res = entry.getValue();
                 writer.write(entry.getKey() + "," + res.getName() + "," + res.getNumPeople() + "," 
-                    + res.getPhone() + "," + res.getFloor() + "," + res.getRoom() + "," + res.getcheckInTime() + "," + res.getcheckOutTime());
+                    + res.getPhone() + "," + res.getFloor() + "," + res.getRoom() + "," + res.getcheckInTime() + "," + res.getcheckOutTime()+ "," + res.getPaymentType());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -553,7 +648,7 @@ public class ReservationGUI extends javax.swing.JFrame {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 8) { // 데이터 형식 확인
+                if (data.length == 9) { // 데이터 형식 확인
                     String uniqueID = data[0];
                     String name = data[1];
                     int numPeople = Integer.parseInt(data[2]);
@@ -562,8 +657,9 @@ public class ReservationGUI extends javax.swing.JFrame {
                     int room = Integer.parseInt(data[5]);
                     String checkInTime = data[6];
                     String checkOutTime = data[7];
+                    String PaymentType = data[8];
 
-                    reservations.put(uniqueID, new Reservation(name, numPeople, phone, floor, room, checkInTime, checkOutTime));
+                    reservations.put(uniqueID, new Reservation(name, numPeople, phone, floor, room, checkInTime, checkOutTime, PaymentType));
                 }
             }
         } catch (IOException e) {
@@ -611,8 +707,11 @@ public class ReservationGUI extends javax.swing.JFrame {
         private int room;
         private String checkInTime;    // 체크인 시간
         private String checkOutTime;
+        private String PaymentType;
 
-        public Reservation(String name, int numPeople, String phone, int floor, int room, String checkInTime, String checkOutTime) {
+        
+
+        public Reservation(String name, int numPeople, String phone, int floor, int room, String checkInTime, String checkOutTime, String PaymentType) {
             this.name = name;
             this.numPeople = numPeople;
             this.phone = phone;
@@ -620,8 +719,17 @@ public class ReservationGUI extends javax.swing.JFrame {
             this.room = room;
             this.checkInTime = checkInTime;
             this.checkOutTime = checkOutTime;
+            this.PaymentType = PaymentType;
+        }
+        public String getPaymentType() {
+            return PaymentType;
         }
 
+    // 결제 유형 Setter (필요 시 추가)
+        public void setPaymentType(String PaymentType) {
+            this.PaymentType = PaymentType;
+        }
+        
         public String getName() {
             return name;
         }
