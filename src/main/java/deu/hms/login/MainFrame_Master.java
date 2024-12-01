@@ -269,6 +269,7 @@ public class MainFrame_Master extends javax.swing.JFrame {
             ManagementFrame managementFrame = new ManagementFrame();
             managementFrame.setVisible(true);  // 관리 페이지로 이동 
         }
+        this.dispose();
     }//GEN-LAST:event_managementBtnActionPerformed
 
     private void roomServiceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomServiceBtnActionPerformed
