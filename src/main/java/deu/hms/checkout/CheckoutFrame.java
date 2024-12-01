@@ -19,6 +19,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.File;
 import java.io.IOException;
+import java.awt.Font;
 
 
 public class CheckoutFrame extends javax.swing.JFrame {
@@ -30,6 +31,8 @@ public class CheckoutFrame extends javax.swing.JFrame {
  
     public CheckoutFrame() {
         initComponents();
+        loadCheckInList();
+        checkInListArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
     }
     private void resetFields() {
     idField.setText(""); // ID 필드 초기화
@@ -39,8 +42,78 @@ public class CheckoutFrame extends javax.swing.JFrame {
     checkOutDateTime = null; // 체크아웃 시간 초기화
     extraFee = 0; // 추가 요금 초기화
 }
+    private void removeCustomerFromCheckInList(Customer customer) {
+    String inputFile = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt";
+    String tempFile = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\temp_checked_in_customers.txt";
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            // 현재 고객의 정보가 포함된 줄인지 확인
+            if (!line.contains("고객 이름: " + customer.getName()) &&
+                !line.contains("예약 번호: " + customer.getReservationId())) {
+                writer.write(line);
+                writer.newLine();
+            }
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "체크인 명단 업데이트 중 오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+        return;
+    }
+
+    // 기존 파일을 임시 파일로 교체
+    File originalFile = new File(inputFile);
+    File updatedFile = new File(tempFile);
+
+    if (originalFile.delete()) {
+        updatedFile.renameTo(originalFile);
+    } else {
+        JOptionPane.showMessageDialog(this, "체크인 명단 파일 업데이트 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+    }
+}
     
-private void saveFeedbackToFile(String feedback) {
+    
+    private void loadCheckInList() {
+    String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt";
+
+    File file = new File(filePath);
+
+    if (!file.exists()) {
+        checkInListArea.setText("체크인된 고객이 없습니다."); // 명단이 없을 때 초기 메시지
+        return;
+    }
+
+     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        checkInListArea.setText(""); // 기존 내용을 초기화
+        String line;
+        while ((line = reader.readLine()) != null) {
+            // 파일의 각 줄을 읽어 포맷에 맞게 추가
+            String[] parts = line.split(", "); // 파일 데이터 분리
+            if (parts.length >= 5) { // 데이터가 제대로 구성된 경우
+                String formattedLine = String.format(
+                    "고유 번호: %-10s | 이름: %-10s | 객실 번호: %-5s | 객실 요금: %-10s | 결제 방식: %-5s",
+                    parts[1].split(": ")[1].trim(), // 고유 번호
+                    parts[0].split(": ")[1].trim(), // 이름
+                    parts[2].split(": ")[1].trim(), // 객실 번호
+                    parts[3].split(": ")[1].trim(), // 객실 요금
+                    parts[4].split(": ")[1].trim()  // 결제 방식
+                );
+                checkInListArea.append(formattedLine + "\n");
+            } else {
+                checkInListArea.append("데이터 형식 오류: " + line + "\n"); // 오류 데이터 처리
+            }
+        }
+    } catch (IOException e) {
+        checkInListArea.setText("체크인 명단을 불러오는 중 오류 발생!"); // 오류 메시지
+        e.printStackTrace();
+    }
+}
+    
+    
+    private void saveFeedbackToFile(String feedback) {
     // 저장할 파일 경로 업데이트
     String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\feedback_list.txt";
     
@@ -53,7 +126,7 @@ private void saveFeedbackToFile(String feedback) {
         JOptionPane.showMessageDialog(this, "파일 저장 중 오류 발생: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
     }
 }
-private boolean isCheckedOut(String nameOrID) {
+    private boolean isCheckedOut(String nameOrID) {
     try (BufferedReader reader = new BufferedReader(new FileReader("checked_out_customers.txt"))) {
         String line;
         while ((line = reader.readLine()) != null) {
@@ -85,6 +158,10 @@ private boolean isCheckedOut(String nameOrID) {
         FeedbackArea = new javax.swing.JTextArea();
         CheckOutButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
+        refreshButton = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        checkInListArea = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
 
         idLabel.setText("이름 또는 고유 번호 입력 :");
 
@@ -119,7 +196,7 @@ private boolean isCheckedOut(String nameOrID) {
 
         PaymentLabel.setText("결제 유형 선택 :");
 
-        ChooseComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "카드", "현장 결제" }));
+        ChooseComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "카드", "현금" }));
         ChooseComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ChooseComboBoxActionPerformed(evt);
@@ -146,69 +223,98 @@ private boolean isCheckedOut(String nameOrID) {
             }
         });
 
+        refreshButton.setText("체크인 명단 새로고침");
+
+        checkInListArea.setColumns(20);
+        checkInListArea.setRows(5);
+        jScrollPane3.setViewportView(checkInListArea);
+
+        jLabel1.setText("체크인 명단 :");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(100, 100, 100)
-                .addComponent(RoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(305, 305, 305)
+                .addComponent(PaymentLabel)
+                .addGap(18, 18, 18)
+                .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 319, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(316, 316, 316)
+                                .addComponent(CheckOutButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(closeButton))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(FeedbackLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(240, 240, 240)
+                                .addComponent(idLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(311, 311, 311)
+                                .addComponent(RoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1))))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(312, 312, 312)
+                .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(293, 293, 293)
                 .addComponent(InitializationButton)
                 .addGap(16, 16, 16))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(44, 44, 44)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(idLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(idField, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                        .addGap(102, 102, 102))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addComponent(CheckOutButton)
-                        .addGap(28, 28, 28)
-                        .addComponent(closeButton)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
-                            .addComponent(FeedbackLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(PaymentLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(InitializationButton)
-                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(InitializationButton)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(refreshButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(idLabel1)
                     .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(RoomButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(PaymentLabel)
                     .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(3, 3, 3)
                 .addComponent(FeedbackLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CheckOutButton)
                     .addComponent(closeButton))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
         );
 
         pack();
@@ -243,7 +349,7 @@ private boolean isCheckedOut(String nameOrID) {
 
     if (currentCustomer != null) {
         checkOutDateTime = LocalDateTime.now(); // 현재 시간 저장
-        LocalTime checkOutLimit = LocalTime.of(01, 0); // 기준 체크아웃 시간
+        LocalTime checkOutLimit = LocalTime.of(11, 0); // 기준 체크아웃 시간
         LocalTime actualCheckOutTime = checkOutDateTime.toLocalTime();
 
         // 추가 요금 계산
@@ -286,7 +392,7 @@ private boolean isCheckedOut(String nameOrID) {
     }//GEN-LAST:event_RoomButtonActionPerformed
 
     private void CheckOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckOutButtonActionPerformed
-     if (checkOutDateTime == null || currentCustomer == null) {
+    if (checkOutDateTime == null || currentCustomer == null) {
         JOptionPane.showMessageDialog(this, "먼저 객실 정보를 불러오세요.", "오류", JOptionPane.WARNING_MESSAGE);
         return;
     }
@@ -298,16 +404,19 @@ private boolean isCheckedOut(String nameOrID) {
 
     // 체크아웃 완료 메시지
     String message = String.format(
-        "체크아웃 완료!\n결제 방식: %s\n추가 요금: %d원\n총 결제 금액: %d원",
-        paymentType, extraFee, (totalAmount + extraFee)
+    "체크아웃 완료!\n결제 방식: %s\n추가 요금: %d원\n총 결제 금액: %d원",
+    paymentType, extraFee, totalAmount
     );
     JOptionPane.showMessageDialog(this, message, "체크아웃", JOptionPane.INFORMATION_MESSAGE);
 
     // 체크아웃 고객 기록
     saveCheckedOutCustomer(currentCustomer);
+    
+    // 체크아웃 완료 후 체크인 명단에서 삭제
+    removeCustomerFromCheckInList(currentCustomer);
 
-    // 체크인 고객 목록에서 제거
-    removeCheckedInCustomer(currentCustomer);
+    // 체크인 명단 새로고침
+    loadCheckInList();
 
     // 피드백 저장
     saveFeedbackToFile("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\feedback_list.txt",
@@ -325,25 +434,6 @@ private boolean isCheckedOut(String nameOrID) {
         JOptionPane.showMessageDialog(this, "체크아웃 정보를 저장하는 중 오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
     }
 }
-    private void removeCheckedInCustomer(Customer customer) {
-    try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt"));
-         BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\temp_checked_in_customers.txt"))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            if (!line.contains("예약 번호: " + customer.getReservationId())) {
-                writer.write(line);
-                writer.newLine();
-            }
-        }
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "체크인 고객 목록 업데이트 중 오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
-    }
-
-    // 기존 파일을 새로운 파일로 대체
-    new File("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\temp_checked_in_customers.txt")
-        .renameTo(new File("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt"));
-}
-
         private void saveFeedbackToFile(String filePath, String feedback, String roomNumber, String customerNameOrID) {
     if (feedback.isEmpty()) {
         return; // 피드백이 없으면 저장하지 않음
@@ -417,12 +507,16 @@ private boolean isCheckedOut(String nameOrID) {
     private javax.swing.JLabel PaymentLabel;
     private javax.swing.JTextArea RoomArea;
     private javax.swing.JButton RoomButton;
+    private javax.swing.JTextArea checkInListArea;
     private javax.swing.JButton closeButton;
     private javax.swing.JTextField idField;
     private javax.swing.JLabel idLabel;
     private javax.swing.JLabel idLabel1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JButton refreshButton;
     // End of variables declaration//GEN-END:variables
 }
 //테스트4
