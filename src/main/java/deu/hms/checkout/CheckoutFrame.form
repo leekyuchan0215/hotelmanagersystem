@@ -46,7 +46,7 @@
                   <Group type="102" attributes="0">
                       <Component id="idLabel1" min="-2" pref="153" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="idField" pref="95" max="32767" attributes="0"/>
+                      <Component id="idField" pref="495" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -101,7 +101,7 @@
                   <Component id="CheckOutButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="closeButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="43" max="32767" attributes="0"/>
+              <EmptySpace pref="67" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -161,7 +161,7 @@
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="2">
             <StringItem index="0" value="&#xce74;&#xb4dc;"/>
-            <StringItem index="1" value="&#xd604;&#xc7a5; &#xacb0;&#xc81c;"/>
+            <StringItem index="1" value="&#xd604;&#xae08;"/>
           </StringArray>
         </Property>
       </Properties>

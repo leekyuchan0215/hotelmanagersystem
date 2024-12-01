@@ -119,7 +119,7 @@ private boolean isCheckedOut(String nameOrID) {
 
         PaymentLabel.setText("결제 유형 선택 :");
 
-        ChooseComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "카드", "현장 결제" }));
+        ChooseComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "카드", "현금" }));
         ChooseComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ChooseComboBoxActionPerformed(evt);
@@ -164,7 +164,7 @@ private boolean isCheckedOut(String nameOrID) {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(idLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(idField, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                        .addComponent(idField, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
                         .addGap(102, 102, 102))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(52, 52, 52)
@@ -208,7 +208,7 @@ private boolean isCheckedOut(String nameOrID) {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CheckOutButton)
                     .addComponent(closeButton))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         pack();
