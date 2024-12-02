@@ -113,22 +113,25 @@ public class Checkin extends JFrame {
     }
 
     
-    private void saveCheckedInCustomerToFile(Customer customer) {
+  private void saveCheckedInCustomerToFile(Customer customer) {
     String filePath = "checked_in_customers.txt"; // 저장할 파일 경로
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) { // append 모드로 파일 열기
+        int roomPrice = roomDataMap.get(Integer.parseInt(customer.getRoomNumber())).getRoomPrice(); // 방 가격 가져오기
         writer.write("고유번호: " + customer.getReservationId() + ", " +
                      "이름: " + customer.getName() + ", " +
                      "객실 번호: " + customer.getRoomNumber() + ", " +
                      "체크인 날짜: " + customer.getCheckInDate() + ", " +
                      "체크아웃 날짜: " + customer.getCheckOutDate() + ", " +
                      "결제 유형: " + customer.getPaymentType() + ", " +
-                     "결제 방식: " + customer.getPaymentMethod());
+                     "결제 방식: " + customer.getPaymentMethod() + ", " +
+                     "결제 금액: " + roomPrice + "원");
         writer.newLine(); // 줄바꿈 추가
         System.out.println("체크인된 고객 정보가 파일에 저장되었습니다.");
     } catch (IOException e) {
         JOptionPane.showMessageDialog(this, "checked_in_customers.txt 파일 저장 중 오류 발생: " + e.getMessage());
     }
 }
+
     
 
     // 기존 체크인 패널 생성
