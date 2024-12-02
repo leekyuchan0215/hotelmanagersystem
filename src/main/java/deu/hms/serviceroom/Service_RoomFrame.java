@@ -20,11 +20,132 @@ public class Service_RoomFrame extends javax.swing.JFrame {
     private String userType;  // "manager" 또는 "staff"를 저장하는 변수
 
     public Service_RoomFrame(String userType) {
+        // 생성자의 매개변수로 전달된 사용자 유형(userType)을 클래스 필드에 저장
         this.userType = userType;
+        // 생성자 호출 시 사용자 유형을 콘솔에 출력하여 디버깅에 활용
         System.out.println("User type in constructor: " + userType);
+        // GUI 컴포넌트 초기화 메서드 호출 (버튼, 라벨, 텍스트 필드 등 생성 및 배치)
         initComponents();
+        // 메뉴 리스트를 로드하여 메뉴 테이블에 표시
         loadMenuList();
-        loadCheckedInRooms();  // 체크인한 객실 번호 로드
+        // 체크인된 객실 번호 목록을 로드하여 콤보박스에 표시
+        loadCheckedInRooms();
+    }
+
+    private void loadMenuList() {
+        loadTableData("menu_list.txt", menuListTable, "룸서비스", 1, 2);
+    }
+
+    private void loadCheckedInRooms() {
+        String filePath = "checked_in_customers.txt"; // 파일 경로
+        Set<String> roomNumbers = new HashSet<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data.length >= 4) {
+                    String roomNumber = data[2].split(":")[1].trim();
+                    roomNumbers.add(roomNumber);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        roomListCombo.removeAllItems();
+        for (String roomNumber : roomNumbers) {
+            roomListCombo.addItem(roomNumber);
+        }
+    }
+
+    private void loadTableData(String filePath, javax.swing.JTable table, String requiredType, int... columns) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data.length >= columns.length + 1 && requiredType.equals(data[0])) {
+                    Object[] rowData = new Object[columns.length];
+                    for (int i = 0; i < columns.length; i++) {
+                        rowData[i] = data[columns[i]];
+                    }
+                    model.addRow(rowData);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showDialog(javax.swing.JDialog dialog, String title, int width, int height) {
+        dialog.setSize(width, height);
+        dialog.setLocationRelativeTo(this);
+        dialog.setTitle(title);
+        dialog.setModal(false);
+        dialog.setVisible(true);
+        dialog.toFront();
+    }
+
+    private int calculateTotalPrice() {
+        DefaultTableModel model = (DefaultTableModel) orderListTable.getModel();
+        int totalprice = 0;
+        for (int i = 0; i < model.getRowCount(); i++) {
+            int price = Integer.parseInt((String) model.getValueAt(i, 1));
+            int count = (int) model.getValueAt(i, 2);
+            totalprice += price * count;
+        }
+        return totalprice;
+    }
+
+    private void saveToFile(String filePath, String data) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+            bw.write(data);
+            bw.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updatePriceText() {
+        int totalprice = calculateTotalPrice();
+        priceText.setText(String.valueOf(totalprice));
+    }
+
+    private void navigateToMainFrame() {
+        if ("master".equals(userType)) {
+            new MainFrame_Master().setVisible(true);
+        } else if ("staff".equals(userType)) {
+            new MainFrame_Staff().setVisible(true);
+        }
+        this.dispose();
+    }
+
+    private void copyOrderListToReservationTable() {
+        DefaultTableModel orderModel = (DefaultTableModel) orderListTable.getModel();
+        DefaultTableModel reservationModel = (DefaultTableModel) reservationTable.getModel();
+        reservationModel.setRowCount(0);
+        for (int i = 0; i < orderModel.getRowCount(); i++) {
+            reservationModel.addRow(new Object[]{
+                orderModel.getValueAt(i, 0),
+                orderModel.getValueAt(i, 1),
+                orderModel.getValueAt(i, 2)
+            });
+        }
+    }
+
+    private StringBuilder createServiceData(String selectedRoomNumber) {
+        StringBuilder serviceData = new StringBuilder("룸서비스, ").append(selectedRoomNumber).append(",");
+        for (int i = 0; i < orderListTable.getRowCount(); i++) {
+            if (i > 0) {
+                serviceData.append("/");
+            }
+            serviceData.append(orderListTable.getValueAt(i, 0)).append("/").append(orderListTable.getValueAt(i, 2));
+        }
+        serviceData.append(",").append(calculateTotalPrice()).append(",").append(howPayComboBox.getSelectedItem());
+        return serviceData;
     }
 
 
@@ -529,8 +650,8 @@ public class Service_RoomFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(34, 34, 34)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -546,21 +667,19 @@ public class Service_RoomFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(resetBtn)))
                         .addGap(0, 46, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(70, 70, 70)
                         .addComponent(jLabel2)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(61, 61, 61)
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel8)
-                                .addGap(101, 101, 101))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(roomListCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(roomListCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(102, 102, 102)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel8)
+                        .addGap(101, 101, 101)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(225, 225, 225)
@@ -604,330 +723,183 @@ public class Service_RoomFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void loadMenuList() {
-        String filePath = "menu_list.txt"; // 파일 경로
-        DefaultTableModel model = (DefaultTableModel) menuListTable.getModel();
-        model.setRowCount(0); // 기존 데이터 초기화
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(","); // ','로 분리
-                if (data.length >= 3 && "룸서비스".equals(data[0])) { // 첫 번째 값이 "룸서비스"인지 확인
-                    String menu = data[1]; // 두 번째 값
-                    String price = data[2]; // 세 번째 값
-                    model.addRow(new Object[]{menu, price}); // 테이블에 추가
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace(); // 파일 읽기 오류 처리
-        }
-    }
-
-    private void loadCheckedInRooms() {
-        String filePath = "checked_in_customers.txt"; // 파일 경로
-        Set<String> roomNumbers = new HashSet<>(); // 중복 제거를 위한 Set 사용
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(","); // ','로 분리
-                if (data.length >= 4) {
-                    String roomNumber = data[2].split(":")[1].trim(); // 객실 번호 가져오기 (예: "객실 번호: 103"에서 103 추출)
-                    roomNumbers.add(roomNumber); // 중복 없이 객실 번호 추가
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace(); // 파일 읽기 오류 처리
-        }
-
-        // roomListCombo에 객실 번호 추가
-        roomListCombo.removeAllItems(); // 기존 아이템 제거
-        for (String roomNumber : roomNumbers) {
-            roomListCombo.addItem(roomNumber); // ComboBox에 객실 번호 추가
-        }
-    }
-
     private void priceTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceTextActionPerformed
         // TODO add your handling code here:     
     }//GEN-LAST:event_priceTextActionPerformed
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-        // TODO add your handling code here:
-        // 메뉴 테이블에서 선택된 행 가져오기
+        addMenuToOrderList();
+    }//GEN-LAST:event_addBtnActionPerformed
+
+    private void addMenuToOrderList() {
         int selectedRow = menuListTable.getSelectedRow();
         if (selectedRow == -1) {
-            // 선택된 행이 없을 경우 경고 메시지
-            javax.swing.JOptionPane.showMessageDialog(this, "추가할 메뉴를 선택하세요!", "알림", javax.swing.JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "추가할 메뉴를 선택하세요!", "알림", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
-        // 메뉴와 가격 데이터 읽기
-        String menu = (String) menuListTable.getValueAt(selectedRow, 0); // 메뉴 이름
-        String price = (String) menuListTable.getValueAt(selectedRow, 1); // 메뉴 가격
-
-        // 주문 목록 테이블의 모델 가져오기
+        String menu = (String) menuListTable.getValueAt(selectedRow, 0);
+        String price = (String) menuListTable.getValueAt(selectedRow, 1);
         DefaultTableModel orderModel = (DefaultTableModel) orderListTable.getModel();
-
-        // 주문 목록에서 이미 존재하는 메뉴인지 확인
         boolean menuExists = false;
         for (int i = 0; i < orderModel.getRowCount(); i++) {
-            String existingMenu = (String) orderModel.getValueAt(i, 0); // 주문 테이블의 메뉴 이름
-            if (menu.equals(existingMenu)) {
-                // 이미 존재하면 수량 증가
-                int quantity = (int) orderModel.getValueAt(i, 2); // 수량
-                orderModel.setValueAt(quantity + 1, i, 2); // 수량 +1
+            if (menu.equals(orderModel.getValueAt(i, 0))) {
+                int quantity = (int) orderModel.getValueAt(i, 2);
+                orderModel.setValueAt(quantity + 1, i, 2);
                 menuExists = true;
                 break;
             }
         }
-
-        // 새로운 메뉴라면 추가
         if (!menuExists) {
-            orderModel.addRow(new Object[]{menu, price, 1}); // 메뉴, 가격, 초기 수량 1
+            orderModel.addRow(new Object[]{menu, price, 1});
         }
-
-        // 총 금액 계산하여 priceText에 설정
-        int totalprice = 0;
-        for (int i = 0; i < orderListTable.getRowCount(); i++) {
-            String money = (String) orderListTable.getValueAt(i, 1);  // orderTableList에 2번째 열 값 money에 저장
-            int count = (int) orderListTable.getValueAt(i, 2);  // 수량 값 가져오기
-
-            int a = Integer.parseInt(money);   // String을 int로 변경
-            totalprice += a * count;  // 총 금액 계산
-        }
-
-        priceText.setText(String.valueOf(totalprice)); // 계산된 총 금액을 priceText에 설정
-    }//GEN-LAST:event_addBtnActionPerformed
+        updatePriceText();
+    }
 
     private void minusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minusBtnActionPerformed
-        // 선택된 행의 인덱스를 가져오기
-        int selectedRow = orderListTable.getSelectedRow();
+        removeMenuFromOrderList();
+    }//GEN-LAST:event_minusBtnActionPerformed
 
-        // 선택된 행이 없으면 경고 메시지 표시 후 종료
+    private void removeMenuFromOrderList() {
+        int selectedRow = orderListTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요!", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        // JTable의 모델 가져오기
         DefaultTableModel model = (DefaultTableModel) orderListTable.getModel();
-
-        // 3번째 열 (수량) 값 가져오기 (인덱스는 0부터 시작하므로 열 인덱스는 2)
         int quantity = (int) model.getValueAt(selectedRow, 2);
-
         if (quantity == 1) {
-            // 수량이 1이면 행 삭제
             model.removeRow(selectedRow);
-        } else if (quantity > 1) {
-            // 수량이 2 이상이면 1 감소
+        } else {
             model.setValueAt(quantity - 1, selectedRow, 2);
         }
-
-        // 총 금액 계산하여 priceText에 설정
-        int totalprice = 0;
-        for (int i = 0; i < orderListTable.getRowCount(); i++) {
-            String money = (String) orderListTable.getValueAt(i, 1);  // orderTableList에 2번째 열 값 money에 저장
-            int count = (int) orderListTable.getValueAt(i, 2);  // 수량 값 가져오기
-
-            int a = Integer.parseInt(money);   // String을 int로 변경
-            totalprice += a * count;  // 총 금액 계산
-        }
-
-        priceText.setText(String.valueOf(totalprice)); // 계산된 총 금액을 priceText에 설정
-    }//GEN-LAST:event_minusBtnActionPerformed
+        updatePriceText();
+    }
 
     private void howPayComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_howPayComboBoxActionPerformed
         // TODO add your handling code here:
+
     }//GEN-LAST:event_howPayComboBoxActionPerformed
 
     private void payBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payBtnActionPerformed
-        DefaultTableModel model = (DefaultTableModel) orderListTable.getModel();
+        handlePayButton();
+    }//GEN-LAST:event_payBtnActionPerformed
 
-        // orderListTable이 비어있는지 확인
-        if (model.getRowCount() == 0) {
-            // 테이블에 항목이 없을 경우 경고 메시지 표시
+    private void handlePayButton() {
+        if (orderListTable.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "메뉴를 담아야합니다.", "경고", JOptionPane.WARNING_MESSAGE);
-            return; // 메서드 종료
+            return;
         }
-
-        // 결제 진행
-        String howpay = (String) howPayComboBox.getSelectedItem();
-        int totalprice = calculateTotalPrice();
         String selectedRoomNumber = (String) roomListCombo.getSelectedItem();
-
         if (selectedRoomNumber == null) {
             JOptionPane.showMessageDialog(this, "객실 번호를 선택해 주세요.", "오류", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
-        // "룸서비스", roomListCombo 값, orderListTable 메뉴/수량, 총 금액, 결제 방식
-        StringBuilder serviceData = new StringBuilder("룸서비스");
-        serviceData.append(", ").append(selectedRoomNumber);
-
-        // orderListTable에 있는 메뉴/수량 정보를 추가 (각 메뉴 사이에 슬래시로 구분)
-        StringBuilder menuList = new StringBuilder();
-        for (int i = 0; i < model.getRowCount(); i++) {
-            String menu = (String) model.getValueAt(i, 0);
-            int quantity = (int) model.getValueAt(i, 2);
-            if (i > 0) {
-                menuList.append("/"); // 각 메뉴 사이에 슬래시 추가
-            }
-            menuList.append(menu).append("/").append(quantity);
-        }
-
-        // 메뉴 정보 추가 (쉼표로 구분)
-        serviceData.append(", ").append(menuList.toString());
-
-        // 총 금액과 결제 방식 추가
-        serviceData.append(", ").append(totalprice);
-        serviceData.append(", ").append(howpay);
-
-        // 파일에 저장
+        StringBuilder serviceData = createServiceData(selectedRoomNumber);
         saveToFile("use_service.txt", serviceData.toString());
-
-        // 결제 완료 메시지
-        JOptionPane.showMessageDialog(this, totalprice + "원 결제되었습니다.");
-
-        // 주문 목록 초기화
-        model.setRowCount(0);
-        priceText.setText("0");
+        JOptionPane.showMessageDialog(this, calculateTotalPrice() + "원 결제되었습니다.");
+        ((DefaultTableModel) orderListTable.getModel()).setRowCount(0);
+        updatePriceText();
     }
 
-// 총 금액 계산 메서드
-    private int calculateTotalPrice() {
-        DefaultTableModel model = (DefaultTableModel) orderListTable.getModel();
-        int totalprice = 0;
-
-        for (int i = 0; i < model.getRowCount(); i++) {
-            String money = (String) model.getValueAt(i, 1);
-            int count = (int) model.getValueAt(i, 2);
-            int a = Integer.parseInt(money);
-            totalprice += a * count;
-        }
-
-        return totalprice;
-    }
-
-// 파일에 데이터 저장 메서드
-    private void saveToFile(String filePath, String data) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
-            bw.write(data);
-            bw.newLine();
-        } catch (IOException e) {
-            e.printStackTrace(); // 파일 쓰기 오류 처리
-        }
-    }//GEN-LAST:event_payBtnActionPerformed
 
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
-        // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) orderListTable.getModel();
-        model.setRowCount(0);
-        priceText.setText("0");
+        resetOrderList();
     }//GEN-LAST:event_resetBtnActionPerformed
 
+    private void resetOrderList() {
+        ((DefaultTableModel) orderListTable.getModel()).setRowCount(0);
+        updatePriceText();
+    }
+
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
-        // TODO add your handling code here:
-        System.out.println("User Type :  " + userType);
-        if ("master".equals(userType)) {
-            // 관리자 페이지로 이동
-            MainFrame_Master mframe = new MainFrame_Master();
-            mframe.setVisible(true);
-        } else if ("staff".equals(userType)) {
-            // 일반 직원 페이지로 이동
-            MainFrame_Staff sframe = new MainFrame_Staff();
-            sframe.setVisible(true);
-        }
-        this.dispose();  // 현재 창 닫기
+        navigateToMainFrame();
     }//GEN-LAST:event_backBtnActionPerformed
 
     private void reservationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationBtnActionPerformed
-        // orderListTable의 모델 가져오기
-        DefaultTableModel orderModel = (DefaultTableModel) orderListTable.getModel();
-
-        // orderListTable이 비어 있는지 확인
-        if (orderModel.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, "메뉴를 담아주세요.", "오류", JOptionPane.WARNING_MESSAGE);
-        } else {
-            // 다이얼로그 설정
-            reservationDialog.setSize(700, 500);  // 다이얼로그 크기 설정
-            reservationDialog.setLocationRelativeTo(this);  // 부모 컴포넌트를 기준으로 중앙에 배치
-            reservationDialog.setTitle("룸 서비스 예약");  // 다이얼로그 제목 설정
-            reservationDialog.setModal(false);  // 비모달로 설정 (부모 창과 상호작용 가능)
-            reservationDialog.setVisible(true);  // 다이얼로그 표시
-            reservationDialog.toFront();  // 다이얼로그를 화면 최상위로 가져오기
-
-            // reservationTable의 모델 가져오기
-            DefaultTableModel reservationModel = (DefaultTableModel) reservationTable.getModel();
-
-            // 기존 데이터 제거 (필요한 경우)
-            reservationModel.setRowCount(0);
-
-            // orderListTable의 데이터를 reservationTable로 복사
-            for (int i = 0; i < orderModel.getRowCount(); i++) {
-                Object[] rowData = new Object[orderModel.getColumnCount()];
-                for (int j = 0; j < orderModel.getColumnCount(); j++) {
-                    rowData[j] = orderModel.getValueAt(i, j);
-                }
-                reservationModel.addRow(rowData);
-            }
-        }
+        handleReservationButton();
     }//GEN-LAST:event_reservationBtnActionPerformed
+
+    private void handleReservationButton() {
+        if (orderListTable.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "메뉴를 담아주세요.", "오류", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        copyOrderListToReservationTable();
+        showDialog(reservationDialog, "룸서비스 예약", 700, 500);
+    }
+
 
     private void yearTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yearTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_yearTextActionPerformed
 
     private void roomListComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomListComboActionPerformed
-        // TODO add your handling code here:
-        // roomListCombo에서 선택된 방 번호 가져오기
-        String selectedRoomNumber = (String) roomListCombo.getSelectedItem();
+        String selectedRoomNumber = getSelectedRoomNumber();
+        if (selectedRoomNumber == null) return;
 
-        if (selectedRoomNumber == null) {
-            return;  // 선택된 방 번호가 없으면 메서드 종료
+        String reservationDate = findReservationDate(selectedRoomNumber);
+        if (reservationDate != null) {
+            yearText.setText(reservationDate.split("-")[0]);
         }
+    }//GEN-LAST:event_roomListComboActionPerformed
 
-        String filePath = "reservations.txt"; // 예약자 정보가 담긴 파일 경로
+    private String getSelectedRoomNumber() {
+        return (String) roomListCombo.getSelectedItem();
+    }
+
+    private String findReservationDate(String selectedRoomNumber) {
+        String filePath = "reservations.txt";
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
 
             while ((line = br.readLine()) != null) {
-                String[] data = line.split(","); // ','로 데이터를 분리
-                if (data.length >= 7) {
-                    String roomNumber = data[5].trim(); // 6번째 값인 방 번호 가져오기
-
-                    // 선택된 방 번호와 파일의 방 번호가 일치하는지 확인
-                    if (selectedRoomNumber.equals(roomNumber)) {
-                        String dateValue = data[6].trim(); // 7번째 값인 날짜 가져오기 (예: 2024-01-01)
-                        String year = dateValue.split("-")[0]; // '-'로 분리하여 연도 추출
-                        yearText.setText(year); // 연도를 yearText에 설정
-                        break; // 해당 방 번호에 대해 첫 번째로 일치하는 항목만 처리
-                    }
+                String[] data = line.split(",");
+                if (data.length >= 7 && selectedRoomNumber.equals(data[5].trim())) {
+                    return data[6].trim();
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace(); // 파일 읽기 오류 처리
+            e.printStackTrace();
         }
-    }//GEN-LAST:event_roomListComboActionPerformed
+
+        return null;
+    }
 
     private void monthTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_monthTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_monthTextActionPerformed
 
     private void reservationDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationDialogBtnActionPerformed
-        // "룸서비스"라는 고정 문자열 추가
+        String reservationData = generateReservationData();
+        saveReservationToFile(reservationData);
+        resetReservationDialog();
+    }//GEN-LAST:event_reservationDialogBtnActionPerformed
+    private String generateReservationData() {
         StringBuilder reservationData = new StringBuilder("룸서비스");
 
-        // yearText, monthText, dayText, hourCombo, minuteCombo, roomListCombo 값 가져오기
+        // yearText, monthText, dayText, hourCombo, minuteCombo 값 가져오기
         reservationData.append(", ").append((String) roomListCombo.getSelectedItem());
         reservationData.append(", ").append(yearText.getText());
         reservationData.append(", ").append((String) monthText.getSelectedItem());
         reservationData.append(", ").append((String) dayText.getSelectedItem());
-        reservationData.append(", ").append((String) hourCombo.getSelectedItem()); // hourCombo에 해당하는 콤보박스
-        reservationData.append(", ").append((String) minuteCombo.getSelectedItem()); // minuteCombo에 해당하는 콤보박스
+        reservationData.append(", ").append((String) hourCombo.getSelectedItem());
+        reservationData.append(", ").append((String) minuteCombo.getSelectedItem());
 
         // reservationTable의 메뉴와 수량을 문자열로 생성
+        reservationData.append(", ").append(getMenuList());
+
+        // priceText에서 총 금액을 가져와 추가
+        reservationData.append(", ").append(priceText.getText());
+
+        // howPayDialog에서 선택한 결제 방식 추가
+        String howPay = (String) howpayDialog.getSelectedItem();
+        reservationData.append(", ").append(howPay);
+
+        return reservationData.toString();
+    }
+
+    private String getMenuList() {
         DefaultTableModel reservationModel = (DefaultTableModel) reservationTable.getModel();
         StringBuilder menuList = new StringBuilder();
         for (int i = 0; i < reservationModel.getRowCount(); i++) {
@@ -938,30 +910,26 @@ public class Service_RoomFrame extends javax.swing.JFrame {
             }
             menuList.append(menu).append("/").append(quantity);
         }
-        reservationData.append(", ").append(menuList.toString());
+        return menuList.toString();
+    }
 
-        // priceText에서 총 금액을 가져와 추가
-        reservationData.append(", ").append(priceText.getText());
-
-        // howPayDialog에서 선택한 결제 방식 추가
-        String howPay = (String) howpayDialog.getSelectedItem(); // howPayComboBox에서 결제 방식을 가져옴
-        reservationData.append(", ").append(howPay);
-
-        // 파일에 저장
+    private void saveReservationToFile(String reservationData) {
         String filePath = "service_reservation_list.txt";
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
-            bw.write(reservationData.toString());
+            bw.write(reservationData);
             bw.newLine(); // 줄 바꿈 추가 -> 기존 값 아래에 새 값을 저장
             JOptionPane.showMessageDialog(this, "예약 정보가 저장되었습니다.");
         } catch (IOException e) {
             e.printStackTrace(); // 파일 쓰기 오류 처리
         }
+    }
+
+    private void resetReservationDialog() {
         DefaultTableModel model = (DefaultTableModel) orderListTable.getModel();
         model.setRowCount(0);
         priceText.setText("0");
         reservationDialog.dispose();
-    }//GEN-LAST:event_reservationDialogBtnActionPerformed
-
+    }
     private void hourComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hourComboActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_hourComboActionPerformed
@@ -977,79 +945,53 @@ public class Service_RoomFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void reservationCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationCheckActionPerformed
-        // 다이얼로그 설정
-        reservationCheckDialog.setSize(800, 500);  // 다이얼로그 크기 설정
-        reservationCheckDialog.setLocationRelativeTo(this);  // 부모 컴포넌트를 기준으로 중앙에 배치
-        reservationCheckDialog.setTitle("예약 확인");  // 다이얼로그 제목 설정
-        reservationCheckDialog.setModal(false);  // 비모달로 설정 (부모 창과 상호작용 가능)
-        reservationCheckDialog.setVisible(true);  // 다이얼로그 표시
-        reservationCheckDialog.toFront();  // 다이얼로그를 화면 최상위로 가져오기
+        handleReservationCheck();
+    }//GEN-LAST:event_reservationCheckActionPerformed
 
-        // 테이블 모델 초기화
+    private void handleReservationCheck() {
+        showDialog(reservationCheckDialog, "예약 확인", 800, 500);
         DefaultTableModel reservationModel = (DefaultTableModel) reservationCheckTable.getModel();
-        reservationModel.setRowCount(0); // 기존 데이터 초기화
+        reservationModel.setRowCount(0);
 
-        // 파일 경로 설정
         String filePath = "service_reservation_list.txt";
-
-        // 파일 읽기 및 테이블에 추가
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] data = line.split(","); // 쉼표로 구분된 데이터 분리
-
-                if (data.length >= 10) {
-                    // 날짜 생성: 3번째, 4번째, 5번째 값 합쳐서 "2024년 1월 1일" 형식으로 생성
+                String[] data = line.split(",");
+                if (data.length >= 10 && "룸서비스".equals(data[0])) {
                     String date = data[2] + "년 " + data[3] + "월 " + data[4] + "일";
-
-                    // 시간 생성: 6번째, 7번째 값 합쳐서 "07시 00분" 형식으로 생성
                     String time = data[5] + "시 " + data[6] + "분";
-
-                    // 서비스 종류 (예: "룸서비스" 또는 기타)
                     String serviceType = data[0];
-
-                    // 객실 번호
                     String roomNumber = data[1];
-                    
-                    //메뉴
                     String menuRaw = data[7];
-                    String[] menuItems=menuRaw.split("/");
+                    String[] menuItems = menuRaw.split("/");
                     StringBuilder menuFormatted = new StringBuilder();
-                    
-                    for(int i=0; i<menuItems.length; i+=2){
+                    for (int i = 0; i < menuItems.length; i += 2) {
                         String itemName = menuItems[i];
-                        String itemQuantity = menuItems[i+1];
+                        String itemQuantity = menuItems[i + 1];
                         menuFormatted.append(itemName).append(" ").append(itemQuantity).append("개");
-                        if(i+2 < menuItems.length){
-                            menuFormatted.append(" / ");  // 다음  항목이 있다면 구분자 추가
+                        if (i + 2 < menuItems.length) {
+                            menuFormatted.append(" / ");
                         }
                     }
-
-                    // 총 금액: 9번째 값
                     String totalAmount = data[8];
-
-                    // 결제 방식: 10번째 값
                     String paymentMethod = data[9];
-
-                    // 테이블에 추가할 데이터 배열 생성
                     Object[] rowData = {
-                        serviceType,  //1번째 열: 서비스 종류
-                        roomNumber, // 2번째 열: 객실번호
-                        date, // 3번째 열: 날짜
-                        time, // 4번째 열: 시간
-                        menuFormatted.toString(), // 5번째 열: 메뉴
-                        totalAmount, // 6번째 열: 총 금액
-                        paymentMethod // 7번째 열: 결제 방식
+                        serviceType,
+                        roomNumber,
+                        date,
+                        time,
+                        menuFormatted.toString(),
+                        totalAmount,
+                        paymentMethod
                     };
-
-                    // 테이블 모델에 행 추가
                     reservationModel.addRow(rowData);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace(); // 파일 읽기 오류 처리
+            e.printStackTrace();
         }
-    }//GEN-LAST:event_reservationCheckActionPerformed
+    }
 
     private void backDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backDialogBtnActionPerformed
         // TODO add your handling code here:

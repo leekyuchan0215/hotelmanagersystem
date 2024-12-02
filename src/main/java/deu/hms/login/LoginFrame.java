@@ -4,8 +4,7 @@ import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+
 
 public class LoginFrame extends javax.swing.JFrame {
 
