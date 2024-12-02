@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-
 public class LoginFrame extends javax.swing.JFrame {
 
     public LoginFrame() {
@@ -148,7 +147,7 @@ public class LoginFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_pwTextActionPerformed
 
     private boolean validateLogin(String id, String pw) throws IOException {
-         BufferedReader reader = new BufferedReader(new FileReader("id_pw.txt"));   // "id_pw.txt"를 읽어 reader 변수에 저장
+        BufferedReader reader = new BufferedReader(new FileReader("id_pw.txt"));   // "id_pw.txt"를 읽어 reader 변수에 저장
         String line;
 
         while ((line = reader.readLine()) != null) {    // line변수에 reader를 한줄씩 저장하고 null이 아니라면 while문 수행
@@ -159,19 +158,19 @@ public class LoginFrame extends javax.swing.JFrame {
                 String role = parts[3];  // 배열 네 번째 인덱스에 있는 권한(M or S)을 role 변수에 저장
 
                 if (storedId.equals(id) && storedPw.equals(pw)) {   // 입력한 id,pw와 텍스트 파일에 있던 storedId, storedPw가 일치한다면
-                    
-                   JOptionPane.showMessageDialog(this, "ID : " + id + " 확인되었습니다.");  
-                    if (role.equals("M")) {  
+
+                    JOptionPane.showMessageDialog(this, "ID : " + id + " 확인되었습니다.");
+                    if (role.equals("M")) {
                         // 권한이 "M" ,즉 관리자라면
                         JOptionPane.showMessageDialog(this, "관리자 페이지로 이동합니다.");
-                         this.dispose(); // 로그인 창 닫기
-                        MainFrame_Master masterFrame = new MainFrame_Master(); 
+                        this.dispose(); // 로그인 창 닫기
+                        MainFrame_Master masterFrame = new MainFrame_Master();
                         masterFrame.setVisible(true); //관리자 전용 페이지 띄우기
-                        
+
                     } else if (role.equals("S")) {
                         // 권한이 "S" ,즉 일반 직원이라면
                         JOptionPane.showMessageDialog(this, "직원 페이지로 이동합니다.");
-                         this.dispose(); // 로그인 창 닫기
+                        this.dispose(); // 로그인 창 닫기
                         MainFrame_Staff staffFrame = new MainFrame_Staff();
                         staffFrame.setVisible(true); // 일반 직원 전용 페이지 띄우기
                     }
@@ -185,7 +184,11 @@ public class LoginFrame extends javax.swing.JFrame {
     }
 
     public static void main(String args[]) {
-
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new LoginFrame().setVisible(true);

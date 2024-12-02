@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 public class Service_RoomFrame extends javax.swing.JFrame {
@@ -835,7 +836,9 @@ public class Service_RoomFrame extends javax.swing.JFrame {
 
     private void roomListComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomListComboActionPerformed
         String selectedRoomNumber = getSelectedRoomNumber();
-        if (selectedRoomNumber == null) return;
+        if (selectedRoomNumber == null) {
+            return;
+        }
 
         String reservationDate = findReservationDate(selectedRoomNumber);
         if (reservationDate != null) {
@@ -999,7 +1002,11 @@ public class Service_RoomFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_backDialogBtnActionPerformed
 
     public static void main(String args[]) {
-
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Service_RoomFrame("master").setVisible(true);

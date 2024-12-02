@@ -4,6 +4,7 @@ import deu.hms.management.ManagementFrame;
 import deu.hms.reservation.ReservationGUI;
 import deu.hms.serviceroom.Service_RoomFrame;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 public class MainFrame_Master extends javax.swing.JFrame {
 
@@ -302,6 +303,11 @@ public class MainFrame_Master extends javax.swing.JFrame {
     }//GEN-LAST:event_restaurantserviceBtnActionPerformed
 
     public static void main(String args[]) {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 public class Management_Service extends javax.swing.JFrame {
@@ -68,12 +69,12 @@ public class Management_Service extends javax.swing.JFrame {
         }
     }
 
-     private void showEditDialog(int selectedRow) {
+    private void showEditDialog(int selectedRow) {
         DefaultTableModel editModel = (DefaultTableModel) editTable.getModel();
         editModel.setRowCount(0);
 
         String[] rowData = new String[3];
-        for (int i = 0; i <3; i++) {
+        for (int i = 0; i < 3; i++) {
             rowData[i] = serviceTable.getValueAt(selectedRow, i).toString();
         }
         editModel.addRow(rowData);
@@ -85,7 +86,7 @@ public class Management_Service extends javax.swing.JFrame {
         editDialog.setVisible(true);
         editDialog.toFront();
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -514,6 +515,11 @@ public class Management_Service extends javax.swing.JFrame {
     }
 
     public static void main(String args[]) {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

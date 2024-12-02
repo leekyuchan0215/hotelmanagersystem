@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 public class AccountManagementFrame extends javax.swing.JFrame {
@@ -42,14 +43,13 @@ public class AccountManagementFrame extends javax.swing.JFrame {
             System.out.println("파일을 읽는 중 문제가 발생했습니다.");
         }
     }
-    
+
     // JTable 데이터를 파일에 저장하는 메서드입니다.
     private void saveTableDataToFile() {
         DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
         saveTableDataToFile("id_pw.txt", model); // 테이블 데이터를 파일에 저장합니다.
     }
-    
-      
+
     private void saveTableDataToFile(String filename, DefaultTableModel model) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filename, false))) {
             for (int i = 0; i < model.getRowCount(); i++) {
@@ -88,7 +88,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         editDialog.setVisible(true);
         editDialog.toFront();
     }
-    
+
     // 계정 데이터를 수정하는 메서드입니다.
     private void updateAccountData() {
         DefaultTableModel editModel = (DefaultTableModel) editTable.getModel();
@@ -116,7 +116,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
 
         editDialog.dispose();
     }
-    
+
     // 계정을 등록하는 메서드입니다.
     private void registerAccount() {
         String number = numberText.getText().trim();
@@ -144,22 +144,20 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         rightList.clearSelection();
         loadTableData();
     }
-    
+
     // 선택된 계정을 삭제하는 메서드입니다.
     private void deleteAccount(int selectedRow) {
         DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
         model.removeRow(selectedRow);
         JOptionPane.showMessageDialog(this, "선택된 계정이 삭제되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
     }
-    
+
     // 관리 화면으로 돌아가는 메서드입니다.
     private void backToManagementFrame() {
         JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
         this.dispose();
         new ManagementFrame().setVisible(true);
     }
-    
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -490,7 +488,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
 
     private void storageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storageBtnActionPerformed
         // 저장 버튼 눌렀을 때 동작:
-       saveTableDataToFile();
+        saveTableDataToFile();
     }//GEN-LAST:event_storageBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
@@ -561,6 +559,11 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_editDialogBtnActionPerformed
 
     public static void main(String args[]) {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override

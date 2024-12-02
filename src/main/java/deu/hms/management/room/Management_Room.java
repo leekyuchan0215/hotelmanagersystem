@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 public class Management_Room extends javax.swing.JFrame {
@@ -20,7 +21,7 @@ public class Management_Room extends javax.swing.JFrame {
     public Management_Room() {
         initComponents();
         loadTableData(); // JTable 초기화 시 데이터 로드
-        
+
     }
 
     private void loadTableData() {
@@ -183,7 +184,7 @@ public class Management_Room extends javax.swing.JFrame {
         mframe.setVisible(true);
     }
 
-   /* private void initButtonActions() {
+    /* private void initButtonActions() {
         backBtn.addActionListener(evt -> backToManagementFrame());
         registrationBtn.addActionListener(evt -> registrationDialog.setVisible(true));
         deleteBtn.addActionListener(evt -> {
@@ -208,7 +209,6 @@ public class Management_Room extends javax.swing.JFrame {
         deleteDialogBtn.addActionListener(evt -> editDialog.dispose());
         jButton3.addActionListener(evt -> registrationDialog.dispose());
     }*/
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -588,6 +588,12 @@ public class Management_Room extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     public static void main(String args[]) {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Management_Room().setVisible(true);

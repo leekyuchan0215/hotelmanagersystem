@@ -2,6 +2,7 @@ package deu.hms.login;
 
 import deu.hms.serviceroom.Service_RoomFrame;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 public class MainFrame_Staff extends javax.swing.JFrame {
 
@@ -213,6 +214,11 @@ public class MainFrame_Staff extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_checkinoutBtn1ActionPerformed
     public static void main(String args[]) {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
