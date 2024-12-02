@@ -42,9 +42,11 @@ public class CheckoutFrame extends javax.swing.JFrame {
     checkOutDateTime = null; // 체크아웃 시간 초기화
     extraFee = 0; // 추가 요금 초기화
 }
-    private void removeCustomerFromCheckInList(Customer customer) {
+   private void removeCustomerFromCheckInList(Customer customer) {
     String inputFile = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt";
     String tempFile = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\temp_checked_in_customers.txt";
+
+    boolean customerFound = false; // 삭제 대상 발견 여부 확인용 변수
 
     try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
          BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
@@ -52,11 +54,12 @@ public class CheckoutFrame extends javax.swing.JFrame {
         String line;
         while ((line = reader.readLine()) != null) {
             // 현재 고객의 정보가 포함된 줄인지 확인
-            if (!line.contains("고객 이름: " + customer.getName()) &&
-                !line.contains("예약 번호: " + customer.getReservationId())) {
-                writer.write(line);
-                writer.newLine();
+            if (line.contains("고유번호: " + customer.getReservationId()) || line.contains("이름: " + customer.getName())) {
+                customerFound = true; // 삭제 대상 발견
+                continue; // 삭제 대상은 임시 파일에 쓰지 않음
             }
+            writer.write(line);
+            writer.newLine();
         }
     } catch (IOException e) {
         JOptionPane.showMessageDialog(this, "체크인 명단 업데이트 중 오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
@@ -64,19 +67,26 @@ public class CheckoutFrame extends javax.swing.JFrame {
         return;
     }
 
+    if (!customerFound) {
+        JOptionPane.showMessageDialog(this, "삭제 대상 고객 정보를 찾을 수 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+        return; // 고객을 찾지 못한 경우 더 이상 진행하지 않음
+    }
+
     // 기존 파일을 임시 파일로 교체
     File originalFile = new File(inputFile);
     File updatedFile = new File(tempFile);
 
     if (originalFile.delete()) {
-        updatedFile.renameTo(originalFile);
+        if (!updatedFile.renameTo(originalFile)) {
+            JOptionPane.showMessageDialog(this, "체크인 명단 파일 교체 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+        }
     } else {
-        JOptionPane.showMessageDialog(this, "체크인 명단 파일 업데이트 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "체크인 명단 파일 삭제 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
     }
 }
     
     
-    private void loadCheckInList() {
+   private void loadCheckInList() {
     String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt";
 
     File file = new File(filePath);
@@ -86,20 +96,24 @@ public class CheckoutFrame extends javax.swing.JFrame {
         return;
     }
 
-     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
         checkInListArea.setText(""); // 기존 내용을 초기화
         String line;
         while ((line = reader.readLine()) != null) {
             // 파일의 각 줄을 읽어 포맷에 맞게 추가
             String[] parts = line.split(", "); // 파일 데이터 분리
             if (parts.length >= 5) { // 데이터가 제대로 구성된 경우
+                String id = parts[0].split(": ")[1].trim(); // 고유 번호
+                String name = parts[1].split(": ")[1].trim(); // 이름
+                String roomNumber = parts[2].split(": ")[1].trim(); // 객실 번호
+                String checkInDate = parts[3].split(": ")[1].trim(); // 체크인 날짜
+                String checkOutDate = parts[4].split(": ")[1].trim(); // 체크아웃 날짜
+                String paymentType = parts[5].split(": ")[1].trim(); // 결제 유형
+
+                // 출력 순서를 올바르게 조정
                 String formattedLine = String.format(
-                    "고유 번호: %-10s | 이름: %-10s | 객실 번호: %-5s | 객실 요금: %-10s | 결제 방식: %-5s",
-                    parts[1].split(": ")[1].trim(), // 고유 번호
-                    parts[0].split(": ")[1].trim(), // 이름
-                    parts[2].split(": ")[1].trim(), // 객실 번호
-                    parts[3].split(": ")[1].trim(), // 객실 요금
-                    parts[4].split(": ")[1].trim()  // 결제 방식
+                    "이름: %s, 고유번호: %s, 객실 번호: %s, 체크인 날짜: %s, 체크아웃 날짜: %s, 결제 유형: %s",
+                    name, id, roomNumber, checkInDate, checkOutDate, paymentType
                 );
                 checkInListArea.append(formattedLine + "\n");
             } else {
@@ -238,9 +252,9 @@ public class CheckoutFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(305, 305, 305)
                 .addComponent(PaymentLabel)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 319, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -261,7 +275,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(311, 311, 311)
                                 .addComponent(RoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 201, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -291,7 +305,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
                     .addComponent(InitializationButton)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(refreshButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -306,7 +320,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(PaymentLabel)
                     .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
+                .addGap(6, 6, 6)
                 .addComponent(FeedbackLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -368,20 +382,22 @@ public class CheckoutFrame extends javax.swing.JFrame {
 }
     
     private Customer findCheckInCustomer(String nameOrID) {
-    try (BufferedReader reader = new BufferedReader(new FileReader("checked_in_customers.txt"))) {
+    String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt";
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
         String line;
         while ((line = reader.readLine()) != null) {
-            // 데이터 파싱: 고객 이름, 고유 번호, 객실 번호, 요금을 분리
-            if (line.contains("고객 이름:") && line.contains("예약 번호:") && line.contains("객실 요금:")) {
-                String[] parts = line.split(", ");
-                String name = parts[0].split(": ")[1].trim(); // "고객 이름: 홍길동" -> "홍길동"
-                String reservationId = parts[1].split(": ")[1].trim(); // "예약 번호: 12345" -> "12345"
-                String roomNumber = parts[2].split(": ")[1].trim(); // "객실 번호: 101호" -> "101호"
-                int paymentAmount = Integer.parseInt(parts[3].split(": ")[1].replace("원", "").trim()); // "객실 요금: 100000원" -> 100000
+            // 각 줄을 읽고 파싱
+            String[] parts = line.split(", ");
+            if (parts.length >= 5) {
+                String name = parts[1].split(": ")[1].trim(); // "이름: 홍길동" -> "홍길동"
+                String id = parts[0].split(": ")[1].trim();   // "고유번호: 037" -> "037"
+                String roomNumber = parts[2].split(": ")[1].trim();
+                int paymentAmount = 0; // 파일에 결제 금액 데이터가 없으므로 기본값 설정
 
-                // 입력값(고유번호 또는 이름)과 비교
-                if (reservationId.equalsIgnoreCase(nameOrID) || name.equalsIgnoreCase(nameOrID)) {
-                    return new Customer(name, reservationId, roomNumber, paymentAmount); // 객실 요금 포함
+                // 고유번호나 이름이 일치하는지 확인
+                if (id.equals(nameOrID) || name.equals(nameOrID)) {
+                    return new Customer(name, id, roomNumber, paymentAmount); // 고객 객체 반환
                 }
             }
         }
