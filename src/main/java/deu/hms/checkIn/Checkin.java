@@ -14,66 +14,52 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class Checkin extends JFrame {
     private Map<String, Customer> customerMap; // 예약 고객 정보를 저장할 Map
-    private Map<String, Customer> onSiteCustomerMap; // 현장 체크인 고객 정보를 저장할 Map
-    private Map<Integer, Integer> roomPriceMap; // 객실 번호와 가격 매핑
+    private Map<Integer, RoomData> roomDataMap; // 객실 정보를 저장할 Map
     private Customer currentCustomer; // 현재 선택된 고객 정보
+    private JTextArea reservationListArea; // 예약 명단 표시 영역
 
-// reservations.txt 파일의 예약 데이터를 GUI에 표시
-private JTextArea reservationListArea;
+    public Checkin() {
+        setTitle("호텔 체크인 시스템");
+        setSize(800, 600);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
-public Checkin() {
-    setTitle("호텔 체크인 시스템");
-    setSize(800, 600);
-    setDefaultCloseOperation(EXIT_ON_CLOSE);
-    setLocationRelativeTo(null);
+        customerMap = new HashMap<>();
+        roomDataMap = new HashMap<>();
+        loadRoomData(); // room_list.txt에서 객실 정보 로드
+        loadReservationsFromFile(); // reservations.txt에서 예약 정보 로드
 
-    customerMap = new HashMap<>(); // 예약 고객 정보 초기화
-    onSiteCustomerMap = new HashMap<>(); // 현장 체크인 고객 정보 초기화
-    
-    loadRoomPrices(); // 객실 가격 정보 로드
-    loadReservationsFromFile(); // reservations.txt 파일에서 데이터 로드
-    System.out.println("로드된 고객 수: " + customerMap.size()); // 로드된 고객 수 출력
-    customerMap.forEach((key, customer) -> {
-        System.out.println("고유번호: " + key + ", 이름: " + customer.getName());
-    });
+        JTabbedPane tabbedPane = new JTabbedPane();
+        JPanel checkInPanel = createCheckInPanel(); // 기존 체크인 패널 생성
+        tabbedPane.addTab("체크인", checkInPanel); // 탭에 추가
 
-    JTabbedPane tabbedPane = new JTabbedPane();
-    JPanel checkInPanel = createCheckInPanel(); // 체크인 패널 생성
-    tabbedPane.addTab("체크인", checkInPanel); // 탭에 추가
-
-    add(tabbedPane); // 메인 프레임에 탭 추가
-}
-
-// room_list.txt에서 객실 번호와 가격을 로드
-private void loadRoomPrices() {
-    roomPriceMap = new HashMap<>();
-    try (BufferedReader reader = new BufferedReader(new FileReader("room_list.txt"))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] data = line.split(",");
-            if (data.length == 4) {
-                int roomNumber = Integer.parseInt(data[1]); // 객실 번호
-                int price = Integer.parseInt(data[3]);      // 가격
-                roomPriceMap.put(roomNumber, price);        // 매핑 저장
-            }
-        }
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "room_list.txt 파일을 읽는 중 오류가 발생했습니다: " + e.getMessage());
+        add(tabbedPane); // 메인 프레임에 탭 추가
     }
-}
 
-// 객실 번호로 가격 가져오기
-private int getRoomPrice(int roomNumber) {
-    return roomPriceMap.getOrDefault(roomNumber, 0); // 기본값 0
-}
+    // room_list.txt에서 데이터 로드
+    private void loadRoomData() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("room_list.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data.length == 4) {
+                    int roomNumber = Integer.parseInt(data[1]);
+                    String roomType = data[2];
+                    int roomPrice = Integer.parseInt(data[3]);
+                    roomDataMap.put(roomNumber, new RoomData(roomType, roomPrice));
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "room_list.txt 파일을 읽는 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
 
-private void loadReservationsFromFile() {
+    private void loadReservationsFromFile() {
     try (BufferedReader reader = new BufferedReader(new FileReader("reservations.txt"))) {
         String line;
         while ((line = reader.readLine()) != null) {
-            System.out.println("읽은 데이터: " + line);
             String[] data = line.split(",");
-            if (data.length >= 8) { // 체크아웃 날짜는 무시, 최소 8개의 데이터만 처리
+            if (data.length >= 9) { // 최소 9개의 데이터만 있어도 처리
                 String uniqueID = data[0];
                 String name = data[1];
                 int numPeople = Integer.parseInt(data[2]);
@@ -81,307 +67,261 @@ private void loadReservationsFromFile() {
                 int floor = Integer.parseInt(data[4]);
                 int room = Integer.parseInt(data[5]);
                 String checkInDate = data[6];
-                boolean isCheckedIn = Boolean.parseBoolean(data[7]); // 체크인 여부
+                String checkOutDate = data[7];
+                String paymentType = data[8];
+                String paymentMethod = data.length > 9 ? data[9] : "현금"; // 기본값 현금
+                boolean isCheckedIn = data.length > 10 && Boolean.parseBoolean(data[10]); // 기본값 false
 
-                int price = getRoomPrice(room);
-                Customer customer = new Customer(name, uniqueID, String.valueOf(room), price, 
-                                                 numPeople, phoneNumber, checkInDate);
+                Customer customer = new Customer(name, uniqueID, String.valueOf(room), 
+                        0, numPeople, phoneNumber, checkInDate);
+                customer.setCheckOutDate(checkOutDate);
+                customer.setPaymentType(paymentType);
+                customer.setPaymentMethod(paymentMethod);
                 customer.setCheckedIn(isCheckedIn);
+
                 customerMap.put(uniqueID, customer);
             } else {
-                System.out.println("데이터 형식 오류: " + line);
+                System.out.println("잘못된 데이터 형식: " + line);
             }
         }
     } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "reservations.txt 파일을 읽는 중 오류가 발생했습니다: " + e.getMessage());
+        JOptionPane.showMessageDialog(this, "reservations.txt 파일 읽기 오류: " + e.getMessage());
     }
 }
 
 
-
-private void updateReservationsFile() {
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter("reservations.txt"))) {
-        for (Customer customer : customerMap.values()) {
-            writer.write(customer.getReservationId() + "," +
-                         customer.getName() + "," +
-                         customer.getNumPeople() + "," +
-                         customer.getPhoneNumber() + "," +
-                         customer.getRoomNumber().charAt(0) + "," + // 층수 추출
-                         customer.getRoomNumber() + "," +
-                         customer.getCheckInDate() + "," +
-                         customer.isCheckedIn());
-            writer.newLine();
+    // reservations.txt 업데이트
+    private void updateReservationsFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("reservations.txt"))) {
+            for (Customer customer : customerMap.values()) {
+                writer.write(customer.getReservationId() + ","
+                        + customer.getName() + ","
+                        + customer.getNumPeople() + ","
+                        + customer.getPhoneNumber() + ","
+                        + customer.getRoomNumber().charAt(0) + ","
+                        + customer.getRoomNumber() + ","
+                        + customer.getCheckInDate() + ","
+                        + customer.getCheckOutDate() + ","
+                        + customer.getPaymentType() + ","
+                        + customer.getPaymentMethod() + ","
+                        + customer.isCheckedIn());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "reservations.txt 파일 업데이트 중 오류 발생: " + e.getMessage());
         }
+    }
+
+    
+  private void saveCheckedInCustomerToFile(Customer customer) {
+    String filePath = "checked_in_customers.txt"; // 저장할 파일 경로
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) { // append 모드로 파일 열기
+        int roomPrice = roomDataMap.get(Integer.parseInt(customer.getRoomNumber())).getRoomPrice(); // 방 가격 가져오기
+        writer.write("고유번호: " + customer.getReservationId() + ", " +
+                     "이름: " + customer.getName() + ", " +
+                     "객실 번호: " + customer.getRoomNumber() + ", " +
+                     "체크인 날짜: " + customer.getCheckInDate() + ", " +
+                     "체크아웃 날짜: " + customer.getCheckOutDate() + ", " +
+                     "결제 유형: " + customer.getPaymentType() + ", " +
+                     "결제 방식: " + customer.getPaymentMethod() + ", " +
+                     "결제 금액: " + roomPrice + "원");
+        writer.newLine(); // 줄바꿈 추가
+        System.out.println("체크인된 고객 정보가 파일에 저장되었습니다.");
     } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "reservations.txt 파일을 업데이트하는 중 오류가 발생했습니다: " + e.getMessage());
+        JOptionPane.showMessageDialog(this, "checked_in_customers.txt 파일 저장 중 오류 발생: " + e.getMessage());
     }
 }
 
-
-
-private JPanel createCheckInPanel() {
-    JPanel panel = new JPanel();
-    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-    // 예약 명단 표시 영역
-    reservationListArea = new JTextArea(10, 50);
-    reservationListArea.setEditable(false); // 사용자가 수정 불가
-    JScrollPane scrollPane = new JScrollPane(reservationListArea); // 스크롤 가능
-    panel.add(new JLabel("예약자 명단:"));
-    panel.add(scrollPane);
-
-    // 예약 명단 로드 버튼
-    JButton loadReservationsButton = new JButton("예약자 명단 새로고침");
-    panel.add(loadReservationsButton);
-    loadReservationsButton.addActionListener(e -> displayReservations());
-
-    // 예약 확인 입력 패널
-    JPanel reservationPanel = new JPanel(new FlowLayout());
-    reservationPanel.add(new JLabel("이름 또는 고유 번호:"));
-    JTextField reservationField = new JTextField(15);
-    reservationPanel.add(reservationField);
-
-    // 예약 확인 버튼
-    JButton confirmButton = new JButton("예약 확인");
-    reservationPanel.add(confirmButton);
-    panel.add(reservationPanel);
-
-    // 고객 정보 표시 영역
-    JTextArea customerInfoArea = new JTextArea(5, 50);
-    customerInfoArea.setEditable(false);
-    panel.add(new JScrollPane(customerInfoArea));
-    
-    // 결제 방식 선택
-    JPanel paymentPanel = new JPanel(new FlowLayout());
-    paymentPanel.add(new JLabel("결제 방식:"));
-    JRadioButton cardButton = new JRadioButton("카드");
-    JRadioButton cashButton = new JRadioButton("현금");
-    ButtonGroup paymentGroup = new ButtonGroup();
-    paymentGroup.add(cardButton);
-    paymentGroup.add(cashButton);
-    paymentPanel.add(cardButton);
-    paymentPanel.add(cashButton);
-    panel.add(paymentPanel);
     
 
-    // 체크인 버튼
-    JButton checkInButton = new JButton("체크인");
-    checkInButton.setEnabled(false);
-    panel.add(checkInButton);
+    // 기존 체크인 패널 생성
+    private JPanel createCheckInPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-    // 예약 확인 버튼 이벤트
-    confirmButton.addActionListener(e -> {
-        String reservationInput = reservationField.getText().trim();
-        currentCustomer = findCustomer(reservationInput);
+        reservationListArea = new JTextArea(10, 50);
+        reservationListArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(reservationListArea);
+        panel.add(new JLabel("예약자 명단:"));
+        panel.add(scrollPane);
 
-        if (currentCustomer != null && !currentCustomer.isCheckedIn()) {
-            customerInfoArea.setText("고객 정보:\n"
-                    + "이름: " + currentCustomer.getName() + "\n"
-                    + "고유 번호: " + currentCustomer.getReservationId() + "\n"
-                    + "객실 번호: " + currentCustomer.getRoomNumber());
-            checkInButton.setEnabled(true);
-        } else if (currentCustomer != null && currentCustomer.isCheckedIn()) {
-            customerInfoArea.setText("이미 체크인한 고객입니다.");
-        } else {
-            customerInfoArea.setText("해당 고객을 찾을 수 없습니다.");
-        }
-    });
+        JButton loadReservationsButton = new JButton("예약자 명단 새로고침");
+        panel.add(loadReservationsButton);
+        loadReservationsButton.addActionListener(e -> displayReservations());
 
-   // 체크인 버튼 이벤트
-    checkInButton.addActionListener(e -> {
-        if (currentCustomer != null) {
+        JPanel reservationPanel = new JPanel(new FlowLayout());
+        reservationPanel.add(new JLabel("이름 또는 고유 번호:"));
+        JTextField reservationField = new JTextField(15);
+        reservationPanel.add(reservationField);
+
+        JButton confirmButton = new JButton("예약 확인");
+        reservationPanel.add(confirmButton);
+        panel.add(reservationPanel);
+
+        JTextArea customerInfoArea = new JTextArea(5, 50);
+        customerInfoArea.setEditable(false);
+        panel.add(new JScrollPane(customerInfoArea));
+
+        JPanel paymentPanel = new JPanel(new FlowLayout());
+        paymentPanel.add(new JLabel("결제 방식:"));
+        JRadioButton cardButton = new JRadioButton("카드");
+        JRadioButton cashButton = new JRadioButton("현금");
+        ButtonGroup paymentGroup = new ButtonGroup();
+        paymentGroup.add(cardButton);
+        paymentGroup.add(cashButton);
+        paymentPanel.add(cardButton);
+        paymentPanel.add(cashButton);
+        panel.add(paymentPanel);
+
+        JButton checkInButton = new JButton("체크인");
+        checkInButton.setEnabled(false);
+        panel.add(checkInButton);
+
+        JButton onSiteCheckInButton = new JButton("현장 체크인");
+        panel.add(onSiteCheckInButton);
+        onSiteCheckInButton.addActionListener(e -> showOnSiteCheckInDialog());
+
+        confirmButton.addActionListener(e -> {
+            String reservationInput = reservationField.getText().trim();
+            currentCustomer = findCustomer(reservationInput);
+
+            if (currentCustomer != null && !currentCustomer.isCheckedIn()) {
+                customerInfoArea.setText("고객 정보:\n"
+                        + "이름: " + currentCustomer.getName() + "\n"
+                        + "고유 번호: " + currentCustomer.getReservationId() + "\n"
+                        + "객실 번호: " + currentCustomer.getRoomNumber());
+                checkInButton.setEnabled(true);
+            } else if (currentCustomer != null && currentCustomer.isCheckedIn()) {
+                customerInfoArea.setText("이미 체크인한 고객입니다.");
+            } else {
+                customerInfoArea.setText("해당 고객을 찾을 수 없습니다.");
+            }
+        });
+
+      checkInButton.addActionListener(e -> {
+    if (currentCustomer != null) {
+        String paymentType = currentCustomer.getPaymentType();
+        if (paymentType.equals("현장 결제")) {
             String paymentMethod = cardButton.isSelected() ? "카드" : cashButton.isSelected() ? "현금" : "선택 안됨";
             if (paymentMethod.equals("선택 안됨")) {
                 JOptionPane.showMessageDialog(this, "결제 방식을 선택해주세요.");
                 return;
             }
-            
-            //체크인 처리
-            currentCustomer.checkIn();
-            JOptionPane.showMessageDialog(this, "체크인이 완료되었습니다.\n결제 방식: " + paymentMethod);
-            
-            //파일에 체크인 정보 저장
-            saveCheckedInCustomerToFile(currentCustomer, paymentMethod);
-            
-             // 예약 파일 업데이트
-            updateReservationsFile();
-            
-            // 예약 명단 갱신 (체크인된 고객은 표시되지 않음)
-            displayReservations();
-        } else {
-            JOptionPane.showMessageDialog(this, "먼저 고객을 선택하세요.");
+            currentCustomer.setPaymentMethod(paymentMethod);
         }
-    });
-    
-    // 현장 체크인 버튼
-        JButton onSiteCheckInButton = new JButton("현장 체크인");
-        panel.add(onSiteCheckInButton);
-        onSiteCheckInButton.addActionListener(e -> showOnSiteCheckInDialog());
-    
-    // 예약 명단 초기 표시
-    displayReservations();
 
-    return panel;
-}
+        currentCustomer.setCheckedIn(true);
+        updateReservationsFile(); // reservations.txt 파일 업데이트
 
-// reservations.txt 데이터를 reservationListArea에 표시
-private void displayReservations() {
-    reservationListArea.setText(""); // 기존 내용 초기화
-    customerMap.values().stream()
-        .filter(customer -> !customer.isCheckedIn()) // 체크인되지 않은 고객만 필터링
-        .forEach(customer -> {
-            reservationListArea.append(
-                "고유번호: " + customer.getReservationId()
-                + ", 이름: " + customer.getName()
-                + ", 객실 번호: " + customer.getRoomNumber() + "\n"
-            );
-        });
-}
+        saveCheckedInCustomerToFile(currentCustomer); // checked_in_customers.txt 파일에 저장
+        JOptionPane.showMessageDialog(this, "체크인이 완료되었습니다.");
+        displayReservations(); // 예약 목록 갱신
+    } else {
+        JOptionPane.showMessageDialog(this, "먼저 고객을 선택하세요.");
+    }
+});
 
-    private Customer findCustomer(String input) {
-        return customerMap.values().stream()
-                .filter(customer -> customer.getName().equalsIgnoreCase(input) || customer.getReservationId().equalsIgnoreCase(input))
-                .findFirst()
-                .orElse(null);
+
+        displayReservations();
+        return panel;
     }
 
-    private void saveCheckedInCustomerToFile(Customer customer,String paymentMethod) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("checked_in_customers.txt", true))) {
-            writer.write("고객 이름: " + customer.getName()
-                    + ", 예약 번호: " + customer.getReservationId()
-                    + ", 객실 번호: " + customer.getRoomNumber()
-                    + ", 객실 요금: " + customer.getPaymentAmount() + "원"
-                    + ", 결제 방식: " + paymentMethod);
-            writer.newLine();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "체크인 정보를 파일에 저장하는 중 오류가 발생했습니다: " + e.getMessage());
-        }
-    }
-    
-    //현장 체크인 코드 시작
-
-  private void showOnSiteCheckInDialog() {
+    // 현장 체크인 다이얼로그
+   private void showOnSiteCheckInDialog() {
     JDialog onSiteDialog = new JDialog(this, "현장 체크인", true);
-    onSiteDialog.setSize(700, 500);
+    onSiteDialog.setSize(700, 600);
     onSiteDialog.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.insets = new Insets(5, 5, 5, 5);
     gbc.fill = GridBagConstraints.HORIZONTAL;
 
-    // 이름과 전화번호
     JLabel nameLabel = new JLabel("이름:");
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    onSiteDialog.add(nameLabel, gbc);
-
     JTextField nameField = new JTextField(20);
-    gbc.gridx = 1;
-    onSiteDialog.add(nameField, gbc);
-
     JLabel phoneLabel = new JLabel("전화번호:");
-    gbc.gridx = 0;
-    gbc.gridy = 1;
-    onSiteDialog.add(phoneLabel, gbc);
-
     JTextField phoneField = new JTextField(20);
-    gbc.gridx = 1;
-    onSiteDialog.add(phoneField, gbc);
-
-    // 층수, 객실 번호, 객실 유형 및 가격
     JLabel floorLabel = new JLabel("층수:");
-    gbc.gridx = 0;
-    gbc.gridy = 2;
-    onSiteDialog.add(floorLabel, gbc);
-
     JComboBox<Integer> floorComboBox = new JComboBox<>();
-    for (int i = 1; i <= 20; i++) floorComboBox.addItem(i);
-    gbc.gridx = 1;
-    onSiteDialog.add(floorComboBox, gbc);
-
     JLabel roomLabel = new JLabel("객실 번호:");
-    gbc.gridx = 0;
-    gbc.gridy = 3;
-    onSiteDialog.add(roomLabel, gbc);
-
     JComboBox<String> roomComboBox = new JComboBox<>();
-    gbc.gridx = 1;
-    onSiteDialog.add(roomComboBox, gbc);
-
     JLabel roomTypeLabel = new JLabel("객실 유형:");
-    gbc.gridx = 0;
-    gbc.gridy = 4;
-    onSiteDialog.add(roomTypeLabel, gbc);
-
-    JTextField roomTypeField = new JTextField();
-    roomTypeField.setEditable(false);
-    gbc.gridx = 1;
-    onSiteDialog.add(roomTypeField, gbc);
-
+    JTextField roomTypeField = new JTextField(20);
     JLabel roomPriceLabel = new JLabel("객실 가격:");
-    gbc.gridx = 0;
-    gbc.gridy = 5;
-    onSiteDialog.add(roomPriceLabel, gbc);
-
-    JTextField roomPriceField = new JTextField();
-    roomPriceField.setEditable(false);
-    gbc.gridx = 1;
-    onSiteDialog.add(roomPriceField, gbc);
-
-    // 결제 방식
+    JTextField roomPriceField = new JTextField(20);
+    JLabel checkInDateLabel = new JLabel("체크인 날짜 (YYYY-MM-DD):");
+    JTextField checkInDateField = new JTextField(15);
+    JLabel checkOutDateLabel = new JLabel("체크아웃 날짜 (YYYY-MM-DD):");
+    JTextField checkOutDateField = new JTextField(15);
     JLabel paymentLabel = new JLabel("결제 방식:");
-    gbc.gridx = 0;
-    gbc.gridy = 6;
-    onSiteDialog.add(paymentLabel, gbc);
-
     JRadioButton cardButton = new JRadioButton("카드");
     JRadioButton cashButton = new JRadioButton("현금");
     ButtonGroup paymentGroup = new ButtonGroup();
-    paymentGroup.add(cardButton);
-    paymentGroup.add(cashButton);
-
-    JPanel paymentPanel = new JPanel(new FlowLayout());
-    paymentPanel.add(cardButton);
-    paymentPanel.add(cashButton);
-    gbc.gridx = 1;
-    onSiteDialog.add(paymentPanel, gbc);
-
-    // 버튼
     JButton confirmButton = new JButton("확인");
     JButton cancelButton = new JButton("취소");
+
+    roomTypeField.setEditable(false);
+    roomPriceField.setEditable(false);
+    for (int i = 1; i <= 20; i++) floorComboBox.addItem(i);
+
+    gbc.gridx = 0; gbc.gridy = 0; onSiteDialog.add(nameLabel, gbc);
+    gbc.gridx = 1; onSiteDialog.add(nameField, gbc);
+    gbc.gridx = 0; gbc.gridy = 1; onSiteDialog.add(phoneLabel, gbc);
+    gbc.gridx = 1; onSiteDialog.add(phoneField, gbc);
+    gbc.gridx = 0; gbc.gridy = 2; onSiteDialog.add(floorLabel, gbc);
+    gbc.gridx = 1; onSiteDialog.add(floorComboBox, gbc);
+    gbc.gridx = 0; gbc.gridy = 3; onSiteDialog.add(roomLabel, gbc);
+    gbc.gridx = 1; onSiteDialog.add(roomComboBox, gbc);
+    gbc.gridx = 0; gbc.gridy = 4; onSiteDialog.add(roomTypeLabel, gbc);
+    gbc.gridx = 1; onSiteDialog.add(roomTypeField, gbc);
+    gbc.gridx = 0; gbc.gridy = 5; onSiteDialog.add(roomPriceLabel, gbc);
+    gbc.gridx = 1; onSiteDialog.add(roomPriceField, gbc);
+    gbc.gridx = 0; gbc.gridy = 6; onSiteDialog.add(checkInDateLabel, gbc);
+    gbc.gridx = 1; onSiteDialog.add(checkInDateField, gbc);
+    gbc.gridx = 0; gbc.gridy = 7; onSiteDialog.add(checkOutDateLabel, gbc);
+    gbc.gridx = 1; onSiteDialog.add(checkOutDateField, gbc);
+    gbc.gridx = 0; gbc.gridy = 8; onSiteDialog.add(paymentLabel, gbc);
+    gbc.gridx = 1; 
+    JPanel paymentPanel = new JPanel();
+    paymentPanel.add(cardButton);
+    paymentPanel.add(cashButton);
+    paymentGroup.add(cardButton);
+    paymentGroup.add(cashButton);
+    onSiteDialog.add(paymentPanel, gbc);
+    gbc.gridx = 0; gbc.gridy = 9; gbc.gridwidth = 2;
     JPanel buttonPanel = new JPanel();
     buttonPanel.add(confirmButton);
     buttonPanel.add(cancelButton);
-    gbc.gridx = 0;
-    gbc.gridy = 7;
-    gbc.gridwidth = 2;
     onSiteDialog.add(buttonPanel, gbc);
 
-    // 이벤트 처리
-    floorComboBox.addActionListener(e -> updateRoomComboBoxAndDetails(roomComboBox, roomTypeField, roomPriceField, (int) floorComboBox.getSelectedItem()));
-    roomComboBox.addActionListener(e -> {
-        String selectedRoom = (String) roomComboBox.getSelectedItem();
-        if (selectedRoom != null) {
-            int roomNumber = Integer.parseInt(selectedRoom);
-            roomTypeField.setText(getRoomType(roomNumber));
-            roomPriceField.setText(String.valueOf(getRoomPrice(roomNumber)));
-        }
-    });
+    floorComboBox.addActionListener(e -> updateRoomComboBox(roomComboBox, roomTypeField, roomPriceField, (int) floorComboBox.getSelectedItem()));
 
     confirmButton.addActionListener(e -> {
         String name = nameField.getText().trim();
         String phone = phoneField.getText().trim();
         String roomNumber = (String) roomComboBox.getSelectedItem();
-        String roomType = roomTypeField.getText();
-        int roomPrice = Integer.parseInt(roomPriceField.getText());
-        String paymentMethod = cardButton.isSelected() ? "카드" : cashButton.isSelected() ? "현금" : "선택 안됨";
+        String checkInDate = checkInDateField.getText().trim();
+        String checkOutDate = checkOutDateField.getText().trim();
+        String paymentMethod = cardButton.isSelected() ? "카드" : cashButton.isSelected() ? "현금" : null;
 
-        if (name.isEmpty() || phone.isEmpty() || roomNumber == null || roomType.isEmpty() || paymentMethod.equals("선택 안됨")) {
+        if (name.isEmpty() || phone.isEmpty() || roomNumber == null || checkInDate.isEmpty() || checkOutDate.isEmpty() || paymentMethod == null) {
             JOptionPane.showMessageDialog(onSiteDialog, "모든 정보를 입력해주세요.");
             return;
         }
 
-        processOnSiteCheckIn(name, phone, roomNumber, roomType, roomPrice, paymentMethod);
+        int roomPrice = Integer.parseInt(roomPriceField.getText());
+        int uniqueID = (int) (Math.random() * 900) + 100; // 100 ~ 999 사이의 난수 생성
+        Customer customer = new Customer(name, String.valueOf(uniqueID), roomNumber, roomPrice, 1, phone, checkInDate);
+        customer.setCheckOutDate(checkOutDate);
+        customer.setPaymentType("현장 결제");
+        customer.setPaymentMethod(paymentMethod);
+        customer.setCheckedIn(true); // 체크인 상태로 설정
 
+        // 고객 정보를 checked_in_customers.txt에 저장
+        saveCheckedInCustomerToFile(customer);
+
+        // 고객 정보를 customerMap에 추가 (필요 시 생략 가능)
+        customerMap.put(String.valueOf(uniqueID), customer);
+
+        JOptionPane.showMessageDialog(onSiteDialog, "현장 체크인이 완료되었습니다!");
         onSiteDialog.dispose();
     });
 
@@ -391,57 +331,52 @@ private void displayReservations() {
 }
 
 
-private void processOnSiteCheckIn(String name, String phone, String roomNumber, String roomType, int roomPrice, String paymentMethod) {
-    String uniqueID = "OS-" + System.currentTimeMillis();
+    private void updateRoomComboBox(JComboBox<String> roomComboBox, JTextField roomTypeField, JTextField roomPriceField, int floor) {
+        roomComboBox.removeAllItems();
+        roomTypeField.setText("");
+        roomPriceField.setText("");
 
-    Customer customer = new Customer(name, uniqueID, roomNumber, roomPrice, 1, phone, "현장 체크인");
-    customer.checkIn();
-    onSiteCustomerMap.put(uniqueID, customer);
-
-    saveOnSiteCheckedInCustomerToFile(name, roomNumber, roomType, roomPrice, paymentMethod);
-
-    JOptionPane.showMessageDialog(this, "현장 체크인이 완료되었습니다.\n결제 방식: " + paymentMethod);
-}
-
-
-private void saveOnSiteCheckedInCustomerToFile(String name, String roomNumber, String roomType, int roomPrice, String paymentMethod) {
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter("checked_in_customers.txt", true))) {
-        writer.write("고객 이름: " + name
-                + ", 객실 번호: " + roomNumber
-                + ", 객실 유형: " + roomType
-                + ", 객실 요금: " + roomPrice + "원"
-                + ", 결제 방식: " + paymentMethod);
-        writer.newLine();
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "체크인 정보를 파일에 저장하는 중 오류가 발생했습니다: " + e.getMessage());
-    }
-}
-
-private void updateRoomComboBoxAndDetails(JComboBox<String> roomComboBox, JTextField roomTypeField, JTextField roomPriceField, int floor) {
-    roomComboBox.removeAllItems();
-    roomTypeField.setText("");
-    roomPriceField.setText("");
-
-    roomPriceMap.keySet().stream()
-            .filter(roomNumber -> roomNumber / 100 == floor) // 층수로 필터링
-            .forEach(roomNumber -> roomComboBox.addItem(String.valueOf(roomNumber)));
-}
-
-private String getRoomType(int roomNumber) {
-    try (BufferedReader reader = new BufferedReader(new FileReader("room_list.txt"))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] data = line.split(",");
-            if (Integer.parseInt(data[1]) == roomNumber) {
-                return data[2]; // 객실 유형 반환
+        roomDataMap.forEach((roomNumber, roomData) -> {
+            if (roomNumber / 100 == floor) {
+                roomComboBox.addItem(String.valueOf(roomNumber));
             }
-        }
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "room_list.txt에서 데이터를 읽는 중 오류가 발생했습니다: " + e.getMessage());
+        });
+
+        roomComboBox.addActionListener(e -> {
+            String selectedRoom = (String) roomComboBox.getSelectedItem();
+            if (selectedRoom != null) {
+                RoomData roomData = roomDataMap.get(Integer.parseInt(selectedRoom));
+                roomTypeField.setText(roomData.getRoomType());
+                roomPriceField.setText(String.valueOf(roomData.getRoomPrice()));
+            }
+        });
     }
-    return "알 수 없음";
-}
-    
+
+    private void displayReservations() {
+        reservationListArea.setText("");
+        if (customerMap.isEmpty()) {
+            reservationListArea.append("예약된 고객이 없습니다.\n");
+            return;
+        }
+
+        customerMap.values().stream()
+                .filter(customer -> !customer.isCheckedIn())
+                .forEach(customer -> reservationListArea.append(
+                        "고유번호: " + customer.getReservationId() +
+                                ", 이름: " + customer.getName() +
+                                ", 객실 번호: " + customer.getRoomNumber() +
+                                ", 체크인 날짜: " + customer.getCheckInDate() +
+                                ", 체크아웃 날짜: " + customer.getCheckOutDate() +
+                                ", 결제 유형: " + customer.getPaymentType() + "\n"));
+    }
+
+    private Customer findCustomer(String input) {
+        return customerMap.values().stream()
+                .filter(customer -> customer.getName().equalsIgnoreCase(input) || customer.getReservationId().equalsIgnoreCase(input))
+                .findFirst()
+                .orElse(null);
+    }
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -467,7 +402,24 @@ private String getRoomType(int roomNumber) {
 public static void main(String args[]) {
         SwingUtilities.invokeLater(() -> new Checkin().setVisible(true));
     }
+    static class RoomData {
+        private final String roomType;
+        private final int roomPrice;
+
+        public RoomData(String roomType, int roomPrice) {
+            this.roomType = roomType;
+            this.roomPrice = roomPrice;
+        }
+
+        public String getRoomType() {
+            return roomType;
+        }
+
+        public int getRoomPrice() {
+            return roomPrice;
+        }
     }
+}
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
