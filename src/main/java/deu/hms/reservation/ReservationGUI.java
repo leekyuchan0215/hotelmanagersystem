@@ -8,7 +8,9 @@ import java.util.Calendar;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JComboBox;
-import java.time.LocalDate;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException; 
 
 
 public class ReservationGUI extends javax.swing.JFrame {
@@ -297,6 +299,7 @@ public class ReservationGUI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     
+    
 
     private void openCreditCardGUI() {
     // CreditCardGUI 창 열기
@@ -430,43 +433,6 @@ public class ReservationGUI extends javax.swing.JFrame {
         }
     }
 
-    private boolean isRoomAvailable(String checkInTime, String checkOutTime, int floor, int room) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("reservation.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] details = line.split(",");  // 쉼표로 데이터 분리
-
-                if (details.length < 9) continue;  // 데이터 형식이 맞지 않으면 무시
-
-                String existingCheckIn = details[6].trim();  // 파일에 저장된 체크인 날짜
-                String existingCheckOut = details[7].trim();  // 파일에 저장된 체크아웃 날짜
-                int existingFloor = Integer.parseInt(details[4].trim());  // 파일의 층수
-                int existingRoom = Integer.parseInt(details[5].trim());  // 파일의 방번호
-
-            // 같은 층과 같은 방인지 확인
-                if (existingFloor == floor && existingRoom == room) {
-                    LocalDate existingIn = LocalDate.parse(existingCheckIn);  // 기존 예약 체크인
-                    LocalDate existingOut = LocalDate.parse(existingCheckOut);  // 기존 예약 체크아웃
-                    LocalDate newIn = LocalDate.parse(checkInTime);  // 새로운 예약 체크인
-                    LocalDate newOut = LocalDate.parse(checkOutTime);  // 새로운 예약 체크아웃
-
-                // 날짜가 겹치는지 확인 (겹치면 false 반환)
-                    if (!(newOut.isBefore(existingIn) || newIn.isAfter(existingOut))) {
-                        return true;  // 날짜가 겹치는 경우, 예약 불가능
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-        return false;  // 예약 가능
-    }
-
-
-
-
-
-
     private void reserveRegisterActionPerformed(java.awt.event.ActionEvent evt) {
         LocalDate checkInDate = getDateFromComboBoxes(checkInY, checkInM, checkInD);
         LocalDate checkOutDate = getDateFromComboBoxes(checkOutY, checkOutM, checkOutD);
@@ -480,6 +446,10 @@ public class ReservationGUI extends javax.swing.JFrame {
         String phoneNum = phoneNumField.getText();
         int floor = Integer.parseInt(floorCom.getSelectedItem().toString().substring(0, 1));
         int room = Integer.parseInt(roomCom.getSelectedItem().toString().replaceAll("[^0-9]", ""));
+        
+
+        
+        
         Map<Integer, String[]> floorData = loadRoomData();
         String[] roomInfo = floorData.get(floor); 
         // 체크인 날짜 및 체크아웃 날짜
@@ -495,16 +465,24 @@ public class ReservationGUI extends javax.swing.JFrame {
         String checkInTime = checkInYear + "-" + checkInMonth + "-" + checkInDay;
         String checkOutTime = checkOutYear + "-" + checkOutMonth + "-" + checkOutDay;
 
-        
-        if (!isRoomAvailable(checkInTime, checkOutTime, floor, room)) {
-            JOptionPane.showMessageDialog(this, "해당 날짜에 이미 예약된 방입니다.");
-            return; // 중복된 예약이므로 진행 중단
-        }
+
         
         
         if (name.isEmpty() || phoneNum.isEmpty()) {
             JOptionPane.showMessageDialog(this, "모든 정보를 입력해 주세요.");
             return;
+        }
+        for (Reservation reservation : reservations.values()) {
+            if (reservation.getFloor() == floor && reservation.getRoom() == room) {
+                LocalDate existingCheckIn = LocalDate.parse(reservation.getcheckInTime());
+                LocalDate existingCheckOut = LocalDate.parse(reservation.getcheckOutTime());
+
+            // 날짜 겹침 확인
+                if (!checkOutDate.isBefore(existingCheckIn) && !checkInDate.isAfter(existingCheckOut)) {
+                    JOptionPane.showMessageDialog(this, "이미 예약된 날짜와 겹칩니다. 다른 날짜를 선택해 주세요.");
+                    return;
+                }
+            }
         }
         String PaymentType = ""; // 결제 유형 초기화
 
@@ -555,6 +533,7 @@ public class ReservationGUI extends javax.swing.JFrame {
         
         JOptionPane.showMessageDialog(this, "예약이 완료되었습니다.");
     }
+   
 
     // 예약 수정 기능
     private void updateReservationActionPerformed(java.awt.event.ActionEvent evt) {
@@ -565,6 +544,7 @@ public class ReservationGUI extends javax.swing.JFrame {
             return;
         }
 
+        
         Reservation reservation = reservations.get(uniqueID);
         reservation.setName(NameField.getText());
         reservation.setNumPeople(Integer.parseInt(numPeopleField.getText()));
@@ -585,6 +565,29 @@ public class ReservationGUI extends javax.swing.JFrame {
     // 예약 날짜 업데이트
         reservation.setcheckInTime(checkInTime);
         reservation.setcheckOutTime(checkOutTime);
+        LocalDate checkInDate = getDateFromComboBoxes(checkInY, checkInM, checkInD);
+        LocalDate checkOutDate = getDateFromComboBoxes(checkOutY, checkOutM, checkOutD);
+        Map<Integer, String[]> floorData = loadRoomData();
+        String[] roomInfo = floorData.get(floor);
+        
+        for (Reservation existingReservation : reservations.values()) {
+    // 같은 예약은 비교하지 않음
+            if (existingReservation == reservation) {
+                continue;
+            }
+
+            if (existingReservation.getFloor() == reservation.getFloor() && 
+                existingReservation.getRoom() == reservation.getRoom()) {
+                LocalDate existingCheckIn = LocalDate.parse(existingReservation.getcheckInTime());
+                LocalDate existingCheckOut = LocalDate.parse(existingReservation.getcheckOutTime());
+
+        // 날짜 겹침 확인
+                if (!(checkOutDate.isBefore(existingCheckIn) || checkInDate.isAfter(existingCheckOut))) {
+                    JOptionPane.showMessageDialog(this, "이미 예약된 날짜와 겹칩니다. 다른 날짜를 선택해 주세요.");
+                    return; // 겹치는 경우 예약 수정 중단
+                }
+            }
+        }
 
         String PaymentType = "현장 결제"; // 기본값
 
