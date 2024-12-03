@@ -4,6 +4,8 @@
  */
 package deu.hms.checkIn;
 
+import deu.hms.login.MainFrame_Master;
+import deu.hms.login.MainFrame_Staff;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -13,12 +15,14 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 
 public class Checkin extends JFrame {
+     private String userType;  // "manager" 또는 "staff"를 저장하는 변수
     private Map<String, Customer> customerMap; // 예약 고객 정보를 저장할 Map
     private Map<Integer, RoomData> roomDataMap; // 객실 정보를 저장할 Map
     private Customer currentCustomer; // 현재 선택된 고객 정보
     private JTextArea reservationListArea; // 예약 명단 표시 영역
 
-    public Checkin() {
+    public Checkin(String userType) {
+        this.userType = userType;
         setTitle("호텔 체크인 시스템");
         setSize(800, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -36,6 +40,15 @@ public class Checkin extends JFrame {
         add(tabbedPane); // 메인 프레임에 탭 추가
     }
 
+    private void navigateToMainFrame() {
+        if ("master".equals(userType)) {
+            new MainFrame_Master().setVisible(true);
+        } else if ("staff".equals(userType)) {
+            new MainFrame_Staff().setVisible(true);
+        }
+        this.dispose();
+    }
+    
     // room_list.txt에서 데이터 로드
     private void loadRoomData() {
         try (BufferedReader reader = new BufferedReader(new FileReader("room_list.txt"))) {
@@ -184,7 +197,11 @@ public class Checkin extends JFrame {
         // 뒤로가기 버튼 추가
         JButton backButton = new JButton("뒤로가기");
         panel.add(backButton);
-
+        backButton.addActionListener(e->{
+            JOptionPane.showMessageDialog(this, "이전 페이지로 이동합니다.");
+            navigateToMainFrame();
+        });
+        
         confirmButton.addActionListener(e -> {
             String reservationInput = reservationField.getText().trim();
             currentCustomer = findCustomer(reservationInput);
@@ -404,7 +421,7 @@ public class Checkin extends JFrame {
      * @param args the command line arguments
      */
 public static void main(String args[]) {
-        SwingUtilities.invokeLater(() -> new Checkin().setVisible(true));
+        SwingUtilities.invokeLater(() -> new Checkin("master").setVisible(true));
     }
     static class RoomData {
         private final String roomType;

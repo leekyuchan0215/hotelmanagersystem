@@ -1,5 +1,6 @@
 package deu.hms.login;
 
+import deu.hms.checkIn.Checkin;
 import deu.hms.servicerestaurant.Service_RestaurantFrame;
 import deu.hms.serviceroom.Service_RoomFrame;
 import javax.swing.JOptionPane;
@@ -23,8 +24,8 @@ public class MainFrame_Staff extends javax.swing.JFrame {
         restaurantServiceBtn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        checkinoutBtn = new javax.swing.JButton();
-        checkinoutBtn1 = new javax.swing.JButton();
+        checkInBtn = new javax.swing.JButton();
+        checkOutBtn = new javax.swing.JButton();
         reservationBtn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
 
@@ -84,17 +85,17 @@ public class MainFrame_Staff extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
-        checkinoutBtn.setText("체크인");
-        checkinoutBtn.addActionListener(new java.awt.event.ActionListener() {
+        checkInBtn.setText("체크인");
+        checkInBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkinoutBtnActionPerformed(evt);
+                checkInBtnActionPerformed(evt);
             }
         });
 
-        checkinoutBtn1.setText("체크아웃");
-        checkinoutBtn1.addActionListener(new java.awt.event.ActionListener() {
+        checkOutBtn.setText("체크아웃");
+        checkOutBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkinoutBtn1ActionPerformed(evt);
+                checkOutBtnActionPerformed(evt);
             }
         });
 
@@ -107,8 +108,8 @@ public class MainFrame_Staff extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(checkinoutBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(checkinoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(checkOutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(checkInBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(reservationBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
@@ -118,9 +119,9 @@ public class MainFrame_Staff extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(reservationBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(checkinoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(checkInBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(checkinoutBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(checkOutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -212,13 +213,21 @@ public class MainFrame_Staff extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_roomServiceBtnActionPerformed
 
-    private void checkinoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkinoutBtnActionPerformed
+    private void checkInBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkInBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_checkinoutBtnActionPerformed
+        int result = JOptionPane.showConfirmDialog(this, "체크인 페이지로 이동 하시겠습니까?", "체크인 페이지로 이동", JOptionPane.YES_NO_OPTION);
 
-    private void checkinoutBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkinoutBtn1ActionPerformed
+        if (result == JOptionPane.YES_OPTION) {
+            // 사용자가 "예"를 선택하면
+            this.dispose();
+            Checkin cFrame = new Checkin("staff");  // 서비스 화면 띄우기
+            cFrame.setVisible(true);  //현재 화면 닫기
+        }
+    }//GEN-LAST:event_checkInBtnActionPerformed
+
+    private void checkOutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkOutBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_checkinoutBtn1ActionPerformed
+    }//GEN-LAST:event_checkOutBtnActionPerformed
 
     private void restaurantServiceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restaurantServiceBtnActionPerformed
         // TODO add your handling code here:
@@ -246,8 +255,8 @@ public class MainFrame_Staff extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton checkinoutBtn;
-    private javax.swing.JButton checkinoutBtn1;
+    private javax.swing.JButton checkInBtn;
+    private javax.swing.JButton checkOutBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;

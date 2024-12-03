@@ -259,7 +259,14 @@ public class MainFrame_Master extends javax.swing.JFrame {
 
     private void checkinBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkinBtnActionPerformed
         // 체크인 버튼 클릭시 행동 처리
-        
+        int result = JOptionPane.showConfirmDialog(this, "체크인 페이지로 이동 하시겠습니까?", "체크인 페이지로 이동", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            // 사용자가 "예"를 선택하면
+            this.dispose();
+            Checkin cFrame = new Checkin("master");  // 서비스 화면 띄우기
+            cFrame.setVisible(true);  //현재 화면 닫기
+        }
     }//GEN-LAST:event_checkinBtnActionPerformed
 
     private void checkoutBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutBtn1ActionPerformed

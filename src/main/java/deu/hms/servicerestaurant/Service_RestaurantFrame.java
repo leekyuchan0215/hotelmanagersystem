@@ -852,7 +852,6 @@ private void removeMenuFromOrderList() {
     private void backBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtn1ActionPerformed
         JOptionPane.showMessageDialog(this, "이전 페이지로 이동합니다.");
         navigateToMainFrame();
-
     }//GEN-LAST:event_backBtn1ActionPerformed
 
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
