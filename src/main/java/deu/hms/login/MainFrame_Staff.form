@@ -160,6 +160,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#xc2dd;&#xb2f9;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="restaurantServiceBtnActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -1,7 +1,9 @@
 package deu.hms.management.account;
 
-import deu.hms.login.MainFrame_Master;
+import deu.hms.management.AccountManagementService;
 import deu.hms.management.ManagementFrame;
+import deu.hms.management.RoomManagementService;
+import deu.hms.management.ServiceManagementService;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -9,7 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
@@ -155,8 +156,12 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     // 관리 화면으로 돌아가는 메서드입니다.
     private void backToManagementFrame() {
         JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
-        this.dispose();
-        new ManagementFrame().setVisible(true);
+        AccountManagementService accountService = new AccountManagementService();
+        RoomManagementService roomService = new RoomManagementService();
+        ServiceManagementService serviceService = new ServiceManagementService();
+
+        ManagementFrame managementFrame = new ManagementFrame(accountService, roomService, serviceService);
+        managementFrame.setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -494,6 +499,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
         // 뒤로 버튼 눌렀을 때 동작
         backToManagementFrame();
+        this.dispose();
     }//GEN-LAST:event_backBtnActionPerformed
 
     private void registrationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationBtnActionPerformed
@@ -607,8 +613,4 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     private void initializeOtherFrames() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
-    /*private void loadTableData() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }*/
 }

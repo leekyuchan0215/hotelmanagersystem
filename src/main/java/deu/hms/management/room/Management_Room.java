@@ -1,7 +1,9 @@
 package deu.hms.management.room;
 
+import deu.hms.management.AccountManagementService;
 import deu.hms.management.ManagementFrame;
-import deu.hms.management.account.AccountManagementFrame;
+import deu.hms.management.RoomManagementService;
+import deu.hms.management.ServiceManagementService;
 // import java.awt.List;
 import java.util.List;
 import java.util.ArrayList;
@@ -179,9 +181,12 @@ public class Management_Room extends javax.swing.JFrame {
 
     private void backToManagementFrame() {
         JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
-        this.dispose();
-        ManagementFrame mframe = new ManagementFrame();
-        mframe.setVisible(true);
+        AccountManagementService accountService = new AccountManagementService();
+        RoomManagementService roomService = new RoomManagementService();
+        ServiceManagementService serviceService = new ServiceManagementService();
+
+        ManagementFrame managementFrame = new ManagementFrame(accountService, roomService, serviceService);
+        managementFrame.setVisible(true);
     }
 
     /* private void initButtonActions() {
@@ -551,6 +556,7 @@ public class Management_Room extends javax.swing.JFrame {
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
         backToManagementFrame();
+        this.dispose();
     }//GEN-LAST:event_backBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed

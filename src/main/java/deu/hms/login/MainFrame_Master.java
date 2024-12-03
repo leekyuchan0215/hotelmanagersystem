@@ -1,7 +1,11 @@
 package deu.hms.login;
 
+import deu.hms.management.AccountManagementService;
 import deu.hms.management.ManagementFrame;
+import deu.hms.management.RoomManagementService;
+import deu.hms.management.ServiceManagementService;
 import deu.hms.reservation.ReservationGUI;
+import deu.hms.servicerestaurant.Service_RestaurantFrame;
 import deu.hms.serviceroom.Service_RoomFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -265,10 +269,12 @@ public class MainFrame_Master extends javax.swing.JFrame {
         int result = JOptionPane.showConfirmDialog(this, "관리 페이지로 이동 하시겠습니까?", "관리페이지로 이동", JOptionPane.YES_NO_OPTION);
 
         if (result == JOptionPane.YES_OPTION) {
-            //사용자가 "예"를 선택하면
-            //this.dispose();
-            ManagementFrame managementFrame = new ManagementFrame();
-            managementFrame.setVisible(true);  // 관리 페이지로 이동 
+            AccountManagementService accountService = new AccountManagementService();
+            RoomManagementService roomService = new RoomManagementService();
+            ServiceManagementService serviceService = new ServiceManagementService();
+
+            ManagementFrame managementFrame = new ManagementFrame(accountService, roomService, serviceService);
+            managementFrame.setVisible(true);
         }
         this.dispose();
     }//GEN-LAST:event_managementBtnActionPerformed
@@ -300,6 +306,10 @@ public class MainFrame_Master extends javax.swing.JFrame {
 
     private void restaurantserviceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restaurantserviceBtnActionPerformed
         // TODO add your handling code here:
+        Service_RestaurantFrame frame = new Service_RestaurantFrame("master");
+        JOptionPane.showMessageDialog(this, "식당 서비스 페이지로 이동합니다.");
+        frame.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_restaurantserviceBtnActionPerformed
 
     public static void main(String args[]) {

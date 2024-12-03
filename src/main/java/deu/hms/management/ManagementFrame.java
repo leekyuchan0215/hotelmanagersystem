@@ -1,18 +1,21 @@
 package deu.hms.management;
 
+import deu.hms.management.AccountManagementService;
+import deu.hms.management.RoomManagementService;
+import deu.hms.management.ServiceManagementService;
 import deu.hms.login.MainFrame_Master;
-import deu.hms.management.account.AccountManagementFrame;
-import deu.hms.management.room.Management_Room;
-import deu.hms.management.service.Management_Service;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 public class ManagementFrame extends javax.swing.JFrame {
-
-    /**
-     * Creates new form ManagementFrame
-     */
-    public ManagementFrame() {
+    private final AccountManagementService accountService;
+    private final RoomManagementService roomService;
+    private final ServiceManagementService serviceService;
+    
+    public ManagementFrame(AccountManagementService accountService, RoomManagementService roomService, ServiceManagementService serviceService) {
+        this.accountService = accountService;
+        this.roomService = roomService;
+        this.serviceService = serviceService;
         initComponents();
     }
 
@@ -113,50 +116,36 @@ public class ManagementFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void accountManagementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accountManagementBtnActionPerformed
         // 계정 관리 버튼을 눌렀을 때 동작
-        JOptionPane.showMessageDialog(this, "계정 관리 페이지로 이동합니다.");
-        this.dispose();  // 현재 창 닫기
-        AccountManagementFrame aframe = new AccountManagementFrame();
-        aframe.setVisible(true);
+        JOptionPane.showMessageDialog(this, "관리페이지로 이동합니다.");
+        accountService.openAccountManagementPage();
+        this.dispose();
     }//GEN-LAST:event_accountManagementBtnActionPerformed
 
     private void serviceManagementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceManagementBtnActionPerformed
         // 서비스 관리 버튼을 눌렀을 때 동작
-        JOptionPane.showMessageDialog(this, "서비스 관리 페이지로 이동합니다.");
-        this.dispose();  // 현재 창 닫기
-        Management_Service sframe = new Management_Service();
-        sframe.setVisible(true);
+        JOptionPane.showMessageDialog(this, "관리페이지로 이동합니다.");
+        serviceService.openServiceManagementPage();
+        this.dispose();
     }//GEN-LAST:event_serviceManagementBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
         // 이전 버튼을 눌렀을 때 동작:
-        this.dispose(); // 로그인 창 닫기
+        JOptionPane.showMessageDialog(this, "이전 페이지로 이동합니다.");
+        this.dispose();
         MainFrame_Master mainframe = new MainFrame_Master();
-        mainframe.setVisible(true);  // 메인 화면 띄우기
+        mainframe.setVisible(true);
     }//GEN-LAST:event_backBtnActionPerformed
 
     private void roomManagementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomManagementBtnActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(this, "객실 관리 페이지로 이동합니다.");
-        this.dispose();  // 현재 창 닫기
-        Management_Room rframe = new Management_Room();
-        rframe.setVisible(true);
+        JOptionPane.showMessageDialog(this, "관리페이지로 이동합니다.");
+        roomService.openRoomManagementPage();
+        this.dispose();
     }//GEN-LAST:event_roomManagementBtnActionPerformed
 
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ManagementFrame().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton accountManagementBtn;
