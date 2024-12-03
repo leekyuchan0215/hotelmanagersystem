@@ -1,5 +1,6 @@
 package deu.hms.login;
 
+import deu.hms.checkIn.Checkin;
 import deu.hms.management.AccountManagementService;
 import deu.hms.management.ManagementFrame;
 import deu.hms.management.RoomManagementService;
@@ -257,7 +258,8 @@ public class MainFrame_Master extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutBtnActionPerformed
 
     private void checkinBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkinBtnActionPerformed
-        // TODO add your handling code here:
+        // 체크인 버튼 클릭시 행동 처리
+        
     }//GEN-LAST:event_checkinBtnActionPerformed
 
     private void checkoutBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutBtn1ActionPerformed
@@ -274,9 +276,9 @@ public class MainFrame_Master extends javax.swing.JFrame {
             ServiceManagementService serviceService = new ServiceManagementService();
 
             ManagementFrame managementFrame = new ManagementFrame(accountService, roomService, serviceService);
-            managementFrame.setVisible(true);
+            managementFrame.setVisible(true); // 관리 화면  띄우기
         }
-        this.dispose();
+        this.dispose();  // 현재화면 닫기
     }//GEN-LAST:event_managementBtnActionPerformed
 
     private void roomServiceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomServiceBtnActionPerformed
@@ -286,10 +288,9 @@ public class MainFrame_Master extends javax.swing.JFrame {
         if (result == JOptionPane.YES_OPTION) {
             // 사용자가 "예"를 선택하면
             this.dispose();
-            Service_RoomFrame rframe = new Service_RoomFrame("master");
-            rframe.setVisible(true);
+            Service_RoomFrame rframe = new Service_RoomFrame("master");  // 서비스 화면 띄우기
+            rframe.setVisible(true);  //현재 화면 닫기
         }
-
     }//GEN-LAST:event_roomServiceBtnActionPerformed
 
     private void reservationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationBtnActionPerformed
@@ -308,8 +309,8 @@ public class MainFrame_Master extends javax.swing.JFrame {
         // TODO add your handling code here:
         Service_RestaurantFrame frame = new Service_RestaurantFrame("master");
         JOptionPane.showMessageDialog(this, "식당 서비스 페이지로 이동합니다.");
-        frame.setVisible(true);
-        this.dispose();
+        frame.setVisible(true);  // 식당 서비스 페이지로 이동
+        this.dispose();  //현재 창 닫기
     }//GEN-LAST:event_restaurantserviceBtnActionPerformed
 
     public static void main(String args[]) {

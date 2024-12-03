@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 public class Service_RestaurantFrame extends javax.swing.JFrame {
@@ -205,6 +206,11 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
             }
         ));
         jScrollPane2.setViewportView(reservationTable);
+        if (reservationTable.getColumnModel().getColumnCount() > 0) {
+            reservationTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+            reservationTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+            reservationTable.getColumnModel().getColumn(2).setPreferredWidth(50);
+        }
 
         jPanel5.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -347,39 +353,39 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(182, 182, 182)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(howpayDialog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(reservationDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(55, 55, 55))
+                .addGap(45, 45, 45))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(58, 58, 58)
+                        .addGap(161, 161, 161)
                         .addComponent(jLabel17))
                     .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(28, 28, 28)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(reservationDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
-                        .addComponent(howpayDialog, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(howpayDialog, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(reservationDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -711,10 +717,10 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_priceTextActionPerformed
 
     private void reservationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationBtnActionPerformed
-        // orderListTable의 모델 가져오기
         handleReservationButton();
     }//GEN-LAST:event_reservationBtnActionPerformed
-    private void handleReservationButton() {
+
+     private void handleReservationButton() {
         if (orderListTable.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "메뉴를 담아주세요.", "오류", JOptionPane.WARNING_MESSAGE);
             return;
@@ -726,6 +732,7 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
     private void payBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payBtnActionPerformed
         handlePayButton();
     }//GEN-LAST:event_payBtnActionPerformed
+
     private void handlePayButton() {
         if (orderListTable.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "메뉴를 담아야합니다.", "경고", JOptionPane.WARNING_MESSAGE);
@@ -742,7 +749,7 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
         ((DefaultTableModel) orderListTable.getModel()).setRowCount(0);
         updatePriceText();
     }
-
+    
     private void howPayComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_howPayComboBoxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_howPayComboBoxActionPerformed
@@ -795,11 +802,11 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
         addMenuToOrderList();
     }//GEN-LAST:event_addBtnActionPerformed
-
-    private void addMenuToOrderList() {
+private void addMenuToOrderList() {
         int selectedRow = menuListTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "추가할 메뉴를 선택하세요!", "알림", JOptionPane.WARNING_MESSAGE);
@@ -823,12 +830,10 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
         updatePriceText();
     }
 
-
     private void minusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minusBtnActionPerformed
         removeMenuFromOrderList();
     }//GEN-LAST:event_minusBtnActionPerformed
-
-    private void removeMenuFromOrderList() {
+private void removeMenuFromOrderList() {
         int selectedRow = orderListTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요!", "오류", JOptionPane.ERROR_MESSAGE);
@@ -845,18 +850,15 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
     }
 
     private void backBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtn1ActionPerformed
-        // TODO add your handling code here:
-         JOptionPane.showMessageDialog(this,"이전 페이지로 이동합니다.");
+        JOptionPane.showMessageDialog(this, "이전 페이지로 이동합니다.");
         navigateToMainFrame();
+
     }//GEN-LAST:event_backBtn1ActionPerformed
 
-
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
-        // TODO add your handling code here:
         resetOrderList();
     }//GEN-LAST:event_resetBtnActionPerformed
-
-    private void resetOrderList() {
+private void resetOrderList() {
         ((DefaultTableModel) orderListTable.getModel()).setRowCount(0);
         updatePriceText();
     }
@@ -872,7 +874,8 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
             yearText.setText(reservationDate.split("-")[0]);
         }
     }//GEN-LAST:event_roomListComboActionPerformed
-    private String getSelectedRoomNumber() {
+
+private String getSelectedRoomNumber() {
         return (String) roomListCombo.getSelectedItem();
     }
 
@@ -894,6 +897,7 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
 
         return null;
     }
+    
     private void yearTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yearTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_yearTextActionPerformed
@@ -916,8 +920,7 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
         saveReservationToFile(reservationData);
         resetReservationDialog();
     }//GEN-LAST:event_reservationDialogBtnActionPerformed
-
-    private String generateReservationData() {
+private String generateReservationData() {
         StringBuilder reservationData = new StringBuilder("식당");
 
         // yearText, monthText, dayText, hourCombo, minuteCombo 값 가져오기
@@ -977,15 +980,15 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_howpayDialogActionPerformed
 
     private void backDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backDialogBtnActionPerformed
-        // TODO add your handling code here:
         reservationCheckDialog.dispose();
     }//GEN-LAST:event_backDialogBtnActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
-
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Service_RestaurantFrame("master").setVisible(true);

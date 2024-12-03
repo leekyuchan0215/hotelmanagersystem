@@ -433,12 +433,7 @@ public class Management_Service extends javax.swing.JFrame {
 
     private void editDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDialogBtnActionPerformed
         // TODO add your handling code here:
-        int selectedRow = serviceTable.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요!", "오류", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        dialogManager.deleteService(selectedRow);
+        dialogManager.updateServiceData(); // ServiceDialogManager를 통해 수정 로직 호출
     }//GEN-LAST:event_editDialogBtnActionPerformed
 
     private void backDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backDialogBtnActionPerformed

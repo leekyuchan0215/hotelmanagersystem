@@ -1,5 +1,6 @@
 package deu.hms.management;
 
+// 계정, 객실, 서비스 관리 서비스를 사용하기 위해 필요한 클래스들을 import합니다.
 import deu.hms.management.AccountManagementService;
 import deu.hms.management.RoomManagementService;
 import deu.hms.management.ServiceManagementService;
@@ -8,15 +9,18 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 public class ManagementFrame extends javax.swing.JFrame {
+    
+    // 계정, 객실, 서비스 관리를 위한 서비스 객체들을 정의합니다.
     private final AccountManagementService accountService;
     private final RoomManagementService roomService;
     private final ServiceManagementService serviceService;
     
+     // 생성자: 필요한 서비스들을 받아서 프레임을 초기화합니다.
     public ManagementFrame(AccountManagementService accountService, RoomManagementService roomService, ServiceManagementService serviceService) {
         this.accountService = accountService;
         this.roomService = roomService;
         this.serviceService = serviceService;
-        initComponents();
+        initComponents();  // 컴포넌트들을 초기화하는 메소드입니다.
     }
 
     @SuppressWarnings("unchecked")
@@ -116,34 +120,35 @@ public class ManagementFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
+     // 계정 관리 버튼을 눌렀을 때 호출되는 메소드입니다
     private void accountManagementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accountManagementBtnActionPerformed
-        // 계정 관리 버튼을 눌렀을 때 동작
         JOptionPane.showMessageDialog(this, "계정 관리페이지로 이동합니다.");
-        accountService.openAccountManagementPage();
-        this.dispose();
+        accountService.openAccountManagementPage(); // 계정 관리 페이지 열기
+        this.dispose();  // 현재 창 닫기
     }//GEN-LAST:event_accountManagementBtnActionPerformed
 
+    // 서비스 관리 버튼을 눌렀을 때 호출되는 메소드입니다.
     private void serviceManagementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceManagementBtnActionPerformed
-        // 서비스 관리 버튼을 눌렀을 때 동작
         JOptionPane.showMessageDialog(this, "서비스 관리페이지로 이동합니다.");
-        serviceService.openServiceManagementPage();
-        this.dispose();
+        serviceService.openServiceManagementPage();  // 서비스 관리 페이지 열기
+        this.dispose();  // 현재 창 닫기
     }//GEN-LAST:event_serviceManagementBtnActionPerformed
 
+    
+     // 이전 버튼을 눌렀을 때 호출되는 메소드입니다.
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
-        // 이전 버튼을 눌렀을 때 동작:
         JOptionPane.showMessageDialog(this, "이전 페이지로 이동합니다.");
         this.dispose();
-        MainFrame_Master mainframe = new MainFrame_Master();
-        mainframe.setVisible(true);
+        MainFrame_Master mainframe = new MainFrame_Master();   // 메인 페이지로 돌아가기
+        mainframe.setVisible(true);  // 메인 프레임을 보이게 설정
     }//GEN-LAST:event_backBtnActionPerformed
 
+    // 객실 관리 버튼을 눌렀을 때 호출되는 메소드입니다.
     private void roomManagementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomManagementBtnActionPerformed
         // TODO add your handling code here:
         JOptionPane.showMessageDialog(this, "객실 관리페이지로 이동합니다.");
-        roomService.openRoomManagementPage();
-        this.dispose();
+        roomService.openRoomManagementPage();  // 객실 관리 페이지 열기
+        this.dispose();  // 현재 창 닫기
     }//GEN-LAST:event_roomManagementBtnActionPerformed
 
 
