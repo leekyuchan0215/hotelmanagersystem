@@ -49,9 +49,49 @@ public class CheckoutFrame extends javax.swing.JFrame {
     String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\use_service.txt";
     return parseServiceFile(filePath, roomNumber, serviceType);
 }
-   private int calculateRoomServiceCharges(String roomNumber) {
+private int calculateReservedServiceCharges(String roomNumber, String serviceType) {
     String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\service_reservation_list.txt";
-    return parseServiceFile(filePath, roomNumber, "룸서비스");
+    int total = 0;
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println("읽은 데이터: " + line); // 디버깅용 출력
+
+            // 데이터 파싱
+            String[] parts = line.split(", "); // 쉼표와 공백으로 데이터 분리
+            if (parts.length >= 8) { // 데이터 최소 구성 확인
+                String type = parts[0].trim();        // 서비스 유형 (예: 식당, 룸서비스)
+                String room = parts[1].trim();       // 객실 번호
+                String action = parts[7].trim();     // 상태 (예: 객실 등록)
+
+                // 디버깅 메시지
+                System.out.println("조건 확인: type=" + type + ", room=" + room + ", action=" + action);
+
+                // 조건: 특정 서비스 유형, 객실 번호, "객실 등록"
+                if (type.equals(serviceType) && room.equals(roomNumber) && action.equals("객실 등록")) {
+                    try {
+                        // 금액 추출 (숫자만 파싱)
+                        int price = Integer.parseInt(parts[6].trim().replaceAll("[^0-9]", ""));
+                        total += price;
+
+                        // 디버깅 출력
+                        System.out.println("적용된 금액: " + price + ", 누적 금액: " + total);
+                    } catch (NumberFormatException e) {
+                        System.out.println("금액 파싱 오류: " + parts[6].trim());
+                    }
+                } else {
+                    System.out.println("조건 불일치: type=" + type + ", serviceType=" + serviceType + 
+                                       ", room=" + room + ", roomNumber=" + roomNumber + ", action=" + action);
+                }
+            } else {
+                System.out.println("데이터 형식 오류: " + line);
+            }
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "파일 읽기 오류: " + filePath + "\n" + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+    }
+    return total;
 }
     
   private int parseServiceFile(String filePath, String roomNumber, String serviceType) {
@@ -62,7 +102,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
             System.out.println("읽은 데이터: " + line); // 디버깅용 출력
 
             // 데이터 파싱
-            String[] parts = line.split(", ");
+            String[] parts = line.split(","); // 쉼표 기준으로 분리
             if (parts.length >= 5) { // 데이터 최소 구성 확인
                 String type = parts[0].trim();       // 서비스 유형 (예: 식당, 룸서비스)
                 String room = parts[1].trim();      // 객실 번호
@@ -70,6 +110,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
                 String priceStr = parts[3].trim();  // 금액
                 String action = parts[4].trim();    // 상태 (예: 객실 등록)
 
+                // 디버깅 메시지
                 System.out.println("type: " + type + ", room: " + room + ", price: " + priceStr + ", action: " + action);
 
                 // 조건: 특정 서비스 유형, 해당 객실 번호, "객실 등록"
@@ -305,23 +346,14 @@ public class CheckoutFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(305, 305, 305)
-                .addComponent(PaymentLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(316, 316, 316)
                                 .addComponent(CheckOutButton)
                                 .addGap(18, 18, 18)
                                 .addComponent(closeButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(FeedbackLabel))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(240, 240, 240)
                                 .addComponent(idLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -329,7 +361,17 @@ public class CheckoutFrame extends javax.swing.JFrame {
                                 .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(311, 311, 311)
-                                .addComponent(RoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(RoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(299, 299, 299)
+                                        .addComponent(PaymentLabel))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(FeedbackLabel)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 201, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
@@ -360,7 +402,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
                     .addComponent(InitializationButton)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(refreshButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -369,14 +411,15 @@ public class CheckoutFrame extends javax.swing.JFrame {
                     .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(RoomButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(PaymentLabel)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(PaymentLabel)
+                        .addGap(9, 9, 9)
+                        .addComponent(FeedbackLabel))
                     .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6)
-                .addComponent(FeedbackLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -400,7 +443,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_idFieldActionPerformed
 
     private void RoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RoomButtonActionPerformed
-       String nameOrID = idField.getText().trim();
+      String nameOrID = idField.getText().trim();
 
     if (nameOrID.isEmpty()) {
         JOptionPane.showMessageDialog(this, "이름 또는 고유 번호를 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
@@ -422,33 +465,42 @@ public class CheckoutFrame extends javax.swing.JFrame {
         // 추가 요금 계산
         extraFee = actualCheckOutTime.isAfter(checkOutLimit) ? 20000 : 0;
 
-       // 식당 요금 계산
+        // 예약 없이 사용한 룸 서비스 금액 계산
+        int roomServiceCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
+
+        // 예약 없이 사용한 식당 금액 계산
         int diningCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "식당");
-        System.out.println("계산된 식당 요금: " + diningCharge);
-// 룸 서비스 요금 계산
-int roomServiceCharge = calculateRoomServiceCharges(currentCustomer.getRoomNumber());
-System.out.println("계산된 룸 서비스 요금: " + roomServiceCharge);
 
-// 총 금액 계산 (업데이트)
-totalAmount = currentCustomer.getPaymentAmount() + extraFee + roomServiceCharge + diningCharge;
+        // 예약된 룸 서비스 금액 계산
+        int reservedRoomServiceCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
 
-// UI 업데이트
-String roomInfo = String.format(
-        "객실: %s\n기본 요금: %d원\n추가 요금: %d원\n룸 서비스 요금: %d원\n식당 요금: %d원\n총 금액: %d원",
-        currentCustomer.getRoomNumber(),
-        currentCustomer.getPaymentAmount(),
-        extraFee,
-        roomServiceCharge,
-        diningCharge,
-        totalAmount
-);
-RoomArea.setText(roomInfo);
+        // 예약된 식당 금액 계산
+        int reservedDiningCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "식당");
+
+        // 총 예약된 서비스 금액
+        int reservedServiceTotal = reservedRoomServiceCharge + reservedDiningCharge;
+
+        // 총 금액 계산 (예약된 서비스 + 비예약 서비스 + 추가 요금)
+        totalAmount = currentCustomer.getPaymentAmount() + extraFee + roomServiceCharge + diningCharge + reservedServiceTotal;
+
+        // UI 업데이트
+        String roomInfo = String.format(
+                "객실: %s\n기본 요금: %d원\n추가 요금: %d원\n룸 서비스 금액: %d원\n식당 금액: %d원\n예약한 룸 서비스 금액: %d원\n예약한 식당 금액: %d원\n총 금액: %d원",
+                currentCustomer.getRoomNumber(),
+                currentCustomer.getPaymentAmount(),
+                extraFee,
+                roomServiceCharge,
+                diningCharge,
+                reservedRoomServiceCharge,
+                reservedDiningCharge,
+                totalAmount
+        );
+        RoomArea.setText(roomInfo);
 
     } else {
         JOptionPane.showMessageDialog(this, "해당 고객의 체크인 정보를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
     }
 }
-    
     private Customer findCheckInCustomer(String nameOrID) {
     String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt";
 
