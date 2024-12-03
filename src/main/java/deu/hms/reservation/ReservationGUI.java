@@ -403,14 +403,11 @@ public class ReservationGUI extends javax.swing.JFrame {
 // 객실 옵션을 업데이트하는 메소드
     // 객실 옵션을 업데이트하는 메소드 (예약된 방 숨기기 포함)
     private void updateRoomOptions() {
-        roomCom.removeAllItems(); // 기존 객실 옵션 제거
-
     // 선택된 층 정보를 가져옴
         int floor = floorCom.getSelectedIndex() + 1; // 선택된 층 번호 (1층부터 시작)
 
     // 층별 객실 정보 읽기
-     Map<Integer, String[]> floorData = loadRoomData();
-
+        Map<Integer, String[]> floorData = loadRoomData();
 
     // 해당 층의 예약된 방 번호 확인
         Set<Integer> reservedRooms = new HashSet<>();
@@ -420,17 +417,54 @@ public class ReservationGUI extends javax.swing.JFrame {
             }
         }
 
-    // 층에 해당하는 호수 (1~5호) 추가
+    // 기존 객실 옵션을 모두 제거
+        roomCom.removeAllItems();
+
+    // 층에 해당하는 호수 (1호부터 5호까지) 추가
         for (int i = 1; i <= 5; i++) {
             String roomNumber = floor + "0" + i; // 예: 101, 102 ...
             int room = Integer.parseInt(roomNumber);
-
-        // 예약된 방인지 확인
-            if (!reservedRooms.contains(room)) {
-                roomCom.addItem(roomNumber + "호"); // 예약되지 않은 방만 추가
-            }
+            roomCom.addItem(roomNumber + "호");
+        // 예약된 방이 아니면 콤보박스에 추가
+            
         }
     }
+
+    private boolean isRoomAvailable(String checkInTime, String checkOutTime, int floor, int room) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("reservation.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] details = line.split(",");  // 쉼표로 데이터 분리
+
+                if (details.length < 9) continue;  // 데이터 형식이 맞지 않으면 무시
+
+                String existingCheckIn = details[6].trim();  // 파일에 저장된 체크인 날짜
+                String existingCheckOut = details[7].trim();  // 파일에 저장된 체크아웃 날짜
+                int existingFloor = Integer.parseInt(details[4].trim());  // 파일의 층수
+                int existingRoom = Integer.parseInt(details[5].trim());  // 파일의 방번호
+
+            // 같은 층과 같은 방인지 확인
+                if (existingFloor == floor && existingRoom == room) {
+                    LocalDate existingIn = LocalDate.parse(existingCheckIn);  // 기존 예약 체크인
+                    LocalDate existingOut = LocalDate.parse(existingCheckOut);  // 기존 예약 체크아웃
+                    LocalDate newIn = LocalDate.parse(checkInTime);  // 새로운 예약 체크인
+                    LocalDate newOut = LocalDate.parse(checkOutTime);  // 새로운 예약 체크아웃
+
+                // 날짜가 겹치는지 확인 (겹치면 false 반환)
+                    if (!(newOut.isBefore(existingIn) || newIn.isAfter(existingOut))) {
+                        return true;  // 날짜가 겹치는 경우, 예약 불가능
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+        return false;  // 예약 가능
+    }
+
+
+
+
 
 
     private void reserveRegisterActionPerformed(java.awt.event.ActionEvent evt) {
@@ -462,6 +496,12 @@ public class ReservationGUI extends javax.swing.JFrame {
         String checkOutTime = checkOutYear + "-" + checkOutMonth + "-" + checkOutDay;
 
         
+        if (!isRoomAvailable(checkInTime, checkOutTime, floor, room)) {
+            JOptionPane.showMessageDialog(this, "해당 날짜에 이미 예약된 방입니다.");
+            return; // 중복된 예약이므로 진행 중단
+        }
+        
+        
         if (name.isEmpty() || phoneNum.isEmpty()) {
             JOptionPane.showMessageDialog(this, "모든 정보를 입력해 주세요.");
             return;
@@ -484,12 +524,12 @@ public class ReservationGUI extends javax.swing.JFrame {
             CreditCardGUI.resetCardInfoValid();
         }
 
-    if (payRadioButton.isSelected()) {
-        PaymentType = "현장 결제";
-    } else if (!cardRadioButton.isSelected()) {
-        JOptionPane.showMessageDialog(this, "결제 유형을 선택해 주세요.");
-        return;
-    }
+        if (payRadioButton.isSelected()) {
+            PaymentType = "현장 결제";
+        } else if (!cardRadioButton.isSelected()) {
+            JOptionPane.showMessageDialog(this, "결제 유형을 선택해 주세요.");
+            return;
+        }
         
         // 고유 번호 생성 (예시로 UUID 사용)
          String uniqueID = String.format("%03d", new Random().nextInt(1000));

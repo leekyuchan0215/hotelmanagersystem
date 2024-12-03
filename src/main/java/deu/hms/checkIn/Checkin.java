@@ -180,6 +180,10 @@ public class Checkin extends JFrame {
         JButton onSiteCheckInButton = new JButton("현장 체크인");
         panel.add(onSiteCheckInButton);
         onSiteCheckInButton.addActionListener(e -> showOnSiteCheckInDialog());
+        
+        // 뒤로가기 버튼 추가
+        JButton backButton = new JButton("뒤로가기");
+        panel.add(backButton);
 
         confirmButton.addActionListener(e -> {
             String reservationInput = reservationField.getText().trim();
