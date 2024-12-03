@@ -6,10 +6,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class AccountDialogManager {
-    private JDialog editDialog;
-    private JDialog registrationDialog;
-    private JTable accountTable;
-    private JTable editTable;
+    private final JDialog editDialog;
+    private final JDialog registrationDialog;
+    private final JTable accountTable;
+    private final JTable editTable;
 
     public AccountDialogManager(JDialog editDialog, JDialog registrationDialog, JTable accountTable, JTable editTable) {
         this.editDialog = editDialog;

@@ -1,4 +1,4 @@
-/*package deu.hms.management;
+package deu.hms.management;
 
 import javax.swing.UIManager; // UIManager는 GUI의 테마(모양)를 설정하기 위해 사용됩니다.
 
@@ -29,4 +29,3 @@ public class Main {
         frame.setVisible(true);
     }
 }
-*/

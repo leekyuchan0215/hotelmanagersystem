@@ -9,9 +9,10 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 public class AccountManagementFrame extends javax.swing.JFrame {
-        private AccountService accountService;
-        private AccountDialogManager dialogManager;
-        
+
+    private final AccountService accountService;
+    private final AccountDialogManager dialogManager;
+
     public AccountManagementFrame() {
         initComponents();
          accountService = new AccountService("id_pw.txt");
@@ -19,7 +20,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         loadTableData(); // JTable 초기화 시 데이터 로드
     }
 
-    // 테이블 데이터를 로드하는 메서드입니다.
+     // 테이블 데이터를 로드하는 메서드입니다.
     private void loadTableData() {
         DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
         accountService.readFileAndPopulateTable(model);
@@ -442,12 +443,13 @@ public class AccountManagementFrame extends javax.swing.JFrame {
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         // 삭제 버튼을 눌렀을 때 동작
+        // 삭제 버튼을 눌렀을 때 동작
         int selectedRow = accountTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요!", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        dialogManager.deleteAccount(selectedRow);   
+        dialogManager.deleteAccount(selectedRow); 
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void numberTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberTextActionPerformed
@@ -471,7 +473,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_registrationCancelDialogActionPerformed
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
-        int selectedRow = accountTable.getSelectedRow();
+         int selectedRow = accountTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.", "오류", JOptionPane.ERROR_MESSAGE);
             return;
