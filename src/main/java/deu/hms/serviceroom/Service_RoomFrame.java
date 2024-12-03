@@ -23,8 +23,6 @@ public class Service_RoomFrame extends javax.swing.JFrame {
     public Service_RoomFrame(String userType) {
         // 생성자의 매개변수로 전달된 사용자 유형(userType)을 클래스 필드에 저장
         this.userType = userType;
-        // 생성자 호출 시 사용자 유형을 콘솔에 출력하여 디버깅에 활용
-        System.out.println("User type in constructor: " + userType);
         // GUI 컴포넌트 초기화 메서드 호출 (버튼, 라벨, 텍스트 필드 등 생성 및 배치)
         initComponents();
         // 메뉴 리스트를 로드하여 메뉴 테이블에 표시
@@ -813,6 +811,7 @@ public class Service_RoomFrame extends javax.swing.JFrame {
     }
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
+        JOptionPane.showMessageDialog(this,"이전 페이지로 이동합니다.");
         navigateToMainFrame();
     }//GEN-LAST:event_backBtnActionPerformed
 

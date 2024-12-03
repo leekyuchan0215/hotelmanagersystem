@@ -16,7 +16,7 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
 
     private String userType;  // "manager" 또는 "staff"를 저장하는 변수
 
-    public Service_RestaurantFrame() {
+    public Service_RestaurantFrame(String userType) {
         this.userType = userType;
         initComponents();
         loadMenuList(); // 메뉴 데이터 로드
@@ -846,6 +846,7 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
 
     private void backBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtn1ActionPerformed
         // TODO add your handling code here:
+         JOptionPane.showMessageDialog(this,"이전 페이지로 이동합니다.");
         navigateToMainFrame();
     }//GEN-LAST:event_backBtn1ActionPerformed
 
@@ -984,33 +985,10 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Service_RestaurantFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Service_RestaurantFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Service_RestaurantFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Service_RestaurantFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Service_RestaurantFrame().setVisible(true);
+                new Service_RestaurantFrame("master").setVisible(true);
             }
         });
     }

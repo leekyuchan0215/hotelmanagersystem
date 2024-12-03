@@ -1,6 +1,9 @@
 package deu.hms.management.service;
 
-import deu.hms.login.MainFrame_Master;
+import deu.hms.management.AccountManagementService;
+import deu.hms.management.ManagementFrame;
+import deu.hms.management.RoomManagementService;
+import deu.hms.management.ServiceManagementService;
 import deu.hms.management.account.AccountManagementFrame;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -416,11 +419,18 @@ public class Management_Service extends javax.swing.JFrame {
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
+        backToManagementFrame();
         this.dispose();
-        new MainFrame_Master().setVisible(true);
     }//GEN-LAST:event_backBtnActionPerformed
+private void backToManagementFrame() {
+        JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
+        AccountManagementService accountService = new AccountManagementService();
+        RoomManagementService roomService = new RoomManagementService();
+        ServiceManagementService serviceService = new ServiceManagementService();
 
+        ManagementFrame managementFrame = new ManagementFrame(accountService, roomService, serviceService);
+        managementFrame.setVisible(true);
+    }
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         // TODO add your handling code here:
         int selectedRow = serviceTable.getSelectedRow();
