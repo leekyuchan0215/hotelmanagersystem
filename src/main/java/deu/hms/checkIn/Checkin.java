@@ -144,6 +144,57 @@ public class Checkin extends JFrame {
         JOptionPane.showMessageDialog(this, "checked_in_customers.txt 파일 저장 중 오류 발생: " + e.getMessage());
     }
 }
+//요청사항 입력
+  private void showRequestInputDialog(Customer customer) {
+    JDialog requestDialog = new JDialog(this, "요청사항 입력", true);
+    requestDialog.setSize(400, 300);
+    requestDialog.setLayout(new BorderLayout());
+
+    JLabel label = new JLabel("고객 요청사항을 입력하세요:");
+    JTextArea requestArea = new JTextArea(10, 30);
+    JScrollPane scrollPane = new JScrollPane(requestArea);
+
+    JButton saveButton = new JButton("저장");
+    JButton cancelButton = new JButton("취소");
+
+    JPanel buttonPanel = new JPanel();
+    buttonPanel.add(saveButton);
+    buttonPanel.add(cancelButton);
+
+    requestDialog.add(label, BorderLayout.NORTH);
+    requestDialog.add(scrollPane, BorderLayout.CENTER);
+    requestDialog.add(buttonPanel, BorderLayout.SOUTH);
+
+    saveButton.addActionListener(e -> {
+        String request = requestArea.getText().trim();
+        if (!request.isEmpty()) {
+            saveRequestToFile(customer, request);
+            JOptionPane.showMessageDialog(this, "요청사항이 저장되었습니다.");
+            requestDialog.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "요청사항을 입력하세요.");
+        }
+    });
+
+    cancelButton.addActionListener(e -> requestDialog.dispose());
+
+    requestDialog.setVisible(true);
+}
+
+  
+  private void saveRequestToFile(Customer customer, String request) {
+    String filePath = "request_list.txt";
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+        writer.write("고유번호: " + customer.getReservationId() + ", " +
+                     "이름: " + customer.getName() + ", " +
+                     "객실 번호: " + customer.getRoomNumber() + ", " +
+                     "요청사항: " + request);
+        writer.newLine();
+        System.out.println("요청사항이 파일에 저장되었습니다.");
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "request_list.txt 파일 저장 중 오류 발생: " + e.getMessage());
+    }
+}
 
     
 
@@ -235,6 +286,10 @@ public class Checkin extends JFrame {
         updateReservationsFile(); // reservations.txt 파일 업데이트
 
         saveCheckedInCustomerToFile(currentCustomer); // checked_in_customers.txt 파일에 저장
+        
+        // 요청사항 입력 다이얼로그 표시
+        showRequestInputDialog(currentCustomer);
+        
         JOptionPane.showMessageDialog(this, "체크인이 완료되었습니다.");
         displayReservations(); // 예약 목록 갱신
     } else {
