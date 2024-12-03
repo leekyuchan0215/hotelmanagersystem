@@ -20,6 +20,8 @@ import java.io.FileWriter;
 import java.io.File;
 import java.io.IOException;
 import java.awt.Font;
+import java.util.Map;
+import java.util.HashMap;
 
 
 public class CheckoutFrame extends javax.swing.JFrame {
@@ -41,6 +43,59 @@ public class CheckoutFrame extends javax.swing.JFrame {
     FeedbackArea.setText(""); // 피드백 초기화
     checkOutDateTime = null; // 체크아웃 시간 초기화
     extraFee = 0; // 추가 요금 초기화
+}
+    
+   private int calculateServiceCharges(String roomNumber, String serviceType) {
+    String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\use_service.txt";
+    return parseServiceFile(filePath, roomNumber, serviceType);
+}
+   private int calculateRoomServiceCharges(String roomNumber) {
+    String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\service_reservation_list.txt";
+    return parseServiceFile(filePath, roomNumber, "룸서비스");
+}
+    
+  private int parseServiceFile(String filePath, String roomNumber, String serviceType) {
+    int total = 0; // 서비스별 합산 금액
+    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println("읽은 데이터: " + line); // 디버깅용 출력
+
+            // 데이터 파싱
+            String[] parts = line.split(", ");
+            if (parts.length >= 5) { // 데이터 최소 구성 확인
+                String type = parts[0].trim();       // 서비스 유형 (예: 식당, 룸서비스)
+                String room = parts[1].trim();      // 객실 번호
+                String details = parts[2].trim();   // 세부 주문 내역
+                String priceStr = parts[3].trim();  // 금액
+                String action = parts[4].trim();    // 상태 (예: 객실 등록)
+
+                System.out.println("type: " + type + ", room: " + room + ", price: " + priceStr + ", action: " + action);
+
+                // 조건: 특정 서비스 유형, 해당 객실 번호, "객실 등록"
+                if (type.equals(serviceType) && room.equals(roomNumber) && action.equals("객실 등록")) {
+                    try {
+                        // 금액 추출 (숫자만 파싱)
+                        int price = Integer.parseInt(priceStr.replaceAll("[^0-9]", ""));
+                        total += price;
+
+                        // 디버깅 출력
+                        System.out.println("적용된 금액: " + price + ", 누적 금액: " + total);
+                    } catch (NumberFormatException e) {
+                        System.out.println("금액 파싱 오류: " + priceStr);
+                    }
+                } else {
+                    System.out.println("조건 불일치: type=" + type + ", serviceType=" + serviceType + 
+                                       ", room=" + room + ", roomNumber=" + roomNumber + ", action=" + action);
+                }
+            } else {
+                System.out.println("데이터 형식 오류: " + line);
+            }
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "파일 읽기 오류: " + filePath + "\n" + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+    }
+    return total;
 }
    private void removeCustomerFromCheckInList(Customer customer) {
     String inputFile = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt";
@@ -345,37 +400,50 @@ public class CheckoutFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_idFieldActionPerformed
 
     private void RoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RoomButtonActionPerformed
-      String nameOrID = idField.getText().trim();
+       String nameOrID = idField.getText().trim();
 
     if (nameOrID.isEmpty()) {
         JOptionPane.showMessageDialog(this, "이름 또는 고유 번호를 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
         return;
     }
 
-    // 체크아웃된 고객인지 확인
     if (isCheckedOut(nameOrID)) {
         JOptionPane.showMessageDialog(this, "해당 고객은 이미 체크아웃되었습니다.", "오류", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
-    // 체크인된 고객 정보 검색
     currentCustomer = findCheckInCustomer(nameOrID);
 
     if (currentCustomer != null) {
-        checkOutDateTime = LocalDateTime.now(); // 현재 시간 저장
-        LocalTime checkOutLimit = LocalTime.of(11, 0); // 기준 체크아웃 시간
+        checkOutDateTime = LocalDateTime.now();
+        LocalTime checkOutLimit = LocalTime.of(11, 0);
         LocalTime actualCheckOutTime = checkOutDateTime.toLocalTime();
 
         // 추가 요금 계산
         extraFee = actualCheckOutTime.isAfter(checkOutLimit) ? 20000 : 0;
-        totalAmount = currentCustomer.getPaymentAmount() + extraFee; // 체크인 요금 + 추가 요금
 
-        String roomInfo = String.format(
-                "이름: %s\n객실: %s\n기본 요금: %d원\n추가 요금: %d원\n총 금액: %d원",
-                currentCustomer.getName(), currentCustomer.getRoomNumber(),
-                currentCustomer.getPaymentAmount(), extraFee, totalAmount
-        );
-        RoomArea.setText(roomInfo);
+       // 식당 요금 계산
+        int diningCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "식당");
+        System.out.println("계산된 식당 요금: " + diningCharge);
+// 룸 서비스 요금 계산
+int roomServiceCharge = calculateRoomServiceCharges(currentCustomer.getRoomNumber());
+System.out.println("계산된 룸 서비스 요금: " + roomServiceCharge);
+
+// 총 금액 계산 (업데이트)
+totalAmount = currentCustomer.getPaymentAmount() + extraFee + roomServiceCharge + diningCharge;
+
+// UI 업데이트
+String roomInfo = String.format(
+        "객실: %s\n기본 요금: %d원\n추가 요금: %d원\n룸 서비스 요금: %d원\n식당 요금: %d원\n총 금액: %d원",
+        currentCustomer.getRoomNumber(),
+        currentCustomer.getPaymentAmount(),
+        extraFee,
+        roomServiceCharge,
+        diningCharge,
+        totalAmount
+);
+RoomArea.setText(roomInfo);
+
     } else {
         JOptionPane.showMessageDialog(this, "해당 고객의 체크인 정보를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
     }
@@ -387,24 +455,50 @@ public class CheckoutFrame extends javax.swing.JFrame {
     try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
         String line;
         while ((line = reader.readLine()) != null) {
-            // 각 줄을 읽고 파싱
-            String[] parts = line.split(", ");
-            if (parts.length >= 5) {
-                String name = parts[1].split(": ")[1].trim(); // "이름: 홍길동" -> "홍길동"
-                String id = parts[0].split(": ")[1].trim();   // "고유번호: 037" -> "037"
-                String roomNumber = parts[2].split(": ")[1].trim();
-                int paymentAmount = 0; // 파일에 결제 금액 데이터가 없으므로 기본값 설정
+            // 각 줄을 읽고 데이터를 확인
+            System.out.println("읽은 데이터: " + line);
 
-                // 고유번호나 이름이 일치하는지 확인
-                if (id.equals(nameOrID) || name.equals(nameOrID)) {
-                    return new Customer(name, id, roomNumber, paymentAmount); // 고객 객체 반환
-                }
+            // 데이터 파싱
+            Map<String, String> customerData = parseCustomerData(line);
+
+            // 고유번호와 이름을 가져오기
+            String id = customerData.get("고유번호");
+            String name = customerData.get("이름");
+            String roomNumber = customerData.get("객실 번호");
+            String paymentStr = customerData.get("결제 금액");
+
+            if (id == null || name == null || roomNumber == null || paymentStr == null) {
+                JOptionPane.showMessageDialog(this, "필수 데이터가 누락되었습니다: " + line, "오류", JOptionPane.ERROR_MESSAGE);
+                continue;
+            }
+
+            // 결제 금액 파싱
+            int paymentAmount = Integer.parseInt(paymentStr.replaceAll("[^0-9]", ""));
+
+            // 고유번호 또는 이름이 일치하는지 확인
+            if (id.equals(nameOrID) || name.equals(nameOrID)) {
+                return new Customer(name, id, roomNumber, paymentAmount); // 고객 객체 반환
             }
         }
     } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "체크인 정보를 읽는 중 오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "파일 읽기 오류: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "결제 금액 변환 오류: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
     }
-    return null; // 일치하는 고객 정보가 없을 경우
+    return null;
+}
+
+// 고객 데이터를 파싱하는 헬퍼 메서드
+private Map<String, String> parseCustomerData(String line) {
+    Map<String, String> dataMap = new HashMap<>();
+    String[] parts = line.split(", ");
+    for (String part : parts) {
+        String[] keyValue = part.split(": ");
+        if (keyValue.length == 2) {
+            dataMap.put(keyValue[0].trim(), keyValue[1].trim());
+        }
+    }
+    return dataMap;
     }//GEN-LAST:event_RoomButtonActionPerformed
 
     private void CheckOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckOutButtonActionPerformed
