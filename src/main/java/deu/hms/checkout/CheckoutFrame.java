@@ -50,7 +50,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
     return parseServiceFile(filePath, roomNumber, serviceType);
 }
 private int calculateReservedServiceCharges(String roomNumber, String serviceType) {
-    String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\service_reservation_list.txt";
+     String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\service_reservation_list.txt";
     int total = 0;
 
     try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -59,26 +59,25 @@ private int calculateReservedServiceCharges(String roomNumber, String serviceTyp
             System.out.println("읽은 데이터: " + line); // 디버깅용 출력
 
             // 데이터 파싱
-            String[] parts = line.split(", "); // 쉼표와 공백으로 데이터 분리
-            if (parts.length >= 8) { // 데이터 최소 구성 확인
+            String[] parts = line.split(","); // 쉼표 기준으로 분리
+            if (parts.length >= 10) { // 데이터 최소 구성 확인
                 String type = parts[0].trim();        // 서비스 유형 (예: 식당, 룸서비스)
                 String room = parts[1].trim();       // 객실 번호
-                String action = parts[7].trim();     // 상태 (예: 객실 등록)
+                String details = parts[7].trim();    // 주문 세부사항
+                String priceStr = parts[8].trim();   // 금액
+                String action = parts[9].trim();     // 상태 (예: 객실 등록)
 
-                // 디버깅 메시지
-                System.out.println("조건 확인: type=" + type + ", room=" + room + ", action=" + action);
-
-                // 조건: 특정 서비스 유형, 객실 번호, "객실 등록"
+                // 조건: 특정 서비스 유형, 해당 객실 번호, "객실 등록"
                 if (type.equals(serviceType) && room.equals(roomNumber) && action.equals("객실 등록")) {
                     try {
                         // 금액 추출 (숫자만 파싱)
-                        int price = Integer.parseInt(parts[6].trim().replaceAll("[^0-9]", ""));
+                        int price = Integer.parseInt(priceStr.replaceAll("[^0-9]", ""));
                         total += price;
 
                         // 디버깅 출력
                         System.out.println("적용된 금액: " + price + ", 누적 금액: " + total);
                     } catch (NumberFormatException e) {
-                        System.out.println("금액 파싱 오류: " + parts[6].trim());
+                        System.out.println("금액 파싱 오류: " + priceStr);
                     }
                 } else {
                     System.out.println("조건 불일치: type=" + type + ", serviceType=" + serviceType + 
@@ -363,35 +362,35 @@ private int calculateReservedServiceCharges(String roomNumber, String serviceTyp
                                 .addGap(311, 311, 311)
                                 .addComponent(RoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(299, 299, 299)
-                                        .addComponent(PaymentLabel))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(FeedbackLabel)))
+                                .addGap(299, 299, 299)
+                                .addComponent(PaymentLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 201, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1))))
+                        .addComponent(jScrollPane1)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(312, 312, 312)
-                .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(293, 293, 293)
                 .addComponent(InitializationButton)
                 .addGap(16, 16, 16))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(312, 312, 312)
+                        .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(FeedbackLabel)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -402,7 +401,7 @@ private int calculateReservedServiceCharges(String roomNumber, String serviceTyp
                     .addComponent(InitializationButton)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(refreshButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -412,21 +411,21 @@ private int calculateReservedServiceCharges(String roomNumber, String serviceTyp
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(RoomButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(PaymentLabel)
-                        .addGap(9, 9, 9)
+                        .addGap(23, 23, 23)
                         .addComponent(FeedbackLabel))
-                    .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(PaymentLabel)
+                        .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(CheckOutButton)
-                    .addComponent(closeButton))
-                .addGap(25, 25, 25))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(closeButton)
+                    .addComponent(CheckOutButton))
+                .addGap(19, 19, 19))
         );
 
         pack();
@@ -443,7 +442,7 @@ private int calculateReservedServiceCharges(String roomNumber, String serviceTyp
     }//GEN-LAST:event_idFieldActionPerformed
 
     private void RoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RoomButtonActionPerformed
-      String nameOrID = idField.getText().trim();
+     String nameOrID = idField.getText().trim();
 
     if (nameOrID.isEmpty()) {
         JOptionPane.showMessageDialog(this, "이름 또는 고유 번호를 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
@@ -459,36 +458,38 @@ private int calculateReservedServiceCharges(String roomNumber, String serviceTyp
 
     if (currentCustomer != null) {
         checkOutDateTime = LocalDateTime.now();
-        LocalTime checkOutLimit = LocalTime.of(11, 0);
+        LocalTime checkOutLimitTime = LocalTime.of(11, 0); // 체크아웃 시간 제한 (11:00)
+        LocalDateTime checkOutLimitDate = LocalDateTime.parse(findCheckOutDate(nameOrID) + "T11:00:00"); // 체크아웃 날짜 가져오기
+
+        // 체크아웃 시간 초과 추가 요금 계산
         LocalTime actualCheckOutTime = checkOutDateTime.toLocalTime();
+        int lateCheckOutFee = actualCheckOutTime.isAfter(checkOutLimitTime) ? 20000 : 0;
 
-        // 추가 요금 계산
-        extraFee = actualCheckOutTime.isAfter(checkOutLimit) ? 20000 : 0;
+        // 체크아웃 날짜 초과 추가 요금 계산 (하루당 50000원 예시)
+        int overdueDays = (int) java.time.Duration.between(checkOutLimitDate, checkOutDateTime).toDays();
+        int overdueFee = overdueDays > 0 ? overdueDays * 50000 : 0;
 
-        // 예약 없이 사용한 룸 서비스 금액 계산
+        // 예약 없이 사용한 룸 서비스 및 식당 금액 계산
         int roomServiceCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
-
-        // 예약 없이 사용한 식당 금액 계산
         int diningCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "식당");
 
-        // 예약된 룸 서비스 금액 계산
+        // 예약된 룸 서비스 및 식당 금액 계산
         int reservedRoomServiceCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
-
-        // 예약된 식당 금액 계산
         int reservedDiningCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "식당");
 
-        // 총 예약된 서비스 금액
-        int reservedServiceTotal = reservedRoomServiceCharge + reservedDiningCharge;
-
-        // 총 금액 계산 (예약된 서비스 + 비예약 서비스 + 추가 요금)
-        totalAmount = currentCustomer.getPaymentAmount() + extraFee + roomServiceCharge + diningCharge + reservedServiceTotal;
+        // 총 금액 계산
+        totalAmount = currentCustomer.getPaymentAmount() + lateCheckOutFee + overdueFee +
+                      roomServiceCharge + diningCharge +
+                      reservedRoomServiceCharge + reservedDiningCharge;
 
         // UI 업데이트
         String roomInfo = String.format(
-                "객실: %s\n기본 요금: %d원\n추가 요금: %d원\n룸 서비스 금액: %d원\n식당 금액: %d원\n예약한 룸 서비스 금액: %d원\n예약한 식당 금액: %d원\n총 금액: %d원",
+                "객실: %s\n기본 요금: %d원\n체크아웃 시간 초과 요금: %d원\n체크아웃 날짜 초과 요금: %d원\n" +
+                "룸 서비스 금액: %d원\n식당 금액: %d원\n예약한 룸 서비스 금액: %d원\n예약한 식당 금액: %d원\n총 금액: %d원",
                 currentCustomer.getRoomNumber(),
                 currentCustomer.getPaymentAmount(),
-                extraFee,
+                lateCheckOutFee,
+                overdueFee,
                 roomServiceCharge,
                 diningCharge,
                 reservedRoomServiceCharge,
@@ -539,7 +540,29 @@ private int calculateReservedServiceCharges(String roomNumber, String serviceTyp
     }
     return null;
 }
+private String findCheckOutDate(String nameOrID) {
+    String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt";
 
+    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            // 고유번호 또는 이름이 포함된 줄을 찾음
+            if (line.contains("고유번호: " + nameOrID) || line.contains("이름: " + nameOrID)) {
+                // 체크아웃 날짜 추출
+                String[] parts = line.split(", "); // 쉼표와 공백으로 나누기
+                for (String part : parts) {
+                    if (part.startsWith("체크아웃 날짜:")) {
+                        return part.split(": ")[1].trim(); // 체크아웃 날짜 추출
+                    }
+                }
+            }
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "파일 읽기 오류: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return null; // 체크아웃 날짜를 찾지 못한 경우
+}
 // 고객 데이터를 파싱하는 헬퍼 메서드
 private Map<String, String> parseCustomerData(String line) {
     Map<String, String> dataMap = new HashMap<>();
