@@ -1,17 +1,13 @@
 package deu.hms.management.room;
 
-import deu.hms.management.AccountManagementService;
 import deu.hms.management.ManagementFrame;
-import deu.hms.management.RoomManagementService;
-import deu.hms.management.ServiceManagementService;
-// import java.awt.List;
-import java.util.List;
-import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -20,71 +16,37 @@ import javax.swing.table.DefaultTableModel;
 
 public class Management_Room extends javax.swing.JFrame {
 
+    private RoomService roomService;
+    private RoomDialogManager dialogManager;
+    
     public Management_Room() {
         initComponents();
-        loadTableData(); // JTable 초기화 시 데이터 로드
-
+        roomService = new RoomService("room_list.txt");
+        dialogManager = new RoomDialogManager(editDialog, registrationDialog, roomTable, editTable);
+        loadTableData();
     }
 
     private void loadTableData() {
         DefaultTableModel model = (DefaultTableModel) roomTable.getModel();
-        model.setRowCount(0);
-
-        try (BufferedReader br = new BufferedReader(new FileReader("room_list.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] rowData = line.split(",");
-                if (rowData.length == 4) {
-                    model.addRow(rowData);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("파일을 읽는 중 문제가 발생했습니다.");
-        }
+        roomService.readFileAndPopulateTable(model);
     }
 
     private void saveTableData() {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("room_list.txt", false))) {
-            DefaultTableModel model = (DefaultTableModel) roomTable.getModel();
-            int rowCount = model.getRowCount();
-            int columnCount = model.getColumnCount();
-
-            for (int i = 0; i < rowCount; i++) {
-                StringBuilder rowBuilder = new StringBuilder();
-                for (int j = 0; j < columnCount; j++) {
-                    rowBuilder.append(model.getValueAt(i, j).toString());
-                    if (j < columnCount - 1) {
-                        rowBuilder.append(",");
-                    }
-                }
-                bufferedWriter.write(rowBuilder.toString());
-                bufferedWriter.newLine();
-            }
-
-            JOptionPane.showMessageDialog(this, "변경 사항이 저장되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "파일 저장 중 오류가 발생했습니다: " + ex.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-        }
+        DefaultTableModel model = (DefaultTableModel) roomTable.getModel();
+        roomService.saveTableDataToFile(model);
+        JOptionPane.showMessageDialog(this, "변경 사항이 저장되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void showEditDialog(int selectedRow) {
-        DefaultTableModel editModel = (DefaultTableModel) editTable.getModel();
-        editModel.setRowCount(0);
+    private void backToManagementFrame() {
+        JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
+       // ManagementFrame을 생성하고 표시
+        deu.hms.management.AccountManagementService accountService = new deu.hms.management.AccountManagementService();
+        deu.hms.management.RoomManagementService roomService = new deu.hms.management.RoomManagementService();
+        deu.hms.management.ServiceManagementService serviceService = new deu.hms.management.ServiceManagementService();
 
-        String[] rowData = new String[4];
-        for (int i = 0; i < 4; i++) {
-            rowData[i] = roomTable.getValueAt(selectedRow, i).toString();
-        }
-        editModel.addRow(rowData);
-
-        editDialog.setSize(700, 300);
-        editDialog.setLocationRelativeTo(this);
-        editDialog.setTitle("객실 수정");
-        editDialog.setModal(false);
-        editDialog.setVisible(true);
-        editDialog.toFront();
+        deu.hms.management.ManagementFrame managementFrame = new deu.hms.management.ManagementFrame(accountService, roomService, serviceService);
+        managementFrame.setVisible(true);
+        this.dispose();
     }
 
     private void updateRoomData() {
@@ -173,47 +135,6 @@ public class Management_Room extends javax.swing.JFrame {
         loadTableData();
     }
 
-    private void deleteRoom(int selectedRow) {
-        DefaultTableModel model = (DefaultTableModel) roomTable.getModel();
-        model.removeRow(selectedRow);
-        JOptionPane.showMessageDialog(this, "선택된 객실이 삭제되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private void backToManagementFrame() {
-        JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
-        AccountManagementService accountService = new AccountManagementService();
-        RoomManagementService roomService = new RoomManagementService();
-        ServiceManagementService serviceService = new ServiceManagementService();
-
-        ManagementFrame managementFrame = new ManagementFrame(accountService, roomService, serviceService);
-        managementFrame.setVisible(true);
-    }
-
-    /* private void initButtonActions() {
-        backBtn.addActionListener(evt -> backToManagementFrame());
-        registrationBtn.addActionListener(evt -> registrationDialog.setVisible(true));
-        deleteBtn.addActionListener(evt -> {
-            int selectedRow = roomTable.getSelectedRow();
-            if (selectedRow != -1) {
-                deleteRoom(selectedRow);
-            } else {
-                JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요.", "오류", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        storageBtn.addActionListener(evt -> saveTableData());
-        changeBtn.addActionListener(evt -> {
-            int selectedRow = roomTable.getSelectedRow();
-            if (selectedRow != -1) {
-                showEditDialog(selectedRow);
-            } else {
-                JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.", "오류", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        changeDialogBtn.addActionListener(evt -> updateRoomData());
-        registrationDialogBtn.addActionListener(evt -> registerRoom());
-        deleteDialogBtn.addActionListener(evt -> editDialog.dispose());
-        jButton3.addActionListener(evt -> registrationDialog.dispose());
-    }*/
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -382,8 +303,8 @@ public class Management_Room extends javax.swing.JFrame {
                         .addGap(112, 112, 112)
                         .addGroup(registrationDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
                         .addGroup(registrationDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8)))
@@ -540,10 +461,10 @@ public class Management_Room extends javax.swing.JFrame {
     private void changeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeBtnActionPerformed
         int selectedRow = roomTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.");
+            JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        showEditDialog(selectedRow);
+        dialogManager.showEditDialog(selectedRow);
     }//GEN-LAST:event_changeBtnActionPerformed
 
     private void changeDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeDialogBtnActionPerformed
@@ -556,7 +477,6 @@ public class Management_Room extends javax.swing.JFrame {
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
         backToManagementFrame();
-        this.dispose();
     }//GEN-LAST:event_backBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
@@ -566,18 +486,11 @@ public class Management_Room extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요.", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        deleteRoom(selectedRow);
+        dialogManager.deleteRoom(selectedRow);  
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void registrationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationBtnActionPerformed
-        // TODO add your handling code here:
-        //  등록 버튼 눌렀을 때 동작 : 새로운 계정을 등록할 수 있는 창 띄우기
-        registrationDialog.setSize(700, 400);  // 다이얼로그 크기 설정
-        registrationDialog.setLocationRelativeTo(this);  // 부모 컴포넌트를 기준으로 중앙에 배치
-        registrationDialog.setTitle("계정 등록");  // 다이얼로그 제목 설정
-        registrationDialog.setModal(false);  // 비모달로 설정 (부모 창과 상호작용 가능)
-        registrationDialog.setVisible(true);  // 다이얼로그 표시
-        registrationDialog.toFront();  // 다이얼로그를 화면 최상위로 가져오기
+        dialogManager.showRegistrationDialog();
     }//GEN-LAST:event_registrationBtnActionPerformed
 
     private void priceTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceTextActionPerformed

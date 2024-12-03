@@ -119,14 +119,14 @@ public class ManagementFrame extends javax.swing.JFrame {
     
     private void accountManagementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accountManagementBtnActionPerformed
         // 계정 관리 버튼을 눌렀을 때 동작
-        JOptionPane.showMessageDialog(this, "관리페이지로 이동합니다.");
+        JOptionPane.showMessageDialog(this, "계정 관리페이지로 이동합니다.");
         accountService.openAccountManagementPage();
         this.dispose();
     }//GEN-LAST:event_accountManagementBtnActionPerformed
 
     private void serviceManagementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceManagementBtnActionPerformed
         // 서비스 관리 버튼을 눌렀을 때 동작
-        JOptionPane.showMessageDialog(this, "관리페이지로 이동합니다.");
+        JOptionPane.showMessageDialog(this, "서비스 관리페이지로 이동합니다.");
         serviceService.openServiceManagementPage();
         this.dispose();
     }//GEN-LAST:event_serviceManagementBtnActionPerformed
@@ -141,7 +141,7 @@ public class ManagementFrame extends javax.swing.JFrame {
 
     private void roomManagementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomManagementBtnActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(this, "관리페이지로 이동합니다.");
+        JOptionPane.showMessageDialog(this, "객실 관리페이지로 이동합니다.");
         roomService.openRoomManagementPage();
         this.dispose();
     }//GEN-LAST:event_roomManagementBtnActionPerformed

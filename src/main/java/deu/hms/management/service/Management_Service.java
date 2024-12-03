@@ -1,93 +1,82 @@
 package deu.hms.management.service;
 
-import deu.hms.management.AccountManagementService;
-import deu.hms.management.ManagementFrame;
-import deu.hms.management.RoomManagementService;
-import deu.hms.management.ServiceManagementService;
-import deu.hms.management.account.AccountManagementFrame;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 public class Management_Service extends javax.swing.JFrame {
 
+    private ServiceService serviceService;
+    private ServiceDialogManager dialogManager;
+
     public Management_Service() {
         initComponents();
+        serviceService = new ServiceService("menu_list.txt");
+        dialogManager = new ServiceDialogManager(editDialog, registrationDialog, serviceTable, editTable);
         loadTableData();
     }
 
     private void loadTableData() {
         // 테이블의 값들을 채우는 메서드
         DefaultTableModel model = (DefaultTableModel) serviceTable.getModel();
-        model.setRowCount(0); // 기존 데이터 초기화
-        readFileAndPopulateTable("menu_list.txt", model); // 파일에서 데이터를 읽어와 테이블을 채웁니다.
-    }
-
-    // 파일을 읽어서 JTable 모델에 데이터를 추가하는 메서드입니다.
-    private void readFileAndPopulateTable(String filename, DefaultTableModel model) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] rowData = line.split(",");
-                if (rowData.length == 3) {
-                    model.addRow(rowData);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("파일을 읽는 중 문제가 발생했습니다.");
-        }
+        serviceService.readFileAndPopulateTable(model);
     }
 
     // JTable 데이터를 파일에 저장하는 메서드입니다.
     private void saveTableDataToFile() {
         DefaultTableModel model = (DefaultTableModel) serviceTable.getModel();
-        saveTableDataToFile("menu_list.txt", model); // 테이블 데이터를 파일에 저장합니다.
+        serviceService.saveTableDataToFile(model);
+        JOptionPane.showMessageDialog(this, "변경 사항이 저장되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void saveTableDataToFile(String filename, DefaultTableModel model) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filename, false))) {
-            for (int i = 0; i < model.getRowCount(); i++) {
-                StringBuilder rowBuilder = new StringBuilder();
-                for (int j = 0; j < model.getColumnCount(); j++) {
-                    rowBuilder.append(model.getValueAt(i, j).toString());
-                    if (j < model.getColumnCount() - 1) {
-                        rowBuilder.append(",");
-                    }
-                }
-                bufferedWriter.write(rowBuilder.toString());
-                bufferedWriter.newLine();
-            }
-            JOptionPane.showMessageDialog(this, "변경 사항이 저장되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
+    private void backToManagementFrame() {
+        JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
+        // ManagementFrame을 생성하고 표시
+        deu.hms.management.AccountManagementService accountService = new deu.hms.management.AccountManagementService();
+        deu.hms.management.RoomManagementService roomService = new deu.hms.management.RoomManagementService();
+        deu.hms.management.ServiceManagementService serviceService = new deu.hms.management.ServiceManagementService();
+
+        deu.hms.management.ManagementFrame managementFrame = new deu.hms.management.ManagementFrame(accountService, roomService, serviceService);
+        managementFrame.setVisible(true);
+        this.dispose();
+    }
+
+    private void clearRegistrationDialog() {
+        registrationDialog.dispose(); // 다이얼로그 닫기
+        foodText.setText("");         // 음식 필드 초기화
+        priceText.setText("");        // 가격 필드 초기화
+        serviceList.clearSelection(); // 서비스 종류 초기화
+    }
+
+    private void registerService() {
+        // 다이얼로그의 입력값 가져오기
+        String service = serviceList.getSelectedValue(); // 서비스 종류
+        String food = foodText.getText().trim();         // 음식
+        String price = priceText.getText().trim();       // 가격
+
+        // 입력값 검증
+        if (service == null || food.isEmpty() || price.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "모든 필드를 채워주세요!", "오류", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 파일에 데이터 저장
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("menu_list.txt", true))) {
+            writer.write(service + "," + food + "," + price);
+            writer.newLine();
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "파일 저장 중 오류가 발생했습니다: " + ex.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "파일 저장 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    }
 
-    private void showEditDialog(int selectedRow) {
-        DefaultTableModel editModel = (DefaultTableModel) editTable.getModel();
-        editModel.setRowCount(0);
-
-        String[] rowData = new String[3];
-        for (int i = 0; i < 3; i++) {
-            rowData[i] = serviceTable.getValueAt(selectedRow, i).toString();
-        }
-        editModel.addRow(rowData);
-
-        editDialog.setSize(700, 300);
-        editDialog.setLocationRelativeTo(this);
-        editDialog.setTitle("서비스 수정");
-        editDialog.setModal(false);
-        editDialog.setVisible(true);
-        editDialog.toFront();
+        // 성공 메시지 출력 및 UI 초기화
+        JOptionPane.showMessageDialog(this, "등록이 완료되었습니다!", "성공", JOptionPane.INFORMATION_MESSAGE);
+        clearRegistrationDialog(); // UI 초기화
+        loadTableData();           // 테이블 새로고침
     }
 
     @SuppressWarnings("unchecked")
@@ -395,12 +384,7 @@ public class Management_Service extends javax.swing.JFrame {
 
     private void registrationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationBtnActionPerformed
         // TODO add your handling code here:
-        registrationDialog.setSize(600, 400);  // 다이얼로그 크기 설정
-        registrationDialog.setLocationRelativeTo(this);  // 부모 컴포넌트를 기준으로 중앙에 배치
-        registrationDialog.setTitle("계정 등록");  // 다이얼로그 제목 설정
-        registrationDialog.setModal(false);  // 비모달로 설정 (부모 창과 상호작용 가능)
-        registrationDialog.setVisible(true);  // 다이얼로그 표시
-        registrationDialog.toFront();  // 다이얼로그를 화면 최상위로 가져오기
+        dialogManager.showRegistrationDialog();
     }//GEN-LAST:event_registrationBtnActionPerformed
 
     private void foodTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_foodTextActionPerformed
@@ -414,115 +398,53 @@ public class Management_Service extends javax.swing.JFrame {
 
     private void registrationDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationDialogBtnActionPerformed
         // TODO add your handling code here:
-        registerService();
+        registerService(); // 별도의 메서드로 로직 분리
     }//GEN-LAST:event_registrationDialogBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
         // TODO add your handling code here:
         backToManagementFrame();
-        this.dispose();
     }//GEN-LAST:event_backBtnActionPerformed
-private void backToManagementFrame() {
-        JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
-        AccountManagementService accountService = new AccountManagementService();
-        RoomManagementService roomService = new RoomManagementService();
-        ServiceManagementService serviceService = new ServiceManagementService();
 
-        ManagementFrame managementFrame = new ManagementFrame(accountService, roomService, serviceService);
-        managementFrame.setVisible(true);
-    }
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        // TODO add your handling code here:
         int selectedRow = serviceTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요!", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        deleteService(selectedRow);
+        dialogManager.deleteService(selectedRow);
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void storageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storageBtnActionPerformed
         // TODO add your handling code here:
-        saveTableDataToFile();
+        DefaultTableModel model = (DefaultTableModel) serviceTable.getModel();
+        serviceService.saveTableDataToFile(model); // ServiceService의 메서드를 호출
     }//GEN-LAST:event_storageBtnActionPerformed
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
         // TODO add your handling code here:
         int selectedRow = serviceTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.");
+            JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        showEditDialog(selectedRow);
+        dialogManager.showEditDialog(selectedRow);
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void editDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDialogBtnActionPerformed
         // TODO add your handling code here:
-        updateServiceData();
+        int selectedRow = serviceTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요!", "오류", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        dialogManager.deleteService(selectedRow);
     }//GEN-LAST:event_editDialogBtnActionPerformed
 
     private void backDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backDialogBtnActionPerformed
         // TODO add your handling code here:
         editDialog.dispose();
     }//GEN-LAST:event_backDialogBtnActionPerformed
-
-    private void registerService() {
-        String service = serviceList.getSelectedValue();
-        String food = foodText.getText().trim();
-        String price = priceText.getText().trim();
-
-        if (food.isEmpty() || price.isEmpty() || service == null) {
-            JOptionPane.showMessageDialog(this, "모든 필드를 채워주세요!", "오류", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("menu_list.txt", true))) {
-            writer.write(service + "," + food + "," + price);
-            writer.newLine();
-        } catch (IOException ex) {
-            Logger.getLogger(AccountManagementFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        JOptionPane.showMessageDialog(this, "등록이 완료되었습니다!", "성공", JOptionPane.INFORMATION_MESSAGE);
-        registrationDialog.dispose();
-        foodText.setText("");
-        priceText.setText("");
-        serviceList.clearSelection();
-        loadTableData();
-    }
-
-    private void deleteService(int selectedRow) {
-        DefaultTableModel model = (DefaultTableModel) serviceTable.getModel();
-        model.removeRow(selectedRow);
-        JOptionPane.showMessageDialog(this, "선택된 서비스가 삭제되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private void updateServiceData() {
-        DefaultTableModel editModel = (DefaultTableModel) editTable.getModel();
-        DefaultTableModel serviceModel = (DefaultTableModel) serviceTable.getModel();
-
-        if (editModel.getRowCount() > 0) {
-            String[] updatedRowData = new String[editModel.getColumnCount()];
-            for (int i = 0; i < updatedRowData.length; i++) {
-                Object cellValue = editModel.getValueAt(0, i);
-                updatedRowData[i] = cellValue != null ? cellValue.toString() : "";
-            }
-
-            int selectedRow = serviceTable.getSelectedRow();
-            if (selectedRow != -1) {
-                for (int i = 0; i < updatedRowData.length; i++) {
-                    serviceModel.setValueAt(updatedRowData[i], selectedRow, i);
-                }
-                JOptionPane.showMessageDialog(this, "데이터가 성공적으로 수정되었습니다.");
-            } else {
-                JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.");
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "수정할 데이터가 없습니다.");
-        }
-
-        editDialog.dispose();
-    }
 
     public static void main(String args[]) {
         try {

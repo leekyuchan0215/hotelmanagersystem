@@ -4,93 +4,35 @@ import deu.hms.management.AccountManagementService;
 import deu.hms.management.ManagementFrame;
 import deu.hms.management.RoomManagementService;
 import deu.hms.management.ServiceManagementService;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 public class AccountManagementFrame extends javax.swing.JFrame {
-
+        private AccountService accountService;
+        private AccountDialogManager dialogManager;
+        
     public AccountManagementFrame() {
         initComponents();
+         accountService = new AccountService("id_pw.txt");
+        dialogManager = new AccountDialogManager(editDialog, registrationDialog, accountTable, editTable);
         loadTableData(); // JTable 초기화 시 데이터 로드
     }
 
     // 테이블 데이터를 로드하는 메서드입니다.
     private void loadTableData() {
         DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
-        model.setRowCount(0); // 기존 데이터를 초기화합니다.
-        readFileAndPopulateTable("id_pw.txt", model); // 파일에서 데이터를 읽어와 테이블을 채웁니다.
+        accountService.readFileAndPopulateTable(model);
     }
 
-    // 파일을 읽어서 JTable 모델에 데이터를 추가하는 메서드입니다.
-    private void readFileAndPopulateTable(String filename, DefaultTableModel model) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = br.readLine()) != null) { // 파일의 각 줄을 읽습니다.
-                String[] rowData = line.split(","); // 데이터를 ','로 분리합니다.
-                if (rowData.length == 4) {
-                    model.addRow(rowData); // 테이블에 행을 추가합니다.
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("파일을 읽는 중 문제가 발생했습니다.");
-        }
-    }
-
-    // JTable 데이터를 파일에 저장하는 메서드입니다.
-    private void saveTableDataToFile() {
+  // JTable 데이터를 파일에 저장하는 메서드입니다.
+    private void saveTableData() {
         DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
-        saveTableDataToFile("id_pw.txt", model); // 테이블 데이터를 파일에 저장합니다.
+        accountService.saveTableDataToFile(model);
+        JOptionPane.showMessageDialog(this, "데이터가 성공적으로 저장되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void saveTableDataToFile(String filename, DefaultTableModel model) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filename, false))) {
-            for (int i = 0; i < model.getRowCount(); i++) {
-                StringBuilder rowBuilder = new StringBuilder();
-                for (int j = 0; j < model.getColumnCount(); j++) {
-                    rowBuilder.append(model.getValueAt(i, j).toString());
-                    if (j < model.getColumnCount() - 1) {
-                        rowBuilder.append(",");
-                    }
-                }
-                bufferedWriter.write(rowBuilder.toString());
-                bufferedWriter.newLine();
-            }
-            JOptionPane.showMessageDialog(this, "변경 사항이 저장되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "파일 저장 중 오류가 발생했습니다: " + ex.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-        }
-    }
-
-    // 계정 수정을 위한 다이얼로그를 표시하는 메서드입니다.
-    private void showEditDialog(int selectedRow) {
-        DefaultTableModel editModel = (DefaultTableModel) editTable.getModel();
-        editModel.setRowCount(0);
-
-        String[] rowData = new String[4];
-        for (int i = 0; i < 4; i++) {
-            rowData[i] = accountTable.getValueAt(selectedRow, i).toString();
-        }
-        editModel.addRow(rowData);
-
-        editDialog.setSize(700, 300);
-        editDialog.setLocationRelativeTo(this);
-        editDialog.setTitle("계정 수정");
-        editDialog.setModal(false);
-        editDialog.setVisible(true);
-        editDialog.toFront();
-    }
-
-    // 계정 데이터를 수정하는 메서드입니다.
+// 계정을 수정하는 메서드입니다.
     private void updateAccountData() {
         DefaultTableModel editModel = (DefaultTableModel) editTable.getModel();
         DefaultTableModel accountModel = (DefaultTableModel) accountTable.getModel();
@@ -118,7 +60,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         editDialog.dispose();
     }
 
-    // 계정을 등록하는 메서드입니다.
+// 계정을 등록하는 메서드입니다.
     private void registerAccount() {
         String number = numberText.getText().trim();
         String id = idText.getText().trim();
@@ -130,29 +72,20 @@ public class AccountManagementFrame extends javax.swing.JFrame {
             return;
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("id_pw.txt", true))) {
-            writer.write(number + "," + id + "," + pw + "," + role);
-            writer.newLine();
-        } catch (IOException ex) {
-            Logger.getLogger(AccountManagementFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        accountService.registerAccount(number, id, pw, role);
         JOptionPane.showMessageDialog(this, "등록이 완료되었습니다!", "성공", JOptionPane.INFORMATION_MESSAGE);
         registrationDialog.dispose();
-        numberText.setText("");
-        idText.setText("");
-        pwText.setText("");
-        rightList.clearSelection();
-        loadTableData();
+        loadTableData(); // 등록 후 테이블을 새로고침합니다.
     }
-
-    // 선택된 계정을 삭제하는 메서드입니다.
+    
+        // 선택된 계정을 삭제하는 메서드입니다.
     private void deleteAccount(int selectedRow) {
         DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
         model.removeRow(selectedRow);
         JOptionPane.showMessageDialog(this, "선택된 계정이 삭제되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
+        // 삭제 후 데이터를 파일에 저장하려면 저장 버튼을 눌러주세요.
     }
-
+    
     // 관리 화면으로 돌아가는 메서드입니다.
     private void backToManagementFrame() {
         JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
@@ -493,7 +426,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
 
     private void storageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storageBtnActionPerformed
         // 저장 버튼 눌렀을 때 동작:
-        saveTableDataToFile();
+        saveTableData();
     }//GEN-LAST:event_storageBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
@@ -504,12 +437,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
 
     private void registrationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationBtnActionPerformed
         //  등록 버튼 눌렀을 때 동작 : 새로운 계정을 등록할 수 있는 창 띄우기
-        registrationDialog.setSize(700, 300);
-        registrationDialog.setLocationRelativeTo(this);
-        registrationDialog.setTitle("계정 등록");
-        registrationDialog.setModal(false);
-        registrationDialog.setVisible(true);
-        registrationDialog.toFront();
+        dialogManager.showRegistrationDialog();
     }//GEN-LAST:event_registrationBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
@@ -519,12 +447,11 @@ public class AccountManagementFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요!", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        deleteAccount(selectedRow);
+        dialogManager.deleteAccount(selectedRow);   
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void numberTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberTextActionPerformed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_numberTextActionPerformed
 
     private void pwTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pwTextActionPerformed
@@ -533,7 +460,6 @@ public class AccountManagementFrame extends javax.swing.JFrame {
 
     private void idTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTextActionPerformed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_idTextActionPerformed
 
     private void registrationDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationDialogBtnActionPerformed
@@ -541,17 +467,16 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_registrationDialogBtnActionPerformed
 
     private void registrationCancelDialogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationCancelDialogActionPerformed
-
         registrationDialog.dispose();
     }//GEN-LAST:event_registrationCancelDialogActionPerformed
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
         int selectedRow = accountTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.");
+            JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        showEditDialog(selectedRow);
+        dialogManager.showEditDialog(selectedRow);
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void backDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backDialogBtnActionPerformed
