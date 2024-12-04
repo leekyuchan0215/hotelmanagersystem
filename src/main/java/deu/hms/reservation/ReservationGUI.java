@@ -107,8 +107,6 @@ public class ReservationGUI extends javax.swing.JFrame {
 
         floor.setText("층수");
 
-        reserveRegister.addActionListener(evt -> reserveRegisterActionPerformed(evt));
-        updateReservation.addActionListener(evt -> updateReservationActionPerformed(evt));
         checkReservationInfo.addActionListener(evt -> checkReservationInfoActionPerformed(evt));
 
         room.setText("호수");
