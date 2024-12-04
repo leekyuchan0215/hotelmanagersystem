@@ -38,7 +38,7 @@
                               <EmptySpace min="-2" pref="322" max="-2" attributes="0"/>
                               <Component id="CheckOutButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="closeButton" min="-2" max="-2" attributes="0"/>
+                              <Component id="backBtn" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="240" max="-2" attributes="0"/>
@@ -129,7 +129,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="CheckOutButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="closeButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="backBtn" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -230,12 +230,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CheckOutButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="closeButton">
+    <Component class="javax.swing.JButton" name="backBtn">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&#xb2eb;&#xae30;"/>
+        <Property name="text" type="java.lang.String" value="&#xc774;&#xc804;"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closeButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="backBtnActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="refreshButton">

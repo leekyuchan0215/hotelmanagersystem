@@ -6,88 +6,109 @@ import deu.hms.management.RoomManagementService;
 import deu.hms.management.ServiceManagementService;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 
 public class AccountManagementFrame extends javax.swing.JFrame {
 
-    private final AccountService accountService;
-    private final AccountDialogManager dialogManager;
+    private final AccountService accountService; // 계정 관련 파일 입출력을 처리하는 AccountService 객체
+    private final AccountDialogManager dialogManager; // 계정 수정 및 등록 다이얼로그를 관리하는 AccountDialogManager 객체
 
+    /**
+     * AccountManagementFrame 클래스의 생성자입니다. GUI 컴포넌트를 초기화하고, AccountService와
+     * AccountDialogManager를 초기화합니다.
+     */
     public AccountManagementFrame() {
         initComponents();
-         accountService = new AccountService("id_pw.txt");
-        dialogManager = new AccountDialogManager(editDialog, registrationDialog, accountTable, editTable);
+        accountService = new AccountService("id_pw.txt"); // 파일 경로를 이용해 AccountService를 초기화합니다.
+        dialogManager = new AccountDialogManager(editDialog, registrationDialog, accountTable, editTable); // 다이얼로그 관리 객체를 초기화합니다.
         loadTableData(); // JTable 초기화 시 데이터 로드
     }
 
-     // 테이블 데이터를 로드하는 메서드입니다.
+    /**
+     * 테이블 데이터를 파일에서 읽어와 JTable에 로드하는 메서드입니다.
+     */
     private void loadTableData() {
         DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
-        accountService.readFileAndPopulateTable(model);
+        accountService.readFileAndPopulateTable(model); // 파일 데이터를 읽어 테이블에 추가합니다.
     }
 
-  // JTable 데이터를 파일에 저장하는 메서드입니다.
+    /**
+     * JTable의 데이터를 파일에 저장하는 메서드입니다.
+     */
     private void saveTableData() {
         DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
-        accountService.saveTableDataToFile(model);
+        accountService.saveTableDataToFile(model); // 테이블 데이터를 파일에 저장합니다.
         JOptionPane.showMessageDialog(this, "데이터가 성공적으로 저장되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
     }
 
-// 계정을 수정하는 메서드입니다.
+    /**
+     * 계정 수정을 처리하는 메서드입니다. editTable의 데이터를 가져와 accountTable의 선택된 행에 업데이트합니다.
+     */
     private void updateAccountData() {
-        DefaultTableModel editModel = (DefaultTableModel) editTable.getModel();
-        DefaultTableModel accountModel = (DefaultTableModel) accountTable.getModel();
+        // DefaultTableModel 객체를 editTable과 accountTable에서 가져옵니다.
+        DefaultTableModel editModel = (DefaultTableModel) editTable.getModel(); // 수정 데이터가 있는 테이블의 모델
+        DefaultTableModel accountModel = (DefaultTableModel) accountTable.getModel(); // 원본 계정 데이터 테이블의 모델
 
-        if (editModel.getRowCount() > 0) {
+        // editModel에 데이터가 있는지 확인합니다.
+        if (editModel.getRowCount() > 0) { // 수정 테이블에 최소 하나의 행이 있는 경우
+            // 수정된 데이터를 저장할 배열 생성 (컬럼 수만큼 크기를 설정)
             String[] updatedRowData = new String[editModel.getColumnCount()];
+
+            // editModel의 첫 번째 행 데이터를 배열로 복사
             for (int i = 0; i < updatedRowData.length; i++) {
-                Object cellValue = editModel.getValueAt(0, i);
+                Object cellValue = editModel.getValueAt(0, i); // 셀 데이터를 가져옴
+                // 셀 데이터가 null인지 확인 후 문자열로 변환
                 updatedRowData[i] = cellValue != null ? cellValue.toString() : "";
             }
 
+            // accountTable에서 선택된 행의 인덱스를 가져옵니다.
             int selectedRow = accountTable.getSelectedRow();
-            if (selectedRow != -1) {
+
+            // 선택된 행이 있는지 확인
+            if (selectedRow != -1) { // 선택된 행이 존재하는 경우
+                // 선택된 행의 데이터를 수정된 데이터로 업데이트
                 for (int i = 0; i < updatedRowData.length; i++) {
-                    accountModel.setValueAt(updatedRowData[i], selectedRow, i);
+                    accountModel.setValueAt(updatedRowData[i], selectedRow, i); // 데이터 설정
                 }
+                // 성공 메시지 표시
                 JOptionPane.showMessageDialog(this, "데이터가 성공적으로 수정되었습니다.");
             } else {
+                // 선택된 행이 없는 경우 경고 메시지 표시
                 JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.");
             }
         } else {
+            // editModel에 데이터가 없는 경우 경고 메시지 표시
             JOptionPane.showMessageDialog(this, "수정할 데이터가 없습니다.");
         }
 
+        // 수정 작업이 완료되었으므로 다이얼로그를 닫습니다.
         editDialog.dispose();
     }
 
-// 계정을 등록하는 메서드입니다.
+    /**
+     * 새로운 계정을 등록하는 메서드입니다. 사용자 입력을 통해 계정을 생성하고, 테이블에 추가합니다.
+     */
     private void registerAccount() {
-        String number = numberText.getText().trim();
-        String id = idText.getText().trim();
-        String pw = pwText.getText().trim();
-        String role = rightList.getSelectedValue();
+        String number = numberText.getText().trim(); // 고유 번호 입력 필드에서 값을 가져옵니다.
+        String id = idText.getText().trim(); // ID 입력 필드에서 값을 가져옵니다.
+        String pw = pwText.getText().trim(); // PW 입력 필드에서 값을 가져옵니다.
+        String role = rightList.getSelectedValue(); // 권한 리스트에서 선택된 값을 가져옵니다.
 
         if (number.isEmpty() || id.isEmpty() || pw.isEmpty() || role == null) {
             JOptionPane.showMessageDialog(this, "모든 필드를 채워주세요!", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        accountService.registerAccount(number, id, pw, role);
+        accountService.registerAccount(number, id, pw, role); // 새로운 계정을 파일에 등록합니다.
         JOptionPane.showMessageDialog(this, "등록이 완료되었습니다!", "성공", JOptionPane.INFORMATION_MESSAGE);
-        registrationDialog.dispose();
+        registrationDialog.dispose(); // 등록이 완료되면 다이얼로그를 닫습니다.
         loadTableData(); // 등록 후 테이블을 새로고침합니다.
     }
-    
-        // 선택된 계정을 삭제하는 메서드입니다.
-    private void deleteAccount(int selectedRow) {
-        DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
-        model.removeRow(selectedRow);
-        JOptionPane.showMessageDialog(this, "선택된 계정이 삭제되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
-        // 삭제 후 데이터를 파일에 저장하려면 저장 버튼을 눌러주세요.
-    }
-    
-    // 관리 화면으로 돌아가는 메서드입니다.
+
+    /**
+     * 관리 화면으로 돌아가는 메서드입니다. 이전 화면으로 돌아가기 위해 ManagementFrame을 표시합니다.
+     */
     private void backToManagementFrame() {
         JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
         AccountManagementService accountService = new AccountManagementService();
@@ -95,7 +116,8 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         ServiceManagementService serviceService = new ServiceManagementService();
 
         ManagementFrame managementFrame = new ManagementFrame(accountService, roomService, serviceService);
-        managementFrame.setVisible(true);
+        managementFrame.setVisible(true); // 관리 화면을 표시합니다.
+        this.dispose(); // 현재 화면을 닫습니다.
     }
 
     @SuppressWarnings("unchecked")
@@ -449,7 +471,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요!", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        dialogManager.deleteAccount(selectedRow); 
+        dialogManager.deleteAccount(selectedRow);
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void numberTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberTextActionPerformed
@@ -473,7 +495,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_registrationCancelDialogActionPerformed
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
-         int selectedRow = accountTable.getSelectedRow();
+        int selectedRow = accountTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "수정할 행을 선택하세요.", "오류", JOptionPane.ERROR_MESSAGE);
             return;
@@ -494,15 +516,11 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new AccountManagementFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new AccountManagementFrame().setVisible(true);
         });
     }
 
@@ -537,7 +555,4 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     private javax.swing.JButton storageBtn;
     // End of variables declaration//GEN-END:variables
 
-    private void initializeOtherFrames() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

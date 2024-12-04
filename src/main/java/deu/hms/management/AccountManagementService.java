@@ -2,7 +2,6 @@ package deu.hms.management;
 
 // AccountManagementFrame 클래스를 사용하기 위해 import합니다.
 import deu.hms.management.account.AccountManagementFrame;
-import javax.swing.JOptionPane; // JOptionPane은 메시지 창을 띄우기 위해 사용됩니다.
 
 public class AccountManagementService {
     // 계정 관리 페이지를 열기 위한 메소드입니다.

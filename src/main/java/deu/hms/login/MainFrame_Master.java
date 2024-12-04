@@ -1,6 +1,7 @@
 package deu.hms.login;
 
 import deu.hms.checkIn.Checkin;
+import deu.hms.checkout.CheckoutFrame;
 import deu.hms.management.AccountManagementService;
 import deu.hms.management.ManagementFrame;
 import deu.hms.management.RoomManagementService;
@@ -10,11 +11,13 @@ import deu.hms.servicerestaurant.Service_RestaurantFrame;
 import deu.hms.serviceroom.Service_RoomFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class MainFrame_Master extends javax.swing.JFrame {
 
     public MainFrame_Master() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     @SuppressWarnings("unchecked")
@@ -271,6 +274,14 @@ public class MainFrame_Master extends javax.swing.JFrame {
 
     private void checkoutBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutBtn1ActionPerformed
         // TODO add your handling code here:
+        int result = JOptionPane.showConfirmDialog(this, "체크아웃 페이지로 이동 하시겠습니까?", "체크아웃 페이지로 이동", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            // 사용자가 "예"를 선택하면
+            this.dispose();
+            CheckoutFrame cFrame = new CheckoutFrame("master");  // 서비스 화면 띄우기
+            cFrame.setVisible(true);  //현재 화면 닫기
+        }
     }//GEN-LAST:event_checkoutBtn1ActionPerformed
 
     private void managementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_managementBtnActionPerformed
@@ -323,14 +334,11 @@ public class MainFrame_Master extends javax.swing.JFrame {
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainFrame_Master().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new MainFrame_Master().setVisible(true);
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -9,20 +9,26 @@ import javax.swing.table.DefaultTableModel;
 
 public class Management_Service extends javax.swing.JFrame {
 
-    private ServiceService serviceService;
-    private ServiceDialogManager dialogManager;
-
+     // 서비스 데이터를 처리하는 ServiceService 객체
+    private final ServiceService serviceService;
+    // 다이얼로그 관리를 담당하는 ServiceDialogManager 객체
+    private final ServiceDialogManager dialogManager;
+    
+    // 생성자
     public Management_Service() {
-        initComponents();
+        initComponents();// UI 초기화
+        // menu_list.txt 파일을 기반으로 데이터를 관리하는 ServiceService 생성
         serviceService = new ServiceService("menu_list.txt");
+        // 다이얼로그 및 테이블을 관리하기 위한 ServiceDialogManager 생성
         dialogManager = new ServiceDialogManager(editDialog, registrationDialog, serviceTable, editTable);
-        loadTableData();
+        loadTableData();  // 테이블 데이터 로드
     }
-
-    private void loadTableData() {
-        // 테이블의 값들을 채우는 메서드
-        DefaultTableModel model = (DefaultTableModel) serviceTable.getModel();
-        serviceService.readFileAndPopulateTable(model);
+    
+    // 테이블 데이터를 로드하는 메서드
+    private void loadTableData() {  
+        // 테이블의 값들을 채우는 메서드 
+        DefaultTableModel model = (DefaultTableModel) serviceTable.getModel();  // 테이블 모델 가져오기
+        serviceService.readFileAndPopulateTable(model);   // 파일에서 읽어와 테이블에 데이터 채우기
     }
 
     // JTable 데이터를 파일에 저장하는 메서드입니다.

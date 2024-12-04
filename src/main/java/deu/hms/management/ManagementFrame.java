@@ -1,12 +1,8 @@
 package deu.hms.management;
 
 // 계정, 객실, 서비스 관리 서비스를 사용하기 위해 필요한 클래스들을 import합니다.
-import deu.hms.management.AccountManagementService;
-import deu.hms.management.RoomManagementService;
-import deu.hms.management.ServiceManagementService;
 import deu.hms.login.MainFrame_Master;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
 
 public class ManagementFrame extends javax.swing.JFrame {
     

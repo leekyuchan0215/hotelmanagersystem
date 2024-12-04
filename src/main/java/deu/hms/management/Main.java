@@ -1,6 +1,7 @@
 package deu.hms.management;
 
 import javax.swing.UIManager; // UIManager는 GUI의 테마(모양)를 설정하기 위해 사용됩니다.
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Main {
 
@@ -8,9 +9,7 @@ public class Main {
         try {
             // UI 모양을 Nimbus 스타일로 설정합니다.
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            // 만약 설정 중 에러가 발생하면, 에러 내용을 콘솔에 출력합니다.
-            e.printStackTrace();
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
         }
 
         // 계정 관리 서비스를 위한 인스턴스를 생성합니다.

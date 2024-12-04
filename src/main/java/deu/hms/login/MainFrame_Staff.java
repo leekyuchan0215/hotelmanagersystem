@@ -1,10 +1,12 @@
 package deu.hms.login;
 
 import deu.hms.checkIn.Checkin;
+import deu.hms.checkout.CheckoutFrame;
 import deu.hms.servicerestaurant.Service_RestaurantFrame;
 import deu.hms.serviceroom.Service_RoomFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class MainFrame_Staff extends javax.swing.JFrame {
 
@@ -227,6 +229,14 @@ public class MainFrame_Staff extends javax.swing.JFrame {
 
     private void checkOutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkOutBtnActionPerformed
         // TODO add your handling code here:
+        int result = JOptionPane.showConfirmDialog(this, "체크아웃 페이지로 이동 하시겠습니까?", "체크아웃 페이지로 이동", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            // 사용자가 "예"를 선택하면
+            this.dispose();
+            CheckoutFrame cFrame = new CheckoutFrame("staff");  // 서비스 화면 띄우기
+            cFrame.setVisible(true);  //현재 화면 닫기
+        }
     }//GEN-LAST:event_checkOutBtnActionPerformed
 
     private void restaurantServiceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restaurantServiceBtnActionPerformed
@@ -243,14 +253,11 @@ public class MainFrame_Staff extends javax.swing.JFrame {
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainFrame_Staff().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new MainFrame_Staff().setVisible(true);
         });
     }
 
