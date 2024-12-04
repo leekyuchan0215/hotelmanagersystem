@@ -107,10 +107,6 @@ public class ReservationGUI extends javax.swing.JFrame {
 
         floor.setText("층수");
 
-        reserveRegister.addActionListener(evt -> reserveRegisterActionPerformed(evt));
-        updateReservation.addActionListener(evt -> updateReservationActionPerformed(evt));
-        checkReservationInfo.addActionListener(evt -> checkReservationInfoActionPerformed(evt));
-
         room.setText("호수");
 
         floorCom.addActionListener(evt -> floorComActionPerformed(evt));
@@ -134,6 +130,7 @@ public class ReservationGUI extends javax.swing.JFrame {
             }
         });
 
+        checkReservationInfo.addActionListener(evt -> checkReservationInfoActionPerformed(evt));
         checkReservationInfo.setText("예약 정보 확인");
 
         displayInfo.setColumns(20);
@@ -415,7 +412,7 @@ public class ReservationGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_updateReservationActionPerformed
 
     private void reserveRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reserveRegisterActionPerformed
-                LocalDate checkInDate = getDateFromComboBoxes(checkInY, checkInM, checkInD);
+        LocalDate checkInDate = getDateFromComboBoxes(checkInY, checkInM, checkInD);
         LocalDate checkOutDate = getDateFromComboBoxes(checkOutY, checkOutM, checkOutD);
 
         if (checkOutDate.isBefore(checkInDate)) {

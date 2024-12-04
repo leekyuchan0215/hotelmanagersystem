@@ -219,9 +219,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="NameField">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="reserveRegister.addActionListener(evt -&gt; reserveRegisterActionPerformed(evt));&#xa;updateReservation.addActionListener(evt -&gt; updateReservationActionPerformed(evt));&#xa;checkReservationInfo.addActionListener(evt -&gt; checkReservationInfoActionPerformed(evt));"/>
-      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="room">
       <Properties>
@@ -283,6 +280,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&#xc608;&#xc57d; &#xc815;&#xbcf4; &#xd655;&#xc778;"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="checkReservationInfo.addActionListener(evt -&gt; checkReservationInfoActionPerformed(evt));"/>
+      </AuxValues>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
