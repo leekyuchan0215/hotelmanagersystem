@@ -2,6 +2,7 @@ package deu.hms.login;
 
 import deu.hms.checkIn.Checkin;
 import deu.hms.checkout.CheckoutFrame;
+import deu.hms.reservation.ReservationGUI;
 import deu.hms.servicerestaurant.Service_RestaurantFrame;
 import deu.hms.serviceroom.Service_RoomFrame;
 import javax.swing.JOptionPane;
@@ -102,6 +103,11 @@ public class MainFrame_Staff extends javax.swing.JFrame {
         });
 
         reservationBtn.setText("예약");
+        reservationBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reservationBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -250,6 +256,18 @@ public class MainFrame_Staff extends javax.swing.JFrame {
             rframe.setVisible(true);
         }
     }//GEN-LAST:event_restaurantServiceBtnActionPerformed
+
+    private void reservationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationBtnActionPerformed
+        // 예약버튼 클릭시 행동처리
+        int result = JOptionPane.showConfirmDialog(this, "예약 페이지로 이동 하시겠습니까?", "예약 페이지로 이동", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            // 사용자가 "예"를 선택하면
+            ReservationGUI reservationFrame = new ReservationGUI("staff");
+            reservationFrame.setVisible(true);  //예약 페이지로 이동
+            this.dispose();
+        }
+    }//GEN-LAST:event_reservationBtnActionPerformed
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");

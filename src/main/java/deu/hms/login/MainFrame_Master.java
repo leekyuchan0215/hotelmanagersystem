@@ -317,9 +317,9 @@ public class MainFrame_Master extends javax.swing.JFrame {
 
         if (result == JOptionPane.YES_OPTION) {
             // 사용자가 "예"를 선택하면
-            this.dispose();
-            ReservationGUI reservationFrame = new ReservationGUI();
+            ReservationGUI reservationFrame = new ReservationGUI("master");
             reservationFrame.setVisible(true);  //예약 페이지로 이동
+            this.dispose();
         }
     }//GEN-LAST:event_reservationBtnActionPerformed
 

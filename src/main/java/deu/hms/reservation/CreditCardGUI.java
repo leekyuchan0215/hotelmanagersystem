@@ -112,6 +112,11 @@ public class CreditCardGUI extends javax.swing.JFrame {
         password.setText("비밀번호");
 
         goBack.setText("이전으로");
+        goBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                goBackActionPerformed(evt);
+            }
+        });
 
         payCom.setText("결제완료");
         goBack.addActionListener(evt -> dispose());
@@ -202,6 +207,10 @@ public class CreditCardGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void goBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goBackActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_goBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
