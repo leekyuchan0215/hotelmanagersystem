@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
+//Checkin 클래스 : 호텔 체크인 시스템의 GUI와 로직으로 구성
 
 public class Checkin extends JFrame {
      private String userType;  // "manager" 또는 "staff"를 저장하는 변수
@@ -33,29 +34,31 @@ public class Checkin extends JFrame {
         loadRoomData(); // room_list.txt에서 객실 정보 로드
         loadReservationsFromFile(); // reservations.txt에서 예약 정보 로드
 
-        JTabbedPane tabbedPane = new JTabbedPane();
-        JPanel checkInPanel = createCheckInPanel(); // 기존 체크인 패널 생성
-        tabbedPane.addTab("체크인", checkInPanel); // 탭에 추가
+        JTabbedPane tabbedPane = new JTabbedPane(); // 탭 UI 생성
+        JPanel checkInPanel = createCheckInPanel(); //  체크인 패널 생성
+        tabbedPane.addTab("체크인", checkInPanel); // 탭에 체크인 패널 추가
 
         add(tabbedPane); // 메인 프레임에 탭 추가
     }
 
+        //이전페이지(메인페이지)이동 로직
+        //userType에 따라 다른 화면 호출함
     private void navigateToMainFrame() {
         if ("master".equals(userType)) {
             new MainFrame_Master().setVisible(true);
         } else if ("staff".equals(userType)) {
             new MainFrame_Staff().setVisible(true);
         }
-        this.dispose();
+        this.dispose();         //현재 창 닫기
     }
     
-    // room_list.txt에서 데이터 로드
+    // room_list.txt에서 객실정보를 로드하여 roomDataMap에 저장
     private void loadRoomData() {
         try (BufferedReader reader = new BufferedReader(new FileReader("room_list.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 4) {
+                if (data.length == 4) { //객실 데이터는 4개의 필드로 구성
                     int roomNumber = Integer.parseInt(data[1]);
                     String roomType = data[2];
                     int roomPrice = Integer.parseInt(data[3]);
@@ -67,12 +70,13 @@ public class Checkin extends JFrame {
         }
     }
 
+    //reservations.txt 파일에서 예약 정보를 로드하여 customerMap에 저장
     private void loadReservationsFromFile() {
     try (BufferedReader reader = new BufferedReader(new FileReader("reservations.txt"))) {
         String line;
         while ((line = reader.readLine()) != null) {
             String[] data = line.split(",");
-            if (data.length >= 9) { // 최소 9개의 데이터만 있어도 처리
+            if (data.length >= 9) { // 최소 9개의 데이터가 있어야 처리 할 수 있음
                 String uniqueID = data[0];
                 String name = data[1];
                 int numPeople = Integer.parseInt(data[2]);
@@ -83,7 +87,7 @@ public class Checkin extends JFrame {
                 String checkOutDate = data[7];
                 String paymentType = data[8];
                 String paymentMethod = data.length > 9 ? data[9] : "현금"; // 기본값 현금
-                boolean isCheckedIn = data.length > 10 && Boolean.parseBoolean(data[10]); // 기본값 false
+                boolean isCheckedIn = data.length > 10 && Boolean.parseBoolean(data[10]); // 기본값 false(체크인 안한 상태)
 
                 Customer customer = new Customer(name, uniqueID, String.valueOf(room), 
                         0, numPeople, phoneNumber, checkInDate);
@@ -103,7 +107,7 @@ public class Checkin extends JFrame {
 }
 
 
-    // reservations.txt 업데이트
+    // reservations.txt 파일에 예약 정보를 저장
     private void updateReservationsFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("reservations.txt"))) {
             for (Customer customer : customerMap.values()) {
@@ -125,7 +129,7 @@ public class Checkin extends JFrame {
         }
     }
 
-    
+    //체크인된 고객 정보를 checked_in_customers.txt에 저장
   private void saveCheckedInCustomerToFile(Customer customer) {
     String filePath = "checked_in_customers.txt"; // 저장할 파일 경로
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) { // append 모드로 파일 열기
@@ -144,7 +148,7 @@ public class Checkin extends JFrame {
         JOptionPane.showMessageDialog(this, "checked_in_customers.txt 파일 저장 중 오류 발생: " + e.getMessage());
     }
 }
-//요청사항 입력
+    //요청사항 입력
   private void showRequestInputDialog(Customer customer) {
     JDialog requestDialog = new JDialog(this, "요청사항 입력", true);
     requestDialog.setSize(400, 300);
@@ -198,34 +202,40 @@ public class Checkin extends JFrame {
 
     
 
-    // 기존 체크인 패널 생성
+    // 예약자 명단과 체크인 패널 생성
     private JPanel createCheckInPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+        //예약명단 표시 영역
         reservationListArea = new JTextArea(10, 50);
         reservationListArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(reservationListArea);
         panel.add(new JLabel("예약자 명단:"));
         panel.add(scrollPane);
 
+        //예약 명단 새로고침 버튼(명단 업데이트)
         JButton loadReservationsButton = new JButton("예약자 명단 새로고침");
         panel.add(loadReservationsButton);
         loadReservationsButton.addActionListener(e -> displayReservations());
 
+        //예약자 확인 영역
         JPanel reservationPanel = new JPanel(new FlowLayout());
         reservationPanel.add(new JLabel("이름 또는 고유 번호:"));
         JTextField reservationField = new JTextField(15);
         reservationPanel.add(reservationField);
 
+        //예약 확인 버튼
         JButton confirmButton = new JButton("예약 확인");
         reservationPanel.add(confirmButton);
         panel.add(reservationPanel);
-
+        
+        //고객 정보 표시 영역
         JTextArea customerInfoArea = new JTextArea(5, 50);
         customerInfoArea.setEditable(false);
         panel.add(new JScrollPane(customerInfoArea));
 
+        //결제 방식 선택
         JPanel paymentPanel = new JPanel(new FlowLayout());
         paymentPanel.add(new JLabel("결제 방식:"));
         JRadioButton cardButton = new JRadioButton("카드");
@@ -236,16 +246,18 @@ public class Checkin extends JFrame {
         paymentPanel.add(cardButton);
         paymentPanel.add(cashButton);
         panel.add(paymentPanel);
-
+        
+        //체크인 버튼
         JButton checkInButton = new JButton("체크인");
         checkInButton.setEnabled(false);
         panel.add(checkInButton);
-
+        
+        //현장 체크인 버튼
         JButton onSiteCheckInButton = new JButton("현장 체크인");
         panel.add(onSiteCheckInButton);
         onSiteCheckInButton.addActionListener(e -> showOnSiteCheckInDialog());
         
-        // 뒤로가기 버튼 추가
+        // 뒤로가기 버튼 
         JButton backButton = new JButton("뒤로가기");
         panel.add(backButton);
         backButton.addActionListener(e->{
@@ -253,6 +265,7 @@ public class Checkin extends JFrame {
             navigateToMainFrame();
         });
         
+        //예약 확인 버튼 눌렀을때 동작
         confirmButton.addActionListener(e -> {
             String reservationInput = reservationField.getText().trim();
             currentCustomer = findCustomer(reservationInput);
@@ -270,6 +283,7 @@ public class Checkin extends JFrame {
             }
         });
 
+      //체크인 버튼 동작
       checkInButton.addActionListener(e -> {
     if (currentCustomer != null) {
         String paymentType = currentCustomer.getPaymentType();
@@ -298,7 +312,7 @@ public class Checkin extends JFrame {
 });
 
 
-        displayReservations();
+        displayReservations(); //초기 예약 명단 표시
         return panel;
     }
 
@@ -427,7 +441,8 @@ public class Checkin extends JFrame {
             }
         });
     }
-
+    
+    //예약정보 표시
     private void displayReservations() {
         reservationListArea.setText("");
         if (customerMap.isEmpty()) {
@@ -445,7 +460,8 @@ public class Checkin extends JFrame {
                                 ", 체크아웃 날짜: " + customer.getCheckOutDate() +
                                 ", 결제 유형: " + customer.getPaymentType() + "\n"));
     }
-
+    
+    //고객 정보 검색
     private Customer findCustomer(String input) {
         return customerMap.values().stream()
                 .filter(customer -> customer.getName().equalsIgnoreCase(input) || customer.getReservationId().equalsIgnoreCase(input))
@@ -475,12 +491,10 @@ public class Checkin extends JFrame {
     /**
      * @param args the command line arguments
      */
-public static void main(String args[]) {
-        SwingUtilities.invokeLater(() -> new Checkin("master").setVisible(true));
-    }
+     //RoomData 클래스: 객실 데이터 구조체
     static class RoomData {
-        private final String roomType;
-        private final int roomPrice;
+        private final String roomType; //객실유형
+        private final int roomPrice;    //객실 가격
 
         public RoomData(String roomType, int roomPrice) {
             this.roomType = roomType;
