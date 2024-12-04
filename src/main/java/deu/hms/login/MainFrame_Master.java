@@ -17,7 +17,7 @@ public class MainFrame_Master extends javax.swing.JFrame {
 
     public MainFrame_Master() {
         initComponents();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
     }
 
     @SuppressWarnings("unchecked")

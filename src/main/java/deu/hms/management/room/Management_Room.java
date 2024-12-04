@@ -172,7 +172,7 @@ public class Management_Room extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         priceText = new javax.swing.JTextField();
         registrationDialogBtn = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        backRegistrationBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         roomTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -286,10 +286,10 @@ public class Management_Room extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("취소");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        backRegistrationBtn.setText("취소");
+        backRegistrationBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                backRegistrationBtnActionPerformed(evt);
             }
         });
 
@@ -320,13 +320,14 @@ public class Management_Room extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
                         .addGroup(registrationDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8)))
+                            .addComponent(jLabel8))
+                        .addGap(79, 79, 79))
                     .addGroup(registrationDialogLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(backRegistrationBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(registrationDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(79, 79, 79))
+                        .addComponent(registrationDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(87, 87, 87))))
             .addGroup(registrationDialogLayout.createSequentialGroup()
                 .addGap(293, 293, 293)
                 .addComponent(jLabel3)
@@ -364,7 +365,7 @@ public class Management_Room extends javax.swing.JFrame {
                                     .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
                 .addGroup(registrationDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(backRegistrationBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(registrationDialogBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(23, 23, 23))
         );
@@ -519,10 +520,10 @@ public class Management_Room extends javax.swing.JFrame {
         registerRoom();
     }//GEN-LAST:event_registrationDialogBtnActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void backRegistrationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backRegistrationBtnActionPerformed
         // TODO add your handling code here:
         registrationDialog.dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_backRegistrationBtnActionPerformed
 
     public static void main(String args[]) {
         try {
@@ -537,6 +538,7 @@ public class Management_Room extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;
+    private javax.swing.JButton backRegistrationBtn;
     private javax.swing.JButton changeBtn;
     private javax.swing.JButton changeDialogBtn;
     private javax.swing.JButton deleteBtn;
@@ -544,7 +546,6 @@ public class Management_Room extends javax.swing.JFrame {
     private javax.swing.JDialog editDialog;
     private javax.swing.JTable editTable;
     private javax.swing.JList<String> floorList;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
