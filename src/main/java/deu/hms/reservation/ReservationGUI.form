@@ -260,6 +260,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&#xc608;&#xc57d;&#xb4f1;&#xb85d;"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="reserveRegisterActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="uniqueID">
       <Properties>

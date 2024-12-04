@@ -46,12 +46,12 @@ public class CheckoutFrame extends javax.swing.JFrame {
     }
 
     private int calculateServiceCharges(String roomNumber, String serviceType) {
-        String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\use_service.txt";
+        String filePath = "use_service.txt";
         return parseServiceFile(filePath, roomNumber, serviceType);
     }
 
     private int calculateReservedServiceCharges(String roomNumber, String serviceType) {
-        String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\service_reservation_list.txt";
+        String filePath = "service_reservation_list.txt";
         int total = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -140,7 +140,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
     }
 
     private void removeCustomerFromCheckInList(Customer customer) {
-        String inputFile = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt";
+        String inputFile = "checked_in_customers.txt";
         String tempFile = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\temp_checked_in_customers.txt";
 
         boolean customerFound = false; // 삭제 대상 발견 여부 확인용 변수
@@ -182,7 +182,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
     }
 
     private void loadCheckInList() {
-        String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt";
+        String filePath = "checked_in_customers.txt";
 
         File file = new File(filePath);
 
@@ -223,7 +223,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
 
     private void saveFeedbackToFile(String feedback) {
         // 저장할 파일 경로 업데이트
-        String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\feedback_list.txt";
+        String filePath = "feedback_list.txt";
 
         try (FileWriter writer = new FileWriter(filePath, true)) { // append 모드로 파일 열기
             String contentToSave = String.format("피드백 시간: %s\n%s\n\n",
@@ -521,7 +521,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
     }
 
     private Customer findCheckInCustomer(String nameOrID) {
-        String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt";
+        String filePath = "checked_in_customers.txt";
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -560,7 +560,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
     }
 
     private String findCheckOutDate(String nameOrID) {
-        String filePath = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_in_customers.txt";
+        String filePath = "checked_in_customers.txt";
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -655,7 +655,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
         loadCheckInList();
 
         // 고객 피드백 저장
-        saveFeedbackToFile("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\feedback_list.txt",
+        saveFeedbackToFile("feedback_list.txt",
                 feedback, roomNumber, customerNameOrID);
 
         // 입력 필드 초기화
@@ -663,7 +663,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
     }
 
     private void saveCheckedOutCustomer(Customer customer) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\checked_out_customers.txt", true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("checked_out_customers.txt", true))) {
             writer.write("고객 이름: " + customer.getName()
                     + ", 예약 번호: " + customer.getReservationId()
                     + ", 객실 번호: " + customer.getRoomNumber());

@@ -119,6 +119,11 @@ public class ReservationGUI extends javax.swing.JFrame {
         roomCom.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "101호" }));
 
         reserveRegister.setText("예약등록");
+        reserveRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reserveRegisterActionPerformed(evt);
+            }
+        });
 
         uniqueID.setText("고유번호");
 
@@ -409,6 +414,107 @@ public class ReservationGUI extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "예약이 수정되었습니다.");
     }//GEN-LAST:event_updateReservationActionPerformed
 
+    private void reserveRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reserveRegisterActionPerformed
+                LocalDate checkInDate = getDateFromComboBoxes(checkInY, checkInM, checkInD);
+        LocalDate checkOutDate = getDateFromComboBoxes(checkOutY, checkOutM, checkOutD);
+
+        if (checkOutDate.isBefore(checkInDate)) {
+            JOptionPane.showMessageDialog(this, "체크아웃 날짜는 체크인 날짜보다 빠를 수 없습니다.");
+            return; // 예약 진행 중단
+        }
+        String name = NameField.getText();
+        int numPeople = Integer.parseInt(numPeopleField.getText());
+        String phoneNum = phoneNumField.getText();
+        int floor = Integer.parseInt(floorCom.getSelectedItem().toString().substring(0, 1));
+        int room = Integer.parseInt(roomCom.getSelectedItem().toString().replaceAll("[^0-9]", ""));
+        
+
+        
+        
+        Map<Integer, String[]> floorData = loadRoomData();
+        String[] roomInfo = floorData.get(floor); 
+        // 체크인 날짜 및 체크아웃 날짜
+        String checkInYear = checkInY.getSelectedItem().toString();
+        String checkInMonth = checkInM.getSelectedItem().toString();
+        String checkInDay = checkInD.getSelectedItem().toString();
+        String checkOutYear = checkOutY.getSelectedItem().toString();
+        String checkOutMonth = checkOutM.getSelectedItem().toString();
+        String checkOutDay = checkOutD.getSelectedItem().toString();
+        // 라디오 버튼 초기화
+
+    // 체크인 및 체크아웃 시간 결합 (년-월-일 형식으로)
+        String checkInTime = checkInYear + "-" + checkInMonth + "-" + checkInDay;
+        String checkOutTime = checkOutYear + "-" + checkOutMonth + "-" + checkOutDay;
+
+
+        
+        
+        if (name.isEmpty() || phoneNum.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "모든 정보를 입력해 주세요.");
+            return;
+        }
+        for (Reservation reservation : reservations.values()) {
+            if (reservation.getFloor() == floor && reservation.getRoom() == room) {
+                LocalDate existingCheckIn = LocalDate.parse(reservation.getcheckInTime());
+                LocalDate existingCheckOut = LocalDate.parse(reservation.getcheckOutTime());
+
+            // 날짜 겹침 확인
+                if (!checkOutDate.isBefore(existingCheckIn) && !checkInDate.isAfter(existingCheckOut)) {
+                    JOptionPane.showMessageDialog(this, "이미 예약된 날짜와 겹칩니다. 다른 날짜를 선택해 주세요.");
+                    return;
+                }
+            }
+        }
+        String PaymentType = ""; // 결제 유형 초기화
+
+    // payRadioButton 또는 cardRadioButton이 선택되었는지 확인
+
+
+// 라디오 버튼 선택 여부에 따라 결제 유형 변경
+        if (cardRadioButton.isSelected()) {
+            PaymentType = "카드 선결제";
+
+        // CreditCardGUI의 isCardInfoValid 값 확인
+            if (CreditCardGUI.isCardInfoValid() == 0) {
+                JOptionPane.showMessageDialog(this, "카드 등록을 해주십시오.");
+                return; // 예약 진행 중단
+            }
+        // 결제 완료 후 isCardInfoValid 값을 0으로 초기화
+            CreditCardGUI.resetCardInfoValid();
+        }
+
+        if (payRadioButton.isSelected()) {
+            PaymentType = "현장 결제";
+        } else if (!cardRadioButton.isSelected()) {
+            JOptionPane.showMessageDialog(this, "결제 유형을 선택해 주세요.");
+            return;
+        }
+        
+        // 고유 번호 생성 (예시로 UUID 사용)
+         String uniqueID = String.format("%03d", new Random().nextInt(1000));
+
+        // 예약 객체 생성 및 예약 정보 추가
+        Reservation reservation = new Reservation(name, numPeople, phoneNum, floor, room, checkInTime, checkOutTime, PaymentType);
+        reservations.put(uniqueID, reservation);
+        
+        // 예약 정보를 파일에 저장
+        saveReservationsToFile();
+        
+        displayInfo.append("예약 완료\n" + 
+            "고유번호: " + uniqueID + "\n" +  // 고유번호
+            "이름: " + name + "\n" +  // 이름
+            "인원: " + numPeople + "\n" +  // 인원수
+            "전화번호: " + phoneNum + "\n" +  // 전화번호
+            "층수: " + floor + "\n" +  // 층수
+            "호수: " + room + "\n"+  // 호수
+            "체크인 시간: " + checkInTime + "\n" + // 체크인 시간
+            "체크아웃 시간: " + checkOutTime + "\n" +  // 체크아웃 시간
+            "결제 유형: " + PaymentType + "\n\n");
+
+        
+        JOptionPane.showMessageDialog(this, "예약이 완료되었습니다.");
+    }//GEN-LAST:event_reserveRegisterActionPerformed
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -581,108 +687,6 @@ public class ReservationGUI extends javax.swing.JFrame {
             
         }
     }
-
-    private void reserveRegisterActionPerformed(java.awt.event.ActionEvent evt) {
-        LocalDate checkInDate = getDateFromComboBoxes(checkInY, checkInM, checkInD);
-        LocalDate checkOutDate = getDateFromComboBoxes(checkOutY, checkOutM, checkOutD);
-
-        if (checkOutDate.isBefore(checkInDate)) {
-            JOptionPane.showMessageDialog(this, "체크아웃 날짜는 체크인 날짜보다 빠를 수 없습니다.");
-            return; // 예약 진행 중단
-        }
-        String name = NameField.getText();
-        int numPeople = Integer.parseInt(numPeopleField.getText());
-        String phoneNum = phoneNumField.getText();
-        int floor = Integer.parseInt(floorCom.getSelectedItem().toString().substring(0, 1));
-        int room = Integer.parseInt(roomCom.getSelectedItem().toString().replaceAll("[^0-9]", ""));
-        
-
-        
-        
-        Map<Integer, String[]> floorData = loadRoomData();
-        String[] roomInfo = floorData.get(floor); 
-        // 체크인 날짜 및 체크아웃 날짜
-        String checkInYear = checkInY.getSelectedItem().toString();
-        String checkInMonth = checkInM.getSelectedItem().toString();
-        String checkInDay = checkInD.getSelectedItem().toString();
-        String checkOutYear = checkOutY.getSelectedItem().toString();
-        String checkOutMonth = checkOutM.getSelectedItem().toString();
-        String checkOutDay = checkOutD.getSelectedItem().toString();
-        // 라디오 버튼 초기화
-
-    // 체크인 및 체크아웃 시간 결합 (년-월-일 형식으로)
-        String checkInTime = checkInYear + "-" + checkInMonth + "-" + checkInDay;
-        String checkOutTime = checkOutYear + "-" + checkOutMonth + "-" + checkOutDay;
-
-
-        
-        
-        if (name.isEmpty() || phoneNum.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "모든 정보를 입력해 주세요.");
-            return;
-        }
-        for (Reservation reservation : reservations.values()) {
-            if (reservation.getFloor() == floor && reservation.getRoom() == room) {
-                LocalDate existingCheckIn = LocalDate.parse(reservation.getcheckInTime());
-                LocalDate existingCheckOut = LocalDate.parse(reservation.getcheckOutTime());
-
-            // 날짜 겹침 확인
-                if (!checkOutDate.isBefore(existingCheckIn) && !checkInDate.isAfter(existingCheckOut)) {
-                    JOptionPane.showMessageDialog(this, "이미 예약된 날짜와 겹칩니다. 다른 날짜를 선택해 주세요.");
-                    return;
-                }
-            }
-        }
-        String PaymentType = ""; // 결제 유형 초기화
-
-    // payRadioButton 또는 cardRadioButton이 선택되었는지 확인
-
-
-// 라디오 버튼 선택 여부에 따라 결제 유형 변경
-        if (cardRadioButton.isSelected()) {
-            PaymentType = "카드 선결제";
-
-        // CreditCardGUI의 isCardInfoValid 값 확인
-            if (CreditCardGUI.isCardInfoValid() == 0) {
-                JOptionPane.showMessageDialog(this, "카드 등록을 해주십시오.");
-                return; // 예약 진행 중단
-            }
-        // 결제 완료 후 isCardInfoValid 값을 0으로 초기화
-            CreditCardGUI.resetCardInfoValid();
-        }
-
-        if (payRadioButton.isSelected()) {
-            PaymentType = "현장 결제";
-        } else if (!cardRadioButton.isSelected()) {
-            JOptionPane.showMessageDialog(this, "결제 유형을 선택해 주세요.");
-            return;
-        }
-        
-        // 고유 번호 생성 (예시로 UUID 사용)
-         String uniqueID = String.format("%03d", new Random().nextInt(1000));
-
-        // 예약 객체 생성 및 예약 정보 추가
-        Reservation reservation = new Reservation(name, numPeople, phoneNum, floor, room, checkInTime, checkOutTime, PaymentType);
-        reservations.put(uniqueID, reservation);
-        
-        // 예약 정보를 파일에 저장
-        saveReservationsToFile();
-        
-        displayInfo.append("예약 완료\n" + 
-            "고유번호: " + uniqueID + "\n" +  // 고유번호
-            "이름: " + name + "\n" +  // 이름
-            "인원: " + numPeople + "\n" +  // 인원수
-            "전화번호: " + phoneNum + "\n" +  // 전화번호
-            "층수: " + floor + "\n" +  // 층수
-            "호수: " + room + "\n"+  // 호수
-            "체크인 시간: " + checkInTime + "\n" + // 체크인 시간
-            "체크아웃 시간: " + checkOutTime + "\n" +  // 체크아웃 시간
-            "결제 유형: " + PaymentType + "\n\n");
-
-        
-        JOptionPane.showMessageDialog(this, "예약이 완료되었습니다.");
-    }
-   
 
     // 예약 정보 확인 기능
     private void checkReservationInfoActionPerformed(java.awt.event.ActionEvent evt) {
