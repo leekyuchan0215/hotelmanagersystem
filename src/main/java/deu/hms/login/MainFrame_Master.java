@@ -268,7 +268,7 @@ public class MainFrame_Master extends javax.swing.JFrame {
             // 사용자가 "예"를 선택하면
             this.dispose();
             Checkin cFrame = new Checkin("master");  // 서비스 화면 띄우기
-            cFrame.setVisible(true);  //현재 화면 닫기
+            cFrame.setVisible(true);  
         }
     }//GEN-LAST:event_checkinBtnActionPerformed
 

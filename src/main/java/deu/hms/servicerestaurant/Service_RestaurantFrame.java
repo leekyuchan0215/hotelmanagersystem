@@ -11,13 +11,15 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 
 public class Service_RestaurantFrame extends javax.swing.JFrame {
 
-
+    // 사용자 유형 ("manager" 또는 "staff")을 저장하는 변수
     private String userType;  // "manager" 또는 "staff"를 저장하는 변수
 
+    // 생성자: userType을 받아 저장하고 컴포넌트를 초기화하고 메뉴와 체크인한 객실 데이터를 로드
     public Service_RestaurantFrame(String userType) {
         this.userType = userType;
         initComponents();
@@ -25,120 +27,154 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
         loadCheckedInRooms();  // 체크인한 객실 번호 로드
     }
 
+    // 메뉴 리스트를 파일에서 불러와 테이블에 로드하는 메소드
     private void loadMenuList() {
         loadTableData("menu_list.txt", menuListTable, "식당", 1, 2);
     }
 
+// 체크인된 객실 번호를 파일에서 불러와 콤보박스에 추가하는 메소드
     private void loadCheckedInRooms() {
-        String filePath = "checked_in_customers.txt"; // 파일 경로
+        // 파일 경로를 지정하는 문자열 변수 선언
+        String filePath = "checked_in_customers.txt";  // 체크인된 고객 정보가 저장된 파일의 경로
+
+        // 중복된 객실 번호를 피하기 위해 Set을 사용하여 객실 번호를 저장
         Set<String> roomNumbers = new HashSet<>();
 
+        // 파일을 읽기 위한 BufferedReader를 생성하고 파일을 읽음
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
+            String line; // 파일의 각 줄을 저장할 변수
+
+            // 파일 끝까지 한 줄씩 읽음
             while ((line = br.readLine()) != null) {
+                // 각 줄의 데이터를 쉼표(,)로 분리하여 배열로 저장
                 String[] data = line.split(",");
+
+                // 데이터 배열의 길이가 4 이상일 때만 처리 (잘못된 데이터 방지)
                 if (data.length >= 4) {
-                    String roomNumber = data[2].split(":")[1].trim();
-                    roomNumbers.add(roomNumber);
+                    // 데이터 배열에서 세 번째 항목(객실 번호 부분)을 콜론(:)으로 분리하여 실제 객실 번호 추출
+                    String roomNumber = data[2].split(":")[1].trim(); // "roomNumber:101" 형식에서 "101"만 추출
+                    roomNumbers.add(roomNumber); // 추출한 객실 번호를 Set에 추가
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) { // 파일 입출력 도중 발생할 수 있는 예외 처리
+            e.printStackTrace(); // 오류 메시지를 출력하여 문제 원인을 파악할 수 있도록 함
         }
 
+        // 콤보박스를 초기화하여 기존 항목을 모두 삭제
         roomListCombo.removeAllItems();
+
+        // Set에 저장된 모든 객실 번호를 콤보박스에 추가
         for (String roomNumber : roomNumbers) {
-            roomListCombo.addItem(roomNumber);
+            roomListCombo.addItem(roomNumber); // 각 객실 번호를 콤보박스의 항목으로 추가
         }
     }
 
+    // 테이블 데이터를 파일에서 불러와 특정 테이블에 추가하는 메소드
     private void loadTableData(String filePath, javax.swing.JTable table, String requiredType, int... columns) {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0);
+        DefaultTableModel model = (DefaultTableModel) table.getModel();  // 테이블의 모델을 가져옴
+        model.setRowCount(0);  // 테이블을 초기화하여 기존 데이터 삭제
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {  // 파일 읽기를 위한 BufferedReader 생성
             String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length >= columns.length + 1 && requiredType.equals(data[0])) {
-                    Object[] rowData = new Object[columns.length];
+            while ((line = br.readLine()) != null) {  // 파일의 각 줄을 읽음
+                String[] data = line.split(",");  // 쉼표로 구분하여 데이터 분리
+                if (data.length >= columns.length + 1 && requiredType.equals(data[0])) {  // 데이터 길이 및 타입 확인
+                    Object[] rowData = new Object[columns.length];  // 테이블에 추가할 행 데이터 배열 생성
                     for (int i = 0; i < columns.length; i++) {
-                        rowData[i] = data[columns[i]];
+                        rowData[i] = data[columns[i]];  // 각 열 데이터를 행 배열에 저장
                     }
-                    model.addRow(rowData);
+                    model.addRow(rowData);  // 테이블 모델에 행 추가
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // 파일 입출력 예외 처리 (오류 무시)
         }
     }
 
+    // 다이얼로그를 표시하는 메소드
     private void showDialog(javax.swing.JDialog dialog, String title, int width, int height) {
         dialog.setSize(width, height);
-        dialog.setLocationRelativeTo(this);
+        dialog.setLocationRelativeTo(this);  // 현재 프레임 중앙에 다이얼로그 배치
         dialog.setTitle(title);
-        dialog.setModal(false);
+        dialog.setModal(false);  // 모달 설정 해제
         dialog.setVisible(true);
-        dialog.toFront();
+        dialog.toFront();  // 다이얼로그를 화면의 최상단에 보이도록 설정
     }
 
+    // 주문된 모든 항목의 총 가격을 계산하는 메소드
     private int calculateTotalPrice() {
         DefaultTableModel model = (DefaultTableModel) orderListTable.getModel();
         int totalprice = 0;
         for (int i = 0; i < model.getRowCount(); i++) {
-            int price = Integer.parseInt((String) model.getValueAt(i, 1));
-            int count = (int) model.getValueAt(i, 2);
-            totalprice += price * count;
+            int price = Integer.parseInt((String) model.getValueAt(i, 1));  // 가격을 정수로 변환
+            int count = (int) model.getValueAt(i, 2);  // 수량 가져오기
+            totalprice += price * count;  // 총 금액 계산
         }
         return totalprice;
     }
 
+    // 데이터를 지정된 파일에 저장하는 메소드
     private void saveToFile(String filePath, String data) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
             bw.write(data);
             bw.newLine();
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
+    // 총 가격 텍스트 필드를 업데이트하는 메소드
     private void updatePriceText() {
         int totalprice = calculateTotalPrice();
-        priceText.setText(String.valueOf(totalprice));
+        priceText.setText(String.valueOf(totalprice));  // 총 가격을 문자열로 변환하여 텍스트 필드에 설정
     }
 
+    // 사용자 유형에 따라 메인 화면으로 이동하는 메소드
     private void navigateToMainFrame() {
         if ("master".equals(userType)) {
             new MainFrame_Master().setVisible(true);
         } else if ("staff".equals(userType)) {
             new MainFrame_Staff().setVisible(true);
         }
-        this.dispose();
+        this.dispose();  // 현재 프레임 닫기
     }
 
+// 주문 리스트의 데이터를 예약 테이블에 복사하는 메소드
     private void copyOrderListToReservationTable() {
-        DefaultTableModel orderModel = (DefaultTableModel) orderListTable.getModel();
-        DefaultTableModel reservationModel = (DefaultTableModel) reservationTable.getModel();
-        reservationModel.setRowCount(0);
+        DefaultTableModel orderModel = (DefaultTableModel) orderListTable.getModel();  // 주문 리스트 테이블의 모델을 가져옴
+        DefaultTableModel reservationModel = (DefaultTableModel) reservationTable.getModel();  // 예약 테이블의 모델을 가져옴
+        reservationModel.setRowCount(0);  // 예약 테이블 초기화하여 기존 데이터 삭제
+
+        // 주문 리스트 테이블의 모든 행을 반복
         for (int i = 0; i < orderModel.getRowCount(); i++) {
+            // 주문 리스트의 각 행의 데이터를 예약 테이블에 새로운 행으로 추가
             reservationModel.addRow(new Object[]{
-                orderModel.getValueAt(i, 0),
-                orderModel.getValueAt(i, 1),
-                orderModel.getValueAt(i, 2)
+                orderModel.getValueAt(i, 0), // 첫 번째 열 값 추가
+                orderModel.getValueAt(i, 1), // 두 번째 열 값 추가
+                orderModel.getValueAt(i, 2) // 세 번째 열 값 추가
             });
         }
     }
 
+// 선택된 객실 번호와 주문 내역을 바탕으로 서비스 데이터를 생성하는 메소드
     private StringBuilder createServiceData(String selectedRoomNumber) {
+        // StringBuilder를 사용해 서비스 데이터를 생성 (식당, 선택된 객실 번호 추가)
         StringBuilder serviceData = new StringBuilder("식당, ").append(selectedRoomNumber).append(", ");
+
+        // 주문 리스트의 모든 행을 반복
         for (int i = 0; i < orderListTable.getRowCount(); i++) {
             if (i > 0) {
-                serviceData.append("/");
+                serviceData.append("/");  // 첫 번째 항목 이후에는 구분자로 슬래시("/") 추가
             }
-            serviceData.append(orderListTable.getValueAt(i, 0)).append("/").append(orderListTable.getValueAt(i, 2));
+            // 각 주문의 항목 이름과 수량을 "/item/quantity" 형식으로 추가
+            serviceData.append(orderListTable.getValueAt(i, 0)) // 주문 항목 이름 추가
+                    .append("/").append(orderListTable.getValueAt(i, 2));  // 주문 항목 수량 추가
         }
-        serviceData.append(", ").append(calculateTotalPrice()).append(", ").append(howPayComboBox.getSelectedItem());
-        return serviceData;
+
+        // 총 가격과 결제 방법 추가
+        serviceData.append(", ").append(calculateTotalPrice()) // 총 가격 추가
+                .append(", ").append(howPayComboBox.getSelectedItem());  // 선택된 결제 방법 추가
+
+        return serviceData;  // 생성된 서비스 데이터 반환
     }
 
     @SuppressWarnings("unchecked")
@@ -718,186 +754,277 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_priceTextActionPerformed
 
     private void reservationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationBtnActionPerformed
+        // '예약하기' 버튼 클릭 시 예약 다이얼로그를 표시하는 핸들러 메소드
         handleReservationButton();
     }//GEN-LAST:event_reservationBtnActionPerformed
 
-     private void handleReservationButton() {
+    // '예약하기' 버튼을 처리하는 메소드
+    private void handleReservationButton() {
         if (orderListTable.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "메뉴를 담아주세요.", "오류", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        copyOrderListToReservationTable();
-        showDialog(reservationDialog, "식당 서비스 예약", 700, 500);
+        copyOrderListToReservationTable();  // 주문 리스트 데이터를 예약 테이블로 복사
+        showDialog(reservationDialog, "식당 서비스 예약", 700, 500);   // 예약 다이얼로그 표시
     }
 
     private void payBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payBtnActionPerformed
+        // '결제' 버튼 클릭 시 호출되는 메소드
         handlePayButton();
     }//GEN-LAST:event_payBtnActionPerformed
 
+// '결제' 버튼을 처리하는 메소드
     private void handlePayButton() {
+        // 주문 내역이 비어 있는지 확인
         if (orderListTable.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, "메뉴를 담아야합니다.", "경고", JOptionPane.WARNING_MESSAGE);
-            return;
+            JOptionPane.showMessageDialog(this, "메뉴를 담아야합니다.", "경고", JOptionPane.WARNING_MESSAGE); // 경고 메시지 표시
+            return; // 메소드 종료
         }
+
+        // 선택된 객실 번호가 있는지 확인
         String selectedRoomNumber = (String) roomListCombo.getSelectedItem();
         if (selectedRoomNumber == null) {
-            JOptionPane.showMessageDialog(this, "객실 번호를 선택해 주세요.", "오류", JOptionPane.WARNING_MESSAGE);
-            return;
+            JOptionPane.showMessageDialog(this, "객실 번호를 선택해 주세요.", "오류", JOptionPane.WARNING_MESSAGE); // 오류 메시지 표시
+            return; // 메소드 종료
         }
+
+        // 서비스 데이터를 생성
         StringBuilder serviceData = createServiceData(selectedRoomNumber);
+
+        // 서비스 데이터를 파일에 저장
         saveToFile("use_service.txt", serviceData.toString());
+
+        // 결제 완료 메시지 표시
         JOptionPane.showMessageDialog(this, calculateTotalPrice() + "원 결제되었습니다.");
+
+        // 주문 리스트 테이블 초기화
         ((DefaultTableModel) orderListTable.getModel()).setRowCount(0);
+
+        // 가격 정보를 업데이트
         updatePriceText();
     }
-    
+
+
     private void howPayComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_howPayComboBoxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_howPayComboBoxActionPerformed
 
     private void reservationCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationCheckActionPerformed
+        // '결제' 버튼 클릭 시 호출되는 메소드
         handleReservationCheck();
     }//GEN-LAST:event_reservationCheckActionPerformed
 
     private void handleReservationCheck() {
+        // 예약 확인 다이얼로그를 표시하는 메소드 호출
         showDialog(reservationCheckDialog, "예약 확인", 800, 500);
+
+        // 예약 확인 테이블의 모델을 가져와 초기화 (기존 데이터 삭제)
         DefaultTableModel reservationModel = (DefaultTableModel) reservationCheckTable.getModel();
         reservationModel.setRowCount(0);
 
+        // 예약 데이터가 저장된 파일의 경로 지정
         String filePath = "service_reservation_list.txt";
+
+        // 파일을 읽기 위한 BufferedReader 생성
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
+
+            // 파일의 각 줄을 읽어 데이터를 처리
             while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
+                String[] data = line.split(","); // 쉼표를 기준으로 데이터 분리
+
+                // 데이터 배열의 길이가 충분하고, 서비스 타입이 "식당"인 경우에만 처리
                 if (data.length >= 10 && "식당".equals(data[0])) {
+                    // 날짜 정보를 형식에 맞춰 조합 (년, 월, 일)
                     String date = data[2] + "년 " + data[3] + "월 " + data[4] + "일";
+
+                    // 시간 정보를 형식에 맞춰 조합 (시, 분)
                     String time = data[5] + "시 " + data[6] + "분";
+
+                    // 서비스 타입과 객실 번호 추출
                     String serviceType = data[0];
                     String roomNumber = data[1];
+
+                    // 메뉴 정보(raw) 추출 후 각 메뉴와 수량을 포맷팅
                     String menuRaw = data[7];
-                    String[] menuItems = menuRaw.split("/");
+                    String[] menuItems = menuRaw.split("/");  // "/"를 기준으로 메뉴 항목과 수량을 분리
                     StringBuilder menuFormatted = new StringBuilder();
+
+                    // 메뉴 항목과 수량을 반복하여 문자열로 포맷팅
                     for (int i = 0; i < menuItems.length; i += 2) {
-                        String itemName = menuItems[i];
-                        String itemQuantity = menuItems[i + 1];
+                        String itemName = menuItems[i]; // 메뉴 이름
+                        String itemQuantity = menuItems[i + 1]; // 메뉴 수량
                         menuFormatted.append(itemName).append(" ").append(itemQuantity).append("개");
+
+                        // 마지막 항목이 아닌 경우 " / " 추가
                         if (i + 2 < menuItems.length) {
                             menuFormatted.append(" / ");
                         }
                     }
+
+                    // 총 금액과 결제 방법 추출
                     String totalAmount = data[8];
                     String paymentMethod = data[9];
+
+                    // 테이블에 추가할 행 데이터 생성
                     Object[] rowData = {
-                        serviceType,
-                        roomNumber,
-                        date,
-                        time,
-                        menuFormatted.toString(),
-                        totalAmount,
-                        paymentMethod
-                    };
+                        serviceType, roomNumber, date, time, menuFormatted.toString(), totalAmount, paymentMethod};
+                    // 행 데이터를 테이블 모델에 추가
                     reservationModel.addRow(rowData);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // 파일 읽기 중 예외 발생 시 오류 메시지 출력
         }
     }
-    
+
+
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
+        // '추가' 버튼 클릭 시 주문 목록에 메뉴를 추가하는 메소드
         addMenuToOrderList();
     }//GEN-LAST:event_addBtnActionPerformed
-private void addMenuToOrderList() {
+
+// 메뉴 리스트에서 선택한 메뉴를 주문 리스트에 추가하는 메소드
+    private void addMenuToOrderList() {
+        // 메뉴 리스트에서 선택된 행의 인덱스를 가져옴
         int selectedRow = menuListTable.getSelectedRow();
+
+        // 선택된 행이 없을 경우 경고 메시지 표시 후 메소드 종료
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "추가할 메뉴를 선택하세요!", "알림", JOptionPane.WARNING_MESSAGE);
             return;
         }
+
+        // 선택된 메뉴의 이름과 가격을 가져옴
         String menu = (String) menuListTable.getValueAt(selectedRow, 0);
         String price = (String) menuListTable.getValueAt(selectedRow, 1);
+
+        // 주문 리스트 테이블의 모델을 가져옴
         DefaultTableModel orderModel = (DefaultTableModel) orderListTable.getModel();
+
+        // 이미 주문 리스트에 동일한 메뉴가 있는지 확인
         boolean menuExists = false;
         for (int i = 0; i < orderModel.getRowCount(); i++) {
             if (menu.equals(orderModel.getValueAt(i, 0))) {
+                // 이미 존재하는 메뉴의 경우 수량을 증가시킴
                 int quantity = (int) orderModel.getValueAt(i, 2);
                 orderModel.setValueAt(quantity + 1, i, 2);
-                menuExists = true;
+                menuExists = true; // 메뉴가 이미 존재함을 표시
                 break;
             }
         }
+
+        // 동일한 메뉴가 없을 경우 새로운 행으로 추가
         if (!menuExists) {
             orderModel.addRow(new Object[]{menu, price, 1});
         }
+
+        // 총 가격 정보를 업데이트
         updatePriceText();
     }
 
+    // '빼기' 버튼 클릭 시 주문 목록에서 메뉴를 제거하는 메소드
     private void minusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minusBtnActionPerformed
         removeMenuFromOrderList();
     }//GEN-LAST:event_minusBtnActionPerformed
-private void removeMenuFromOrderList() {
+    // 주문 리스트에서 선택한 메뉴의 수량을 감소시키거나 제거하는 메소드
+
+// 주문 리스트에서 선택한 메뉴를 삭제하는 메소드
+    private void removeMenuFromOrderList() {
+        // 주문 리스트에서 선택된 행의 인덱스를 가져옴
         int selectedRow = orderListTable.getSelectedRow();
+
+        // 선택된 행이 없을 경우 오류 메시지 표시 후 메소드 종료
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "삭제할 행을 선택하세요!", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
+        // 주문 리스트 테이블의 모델을 가져옴
         DefaultTableModel model = (DefaultTableModel) orderListTable.getModel();
+
+        // 선택된 행의 수량을 가져옴
         int quantity = (int) model.getValueAt(selectedRow, 2);
+
+        // 수량이 1이면 행을 삭제, 아니면 수량을 감소
         if (quantity == 1) {
-            model.removeRow(selectedRow);
+            model.removeRow(selectedRow);  // 수량이 1일 경우 행을 삭제
         } else {
-            model.setValueAt(quantity - 1, selectedRow, 2);
+            model.setValueAt(quantity - 1, selectedRow, 2);  // 수량이 1보다 크면 수량을 1 감소시킴
         }
+
+        // 총 가격 정보를 업데이트
         updatePriceText();
     }
 
+
     private void backBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtn1ActionPerformed
+        // '이전' 버튼 클릭 시 메인 화면으로 돌아가는 메소드
         JOptionPane.showMessageDialog(this, "이전 페이지로 이동합니다.");
         navigateToMainFrame();
     }//GEN-LAST:event_backBtn1ActionPerformed
 
     private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
+        // '초기화' 버튼 클릭 시 주문 목록을 초기화하는 메소드
         resetOrderList();
     }//GEN-LAST:event_resetBtnActionPerformed
-private void resetOrderList() {
-        ((DefaultTableModel) orderListTable.getModel()).setRowCount(0);
-        updatePriceText();
+
+    // 주문 리스트를 초기화하는 메소드
+    private void resetOrderList() {
+        ((DefaultTableModel) orderListTable.getModel()).setRowCount(0);  // 주문 목록을 초기화
+        updatePriceText();   // 총 가격 업데이트
     }
 
     private void roomListComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomListComboActionPerformed
+        // 선택된 객실 번호를 가져옴
         String selectedRoomNumber = getSelectedRoomNumber();
         if (selectedRoomNumber == null) {
-            return;
+            return;  // 객실 번호가 선택되지 않은 경우 메소드를 종료
         }
 
+// 선택된 객실 번호에 해당하는 예약 날짜를 찾음
         String reservationDate = findReservationDate(selectedRoomNumber);
         if (reservationDate != null) {
+            // 예약 날짜가 존재하는 경우, 연도 정보를 추출해 yearText 텍스트 필드에 설정
             yearText.setText(reservationDate.split("-")[0]);
         }
+
     }//GEN-LAST:event_roomListComboActionPerformed
 
-private String getSelectedRoomNumber() {
+    private String getSelectedRoomNumber() {
         return (String) roomListCombo.getSelectedItem();
     }
 
+    // 선택된 객실 번호에 해당하는 예약 날짜를 찾는 메소드
     private String findReservationDate(String selectedRoomNumber) {
+        // 예약 정보가 저장된 파일 경로를 지정
         String filePath = "reservations.txt";
 
+        // 파일을 읽기 위한 BufferedReader 생성
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
 
+            // 파일의 각 줄을 읽어 데이터를 처리
             while ((line = br.readLine()) != null) {
+                // 쉼표를 기준으로 데이터를 분리하여 배열에 저장
                 String[] data = line.split(",");
+
+                // 데이터 배열의 길이가 충분하고, 선택된 객실 번호와 일치하는 경우 처리
                 if (data.length >= 7 && selectedRoomNumber.equals(data[5].trim())) {
+                    // 일치하는 객실 번호에 해당하는 예약 날짜를 반환
                     return data[6].trim();
                 }
             }
         } catch (IOException e) {
+            // 파일을 읽는 도중 발생할 수 있는 예외를 처리하고 오류 메시지를 출력
             e.printStackTrace();
         }
 
+        // 예약 날짜를 찾지 못한 경우 null 반환
         return null;
     }
-    
+
+
     private void yearTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yearTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_yearTextActionPerformed
@@ -920,7 +1047,8 @@ private String getSelectedRoomNumber() {
         saveReservationToFile(reservationData);
         resetReservationDialog();
     }//GEN-LAST:event_reservationDialogBtnActionPerformed
-private String generateReservationData() {
+    
+    private String generateReservationData() {
         StringBuilder reservationData = new StringBuilder("식당");
 
         // yearText, monthText, dayText, hourCombo, minuteCombo 값 가져오기
@@ -986,13 +1114,10 @@ private String generateReservationData() {
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
         }
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Service_RestaurantFrame("master").setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Service_RestaurantFrame("master").setVisible(true);
         });
     }
 
