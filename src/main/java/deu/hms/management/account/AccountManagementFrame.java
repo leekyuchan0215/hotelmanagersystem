@@ -45,6 +45,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
     /**
      * 계정 수정을 처리하는 메서드입니다. editTable의 데이터를 가져와 accountTable의 선택된 행에 업데이트합니다.
      */
+    
     private void updateAccountData() {
         // DefaultTableModel 객체를 editTable과 accountTable에서 가져옵니다.
         DefaultTableModel editModel = (DefaultTableModel) editTable.getModel(); // 수정 데이터가 있는 테이블의 모델
@@ -70,7 +71,8 @@ public class AccountManagementFrame extends javax.swing.JFrame {
                 // 선택된 행의 데이터를 수정된 데이터로 업데이트
                 for (int i = 0; i < updatedRowData.length; i++) {
                     accountModel.setValueAt(updatedRowData[i], selectedRow, i); // 데이터 설정
-                }
+                }            
+          
                 // 성공 메시지 표시
                 JOptionPane.showMessageDialog(this, "데이터가 성공적으로 수정되었습니다.");
             } else {
