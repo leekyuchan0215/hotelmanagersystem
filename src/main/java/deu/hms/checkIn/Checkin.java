@@ -86,7 +86,7 @@ public class Checkin extends JFrame {
                 String checkInDate = data[6];
                 String checkOutDate = data[7];
                 String paymentType = data[8];
-                String paymentMethod = data.length > 9 ? data[9] : "현금"; // 기본값 현금
+                String paymentMethod = data.length > 9 ? data[9] : "카드"; // 기본값 카드
                 boolean isCheckedIn = data.length > 10 && Boolean.parseBoolean(data[10]); // 기본값 false(체크인 안한 상태)
 
                 Customer customer = new Customer(name, uniqueID, String.valueOf(room), 
@@ -287,7 +287,12 @@ public class Checkin extends JFrame {
       checkInButton.addActionListener(e -> {
     if (currentCustomer != null) {
         String paymentType = currentCustomer.getPaymentType();
-        if (paymentType.equals("현장 결제")) {
+        
+        
+          // 카드 선결제 고객 처리
+        if (paymentType.equals("카드 선결제")) {
+            currentCustomer.setPaymentMethod("카드"); // 결제 방식 자동 설정
+        } else if (paymentType.equals("현장 결제")) {
             String paymentMethod = cardButton.isSelected() ? "카드" : cashButton.isSelected() ? "현금" : "선택 안됨";
             if (paymentMethod.equals("선택 안됨")) {
                 JOptionPane.showMessageDialog(this, "결제 방식을 선택해주세요.");

@@ -45,6 +45,47 @@ public class CheckoutFrame extends javax.swing.JFrame {
         checkOutDateTime = null; // 체크아웃 시간 초기화
         extraFee = 0; // 추가 요금 초기화
     }
+    private void calculateAndDisplayRoomInfo(String nameOrID, LocalDate existingCheckOutDate) {
+    // 초과 날짜 계산
+    long overdueDays = java.time.temporal.ChronoUnit.DAYS.between(existingCheckOutDate, checkOutDateTime.toLocalDate());
+    overdueDays = Math.max(overdueDays, 0); // 음수 방지
+
+    // 기준 체크아웃 시간 설정 (11:00 AM)
+    LocalTime standardCheckOutTime = LocalTime.of(11, 0);
+    boolean isLateCheckOut = checkOutDateTime.toLocalTime().isAfter(standardCheckOutTime) && overdueDays == 0;
+
+    // 초과 요금 계산
+    int lateCheckOutFee = isLateCheckOut ? 20000 : 0; // 시간 초과 요금
+    int overdueFee = (int) overdueDays * 50000;      // 날짜 초과 요금
+    extraFee = lateCheckOutFee + overdueFee;
+
+    // 서비스 및 식당 요금 계산
+    int roomServiceCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
+    int diningCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "식당");
+    int reservedRoomServiceCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
+    int reservedDiningCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "식당");
+
+    // 총 금액 계산
+    totalAmount = currentCustomer.getPaymentAmount() + extraFee + roomServiceCharge + diningCharge + reservedRoomServiceCharge + reservedDiningCharge;
+
+    // 객실 정보 표시
+    String roomInfo = String.format(
+            "객실: %s\n기본 요금: %d원\n체크아웃 시간 초과 요금: %d원\n체크아웃 날짜 초과 요금: %d원\n"
+                    + "룸 서비스 금액: %d원\n식당 금액: %d원\n"
+                    + "예약한 룸 서비스 금액: %d원\n예약한 식당 금액: %d원\n"
+                    + "총 금액: %d원",
+            currentCustomer.getRoomNumber(),
+            currentCustomer.getPaymentAmount(),
+            lateCheckOutFee,
+            overdueFee,
+            roomServiceCharge,
+            diningCharge,
+            reservedRoomServiceCharge,
+            reservedDiningCharge,
+            totalAmount
+    );
+    RoomArea.setText(roomInfo); // 객실 정보 텍스트 영역에 표시
+}
     
     //특정 객실의 서비스 사용 금액을 계산(룸 서비스, 식당)
     private int calculateServiceCharges(String roomNumber, String serviceType) {
@@ -285,6 +326,13 @@ public class CheckoutFrame extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         checkInListArea = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox2 = new javax.swing.JComboBox<>();
+        jComboBox3 = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        jSpinner1 = new javax.swing.JSpinner();
+        jSpinner2 = new javax.swing.JSpinner();
 
         idLabel.setText("이름 또는 고유 번호 입력 :");
 
@@ -354,58 +402,84 @@ public class CheckoutFrame extends javax.swing.JFrame {
 
         jLabel1.setText("체크인 명단 :");
 
+        jLabel2.setText("체크아웃 날짜 :");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2024", "2025", "2026", "2027" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
+
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
+
+        jLabel3.setText("체크아웃 시간 :");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(322, 322, 322)
-                                .addComponent(CheckOutButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(backBtn))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(240, 240, 240)
-                                .addComponent(idLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(311, 311, 311)
-                                .addComponent(RoomButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 201, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(293, 293, 293)
-                .addComponent(InitializationButton)
-                .addGap(16, 16, 16))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3)
-                    .addComponent(jScrollPane2))
-                .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(368, 368, 368))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(idLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(RoomButton, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                            .addComponent(idField))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 13, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(FeedbackLabel)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 815, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 809, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(InitializationButton)))))
+                .addGap(19, 19, 19))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(312, 312, 312)
+                        .addGap(334, 334, 334)
                         .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(FeedbackLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(297, 297, 297)
+                        .addGap(331, 331, 331)
                         .addComponent(PaymentLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(339, 339, 339)
+                        .addComponent(CheckOutButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(backBtn)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,22 +489,30 @@ public class CheckoutFrame extends javax.swing.JFrame {
                     .addComponent(InitializationButton)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(refreshButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(idLabel1)
-                    .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(RoomButton)
+                    .addComponent(jLabel2)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(RoomButton)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(PaymentLabel)
                     .addComponent(ChooseComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(2, 2, 2)
                 .addComponent(FeedbackLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -438,7 +520,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CheckOutButton)
                     .addComponent(backBtn))
-                .addContainerGap())
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pack();
@@ -458,94 +540,72 @@ public class CheckoutFrame extends javax.swing.JFrame {
     // 객실 정보 조회 버튼 동작
     private void RoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RoomButtonActionPerformed
         // ID 필드에서 입력된 고객 이름 또는 고유 번호를 가져옴
-        String nameOrID = idField.getText().trim();
-        
-        // 입력값이 비어 있는 경우 경고 메시지를 표시하고 종료
-        if (nameOrID.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "이름 또는 고유 번호를 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        // 고객이 이미 체크아웃된 상태인지 확인
-        if (isCheckedOut(nameOrID)) {
-            JOptionPane.showMessageDialog(this, "해당 고객은 이미 체크아웃되었습니다.", "오류", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+    String nameOrID = idField.getText().trim();
 
-         // 체크인된 고객 정보를 검색
-        currentCustomer = findCheckInCustomer(nameOrID);
-
-        // 체크인된 고객이 있는 경우
-        if (currentCustomer != null) {
-             // 현재 체크아웃 시간을 설정
-            checkOutDateTime = LocalDateTime.now(); 
-            
-            // 체크아웃 시간 제한 설정 (11:00 AM)
-            LocalTime checkOutLimitTime = LocalTime.of(11, 0); 
-
-            // 체크아웃 날짜를 검색
-            String checkOutDateString = findCheckOutDate(nameOrID);
-            if (checkOutDateString == null) {
-                // 체크아웃 날짜를 찾지 못한 경우 오류 메시지 표시
-                JOptionPane.showMessageDialog(this, "체크아웃 날짜를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // 체크아웃 날짜와 현재 날짜 비교
-            LocalDate checkOutDate = LocalDate.parse(checkOutDateString);
-            LocalDate currentDate = checkOutDateTime.toLocalDate();
-
-            int overdueDays = 0;        // 초과 날짜
-            int lateCheckOutFee = 0;    // 늦은 체크아웃 추가 요금
-
-            // 체크아웃 날짜를 초과한 경우 초과 날짜 계산 (하루당 50,000원 추가 요금)
-            if (currentDate.isAfter(checkOutDate)) {
-                overdueDays = (int) java.time.temporal.ChronoUnit.DAYS.between(checkOutDate, currentDate);
-            }
-
-            // 체크아웃 시간이 제한 시간을 초과한 경우 (20,000원 추가 요금)
-            LocalTime actualCheckOutTime = checkOutDateTime.toLocalTime();
-            if (currentDate.equals(checkOutDate) && actualCheckOutTime.isAfter(checkOutLimitTime)) {
-                lateCheckOutFee = 20000;
-            }
-
-            // 초과 요금 합산
-            extraFee = overdueDays * 50000 + lateCheckOutFee;
-
-            // 예약되지 않은 룸 서비스 및 식당 사용 금액 계산
-            int roomServiceCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
-            int diningCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "식당");
-
-            // 예약된 룸 서비스 및 식당 금액 계산
-            int reservedRoomServiceCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
-            int reservedDiningCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "식당");
-
-            // 총 금액 계산
-            totalAmount = currentCustomer.getPaymentAmount() + extraFee
-                    + roomServiceCharge + diningCharge
-                    + reservedRoomServiceCharge + reservedDiningCharge;
-
-            // 객실 정보를 포맷팅하여 텍스트 영역에 표시
-            String roomInfo = String.format(
-                    "객실: %s\n기본 요금: %d원\n체크아웃 시간 초과 요금: %d원\n체크아웃 날짜 초과 요금: %d원\n"
-                    + "룸 서비스 금액: %d원\n식당 금액: %d원\n예약한 룸 서비스 금액: %d원\n예약한 식당 금액: %d원\n총 금액: %d원",
-                    currentCustomer.getRoomNumber(),    // 고객이 예약한 객실 번호
-                    currentCustomer.getPaymentAmount(), // 고객의 기본 결제 금액 (객실 요금)
-                    lateCheckOutFee,        // 체크아웃 시간이 11:00 AM 이후일 경우 부과되는 초과 요금 (20,000원)
-                    overdueDays * 50000,    // 체크아웃 날짜를 초과한 일수에 따른 초과 요금 (하루당 50,000원)
-                    roomServiceCharge,      // 예약 없이 사용한 룸 서비스 총 금액
-                    diningCharge,           // 예약 없이 사용한 식당 서비스 총 금액
-                    reservedRoomServiceCharge,  // 예약된 룸 서비스 총 금액
-                    reservedDiningCharge,       // 예약된 식당 서비스 총 금액
-                    totalAmount         // 모든 요금을 합산한 총 결제 금액
-            );
-            RoomArea.setText(roomInfo); // 텍스트 영역에 객실 정보 표시
-
-        } else {
-            // 체크인 정보를 찾지 못한 경우 오류 메시지 표시
-            JOptionPane.showMessageDialog(this, "해당 고객의 체크인 정보를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
-        }
+    // 입력값이 비어 있으면 경고 메시지를 표시하고 종료
+    if (nameOrID.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "이름 또는 고유 번호를 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
+        return;
     }
+
+    // 이미 체크아웃된 고객인지 확인
+    if (isCheckedOut(nameOrID)) {
+        JOptionPane.showMessageDialog(this, "해당 고객은 이미 체크아웃되었습니다.", "오류", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // 체크인된 고객 정보 가져오기
+    currentCustomer = findCheckInCustomer(nameOrID);
+    if (currentCustomer == null) {
+        JOptionPane.showMessageDialog(this, "해당 고객의 체크인 정보를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    try {
+        // 체크아웃 날짜 및 시간 GUI에서 입력값 가져오기
+        int selectedYear = Integer.parseInt(jComboBox1.getSelectedItem().toString());
+        int selectedMonth = Integer.parseInt(jComboBox2.getSelectedItem().toString());
+        int selectedDay = Integer.parseInt(jComboBox3.getSelectedItem().toString());
+        int selectedHour = (int) jSpinner1.getValue();
+        int selectedMinute = (int) jSpinner2.getValue();
+
+        // 월과 일이 선택되지 않았을 경우 예외 처리
+        if (selectedMonth == 0 || selectedDay == 0) {
+            throw new IllegalArgumentException("날짜가 선택되지 않았습니다.");
+        }
+
+        // 입력된 체크아웃 시간 설정
+        checkOutDateTime = LocalDateTime.of(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
+
+        // 기존 체크아웃 날짜를 파일에서 가져옴
+        String checkOutDateString = findCheckOutDate(nameOrID);
+        if (checkOutDateString == null) {
+            JOptionPane.showMessageDialog(this, "체크아웃 날짜를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 기존 체크아웃 날짜를 LocalDate로 변환
+        LocalDate existingCheckOutDate = LocalDate.parse(checkOutDateString);
+
+        // 입력된 체크아웃 날짜가 기존 체크아웃 날짜보다 빠를 경우 경고 메시지를 표시하고 종료
+        if (checkOutDateTime.toLocalDate().isBefore(existingCheckOutDate)) {
+            JOptionPane.showMessageDialog(this, "입력된 체크아웃 날짜가 기존 체크아웃 날짜보다 빠릅니다. 체크아웃 불가!", "오류", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 초과 요금 계산 및 객실 정보 표시
+        calculateAndDisplayRoomInfo(nameOrID, existingCheckOutDate);
+
+    } catch (NumberFormatException e) {
+        // 잘못된 숫자 형식 입력 시 오류 메시지 표시
+        JOptionPane.showMessageDialog(this, "잘못된 날짜 또는 시간 형식입니다. 다시 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        // 기타 예외 발생 시 오류 메시지 표시
+        JOptionPane.showMessageDialog(this, "오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
+
     
     // 체크인된 고객 명단에서 특정 고객을 검색하는 메서드
     private Customer findCheckInCustomer(String nameOrID) {
@@ -588,6 +648,31 @@ public class CheckoutFrame extends javax.swing.JFrame {
         // 고객 정보를 찾지 못한 경우 null 반환
         return null;
     }
+    private String findCheckInDate(String nameOrID) {
+    String filePath = "checked_in_customers.txt";
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            // 현재 줄에 고객의 고유번호 또는 이름이 포함되어 있는지 확인
+            if (line.contains("고유번호: " + nameOrID) || line.contains("이름: " + nameOrID)) {
+                System.out.println("일치하는 줄 발견: " + line);
+
+                // "체크인 날짜:" 필드 검색
+                String[] parts = line.split(", ");
+                for (String part : parts) {
+                    if (part.trim().startsWith("체크인 날짜:")) {
+                        return part.split(": ")[1].trim(); // 체크인 날짜 반환
+                    }
+                }
+            }
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "파일 읽기 오류: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+    }
+    return null; // 체크인 날짜를 찾지 못한 경우
+}
     
     // 고객의 체크아웃 날짜를 검색하는 메서드
     private String findCheckOutDate(String nameOrID) {
@@ -639,60 +724,59 @@ public class CheckoutFrame extends javax.swing.JFrame {
     // 체크아웃 버튼 클릭 동작
     private void CheckOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckOutButtonActionPerformed
         // 체크아웃 시간 또는 현재 고객 정보가 없는 경우 경고 메시지를 표시하고 종료
-        if (checkOutDateTime == null || currentCustomer == null) {
-            JOptionPane.showMessageDialog(this, "먼저 객실 정보를 불러오세요.", "오류", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // 결제 유형 및 피드백 입력값 가져오기
-        String paymentType = (String) ChooseComboBox.getSelectedItem(); // 선택된 결제 유형
-        String feedback = FeedbackArea.getText().trim();                // 피드백 텍스트
-        String roomNumber = currentCustomer.getRoomNumber();             // 객실 번호
-        String customerNameOrID = idField.getText().trim();             // 입력된 고객 이름 또는 고유 번호
-
-        // 객실 정보 및 요금 세부사항 표시
-        String message = String.format(
-                "객실: %s\n"
-                + "기본 요금: %d원\n"
-                + "체크아웃 시간 초과 요금: %d원\n"
-                + "체크아웃 날짜 초과 요금: %d원\n"
-                + "룸 서비스 금액: %d원\n"
-                + "식당 금액: %d원\n"
-                + "예약한 룸 서비스 금액: %d원\n"
-                + "예약한 식당 금액: %d원\n"
-                + "총 금액: %d원\n\n"
-                + "결제 방식: %s\n",
-                roomNumber,                                       // 고객이 이용한 객실 번호
-                currentCustomer.getPaymentAmount(),               // 고객의 기본 객실 요금
-                (extraFee > 20000 ? 20000 : 0),                   // 체크아웃 시간이 제한 시간(11:00 AM)을 초과했을 경우 부과되는 시간 초과 요금 (최대 20,000원)
-                (extraFee > 20000 ? extraFee - 20000 : extraFee), // 체크아웃 날짜를 초과한 경우 부과되는 날짜 초과 요금
-                calculateServiceCharges(roomNumber, "룸서비스"),    // 예약 없이 사용된 룸 서비스의 총 금액
-                calculateServiceCharges(roomNumber, "식당"),       // 예약 없이 이용된 식당 서비스의 총 금액
-                calculateReservedServiceCharges(roomNumber, "룸서비스"),    // 예약된 룸 서비스의 총 금액
-                calculateReservedServiceCharges(roomNumber, "식당"),       // 예약된 식당 서비스의 총 금액
-                totalAmount,    // 기본 요금, 추가 요금, 모든 서비스 요금을 합한 총 결제 금액
-                paymentType     // 고객이 선택한 결제 방식 (카드 또는 현금)
-        );
-
-        // 체크아웃 완료 메시지 표시
-        JOptionPane.showMessageDialog(this, message, "체크아웃 완료!", JOptionPane.INFORMATION_MESSAGE);
-
-        // 체크아웃 고객을 파일에 기록
-        saveCheckedOutCustomer(currentCustomer);
-
-        // 체크아웃 완료 후 고객 정보를 체크인 명단에서 삭제
-        removeCustomerFromCheckInList(currentCustomer);
-
-        // 체크인 명단 새로고침
-        loadCheckInList();
-
-        // 고객 피드백 파일에 저장
-        saveFeedbackToFile("feedback_list.txt",
-                feedback, roomNumber, customerNameOrID);
-
-        // 입력 필드 및 상태 초기화
-        resetFields();
+    if (checkOutDateTime == null || currentCustomer == null) {
+        JOptionPane.showMessageDialog(this, "먼저 객실 정보를 불러오세요.", "오류", JOptionPane.WARNING_MESSAGE);
+        return;
     }
+
+    // 결제 유형 및 피드백 입력값 가져오기
+    String paymentType = (String) ChooseComboBox.getSelectedItem(); // 선택된 결제 유형
+    String feedback = FeedbackArea.getText().trim();                // 피드백 텍스트
+    String roomNumber = currentCustomer.getRoomNumber();             // 객실 번호
+    String customerNameOrID = idField.getText().trim();             // 입력된 고객 이름 또는 고유 번호
+
+    // 객실 정보 및 요금 세부사항 메시지 생성
+    String message = String.format(
+            "객실: %s\n"
+            + "기본 요금: %d원\n"
+            + "체크아웃 시간 초과 요금: %d원\n"
+            + "체크아웃 날짜 초과 요금: %d원\n"
+            + "룸 서비스 금액: %d원\n"
+            + "식당 금액: %d원\n"
+            + "예약한 룸 서비스 금액: %d원\n"
+            + "예약한 식당 금액: %d원\n"
+            + "총 금액: %d원\n\n"
+            + "결제 방식: %s\n",
+            roomNumber,                                       // 고객이 이용한 객실 번호
+            currentCustomer.getPaymentAmount(),               // 기본 객실 요금
+            (extraFee > 20000 ? 20000 : 0),                   // 시간 초과 요금
+            (extraFee > 20000 ? extraFee - 20000 : extraFee), // 날짜 초과 요금
+            calculateServiceCharges(roomNumber, "룸서비스"),   // 룸 서비스 요금
+            calculateServiceCharges(roomNumber, "식당"),       // 식당 요금
+            calculateReservedServiceCharges(roomNumber, "룸서비스"), // 예약한 룸 서비스 요금
+            calculateReservedServiceCharges(roomNumber, "식당"),     // 예약한 식당 요금
+            totalAmount,    // 총 요금
+            paymentType     // 결제 유형
+    );
+
+    // 체크아웃 완료 메시지 표시
+    JOptionPane.showMessageDialog(this, message, "체크아웃 완료!", JOptionPane.INFORMATION_MESSAGE);
+
+    // 체크아웃 고객 정보를 파일에 저장
+    saveCheckedOutCustomer(currentCustomer);
+
+    // 체크아웃 완료 후 고객 정보를 체크인 명단에서 삭제
+    removeCustomerFromCheckInList(currentCustomer);
+
+    // 체크인 명단 새로고침
+    loadCheckInList();
+
+    // 고객 피드백 파일에 저장
+    saveFeedbackToFile("feedback_list.txt", feedback, roomNumber, customerNameOrID);
+
+    // 입력 필드 및 상태 초기화
+    resetFields();
+}
     
     // 체크아웃된 고객 정보를 파일에 저장하는 메서드
     private void saveCheckedOutCustomer(Customer customer) {
@@ -751,6 +835,10 @@ public class CheckoutFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ChooseComboBoxActionPerformed
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -800,10 +888,17 @@ public class CheckoutFrame extends javax.swing.JFrame {
     private javax.swing.JTextField idField;
     private javax.swing.JLabel idLabel;
     private javax.swing.JLabel idLabel1;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JSpinner jSpinner2;
     private javax.swing.JButton refreshButton;
     // End of variables declaration//GEN-END:variables
 }
