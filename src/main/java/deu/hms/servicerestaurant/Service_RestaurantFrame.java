@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class Service_RestaurantFrame extends javax.swing.JFrame {
 
+
     private String userType;  // "manager" 또는 "staff"를 저장하는 변수
 
     public Service_RestaurantFrame(String userType) {
@@ -163,7 +164,7 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        cancelBtn = new javax.swing.JButton();
         reservationDialogBtn = new javax.swing.JButton();
         howpayDialog = new javax.swing.JComboBox<>();
         reservationCheckDialog = new javax.swing.JDialog();
@@ -319,10 +320,10 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
         jLabel25.setFont(new java.awt.Font("맑은 고딕", 1, 24)); // NOI18N
         jLabel25.setText("식당 서비스 예약");
 
-        jButton3.setText("취소");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        cancelBtn.setText("취소");
+        cancelBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                cancelBtnActionPerformed(evt);
             }
         });
 
@@ -354,7 +355,7 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(howpayDialog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -380,7 +381,7 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(28, 28, 28)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -909,10 +910,10 @@ private String getSelectedRoomNumber() {
         // TODO add your handling code here:
     }//GEN-LAST:event_hourComboActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
         // TODO add your handling code here:
         reservationDialog.dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_cancelBtnActionPerformed
 
     private void reservationDialogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationDialogBtnActionPerformed
         String reservationData = generateReservationData();
@@ -999,11 +1000,11 @@ private String generateReservationData() {
     private javax.swing.JButton addBtn;
     private javax.swing.JButton backBtn1;
     private javax.swing.JButton backDialogBtn;
+    private javax.swing.JButton cancelBtn;
     private javax.swing.JComboBox<String> dayText;
     private javax.swing.JComboBox<String> hourCombo;
     private javax.swing.JComboBox<String> howPayComboBox;
     private javax.swing.JComboBox<String> howpayDialog;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;

@@ -205,7 +205,7 @@ public class MainFrame_Staff extends javax.swing.JFrame {
             this.dispose();  // 현재 창 닫기
             LoginFrame loginframe = new LoginFrame();  // 로그인 화면으로 돌아가기
             loginframe.setVisible(true);
-        }
+        }   
     }//GEN-LAST:event_logoutBtnActionPerformed
 
     private void roomServiceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomServiceBtnActionPerformed

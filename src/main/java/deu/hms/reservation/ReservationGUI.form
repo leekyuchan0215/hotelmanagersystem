@@ -220,7 +220,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="NameField">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="reserveRegister.addActionListener(evt -&gt; reserveRegisterActionPerformed(evt));&#xa;updateReservation.addActionListener(evt -&gt; updateReservationActionPerformed(evt));&#xa;checkReservationInfo.addActionListener(evt -&gt; checkReservationInfoActionPerformed(evt));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="checkReservationInfo.addActionListener(evt -&gt; checkReservationInfoActionPerformed(evt));"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="room">
