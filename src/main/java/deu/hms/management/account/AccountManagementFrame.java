@@ -27,7 +27,7 @@ public class AccountManagementFrame extends javax.swing.JFrame {
 
     /**
      * 테이블 데이터를 파일에서 읽어와 JTable에 로드하는 메서드입니다.
-     */
+     */ 
     private void loadTableData() {
         DefaultTableModel model = (DefaultTableModel) accountTable.getModel();
         accountService.readFileAndPopulateTable(model); // 파일 데이터를 읽어 테이블에 추가합니다.
