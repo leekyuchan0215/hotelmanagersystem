@@ -5,8 +5,6 @@ import deu.hms.management.ManagementFrame;
 import deu.hms.management.RoomManagementService;
 import deu.hms.management.ServiceManagementService;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 
 public class AccountManagementFrame extends javax.swing.JFrame {
