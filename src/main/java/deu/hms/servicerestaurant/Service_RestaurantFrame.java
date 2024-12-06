@@ -1017,7 +1017,6 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
             }
         } catch (IOException e) {
             // 파일을 읽는 도중 발생할 수 있는 예외를 처리하고 오류 메시지를 출력
-            e.printStackTrace();
         }
 
         // 예약 날짜를 찾지 못한 경우 null 반환
@@ -1093,7 +1092,8 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
             bw.newLine(); // 줄 바꿈 추가 -> 기존 값 아래에 새 값을 저장
             JOptionPane.showMessageDialog(this, "예약 정보가 저장되었습니다.");
         } catch (IOException e) {
-            e.printStackTrace(); // 파일 쓰기 오류 처리
+            // 파일 쓰기 오류 처리
+            
         }
     }
 

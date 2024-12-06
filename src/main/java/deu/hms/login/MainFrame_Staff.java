@@ -13,6 +13,7 @@ public class MainFrame_Staff extends javax.swing.JFrame {
 
     public MainFrame_Staff() {
         initComponents();
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
     }
 
     @SuppressWarnings("unchecked")
