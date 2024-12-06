@@ -331,16 +331,6 @@ public class MainFrame_Master extends javax.swing.JFrame {
         this.dispose();  //현재 창 닫기
     }//GEN-LAST:event_restaurantserviceBtnActionPerformed
 
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-        }
-
-        java.awt.EventQueue.invokeLater(() -> {
-            new MainFrame_Master().setVisible(true);
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton checkinBtn;
     private javax.swing.JButton checkoutBtn1;

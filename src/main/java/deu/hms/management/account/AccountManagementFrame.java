@@ -515,16 +515,6 @@ public class AccountManagementFrame extends javax.swing.JFrame {
         updateAccountData();
     }//GEN-LAST:event_editDialogBtnActionPerformed
 
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-        }
-
-        java.awt.EventQueue.invokeLater(() -> {
-            new AccountManagementFrame().setVisible(true);
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable accountTable;

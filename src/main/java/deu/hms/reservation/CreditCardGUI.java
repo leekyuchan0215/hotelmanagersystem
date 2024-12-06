@@ -254,7 +254,4 @@ public class CreditCardGUI extends javax.swing.JFrame {
     }
 
 
-     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> new CreditCardGUI().setVisible(true));
-    }
 }

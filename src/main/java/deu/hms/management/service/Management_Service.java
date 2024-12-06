@@ -440,20 +440,6 @@ public class Management_Service extends javax.swing.JFrame {
         editDialog.dispose();
     }//GEN-LAST:event_backDialogBtnActionPerformed
 
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Management_Service().setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;
     private javax.swing.JButton backDialogBtn;

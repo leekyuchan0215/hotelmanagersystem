@@ -269,16 +269,7 @@ public class MainFrame_Staff extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_reservationBtnActionPerformed
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-        }
 
-        java.awt.EventQueue.invokeLater(() -> {
-            new MainFrame_Staff().setVisible(true);
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton checkInBtn;

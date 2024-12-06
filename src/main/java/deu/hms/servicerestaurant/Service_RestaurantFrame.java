@@ -1111,15 +1111,6 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
         reservationCheckDialog.dispose();
     }//GEN-LAST:event_backDialogBtnActionPerformed
 
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-        }
-        java.awt.EventQueue.invokeLater(() -> {
-            new Service_RestaurantFrame("master").setVisible(true);
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
