@@ -28,7 +28,7 @@ public class AccountDialogManager {
         this.registrationDialog = registrationDialog;
         this.accountTable = accountTable;
         this.editTable = editTable;
-    }
+    }   
 
     /**
      * 선택된 계정을 수정하기 위한 다이얼로그를 표시하는 메서드입니다.

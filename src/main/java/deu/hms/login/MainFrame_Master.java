@@ -268,7 +268,7 @@ public class MainFrame_Master extends javax.swing.JFrame {
             // 사용자가 "예"를 선택하면
             this.dispose();
             Checkin cFrame = new Checkin("master");  // 서비스 화면 띄우기
-            cFrame.setVisible(true);  //현재 화면 닫기
+            cFrame.setVisible(true);  
         }
     }//GEN-LAST:event_checkinBtnActionPerformed
 
@@ -331,16 +331,6 @@ public class MainFrame_Master extends javax.swing.JFrame {
         this.dispose();  //현재 창 닫기
     }//GEN-LAST:event_restaurantserviceBtnActionPerformed
 
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-        }
-
-        java.awt.EventQueue.invokeLater(() -> {
-            new MainFrame_Master().setVisible(true);
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton checkinBtn;
     private javax.swing.JButton checkoutBtn1;

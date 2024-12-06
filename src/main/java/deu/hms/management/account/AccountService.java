@@ -1,4 +1,4 @@
-package deu.hms.management.account;
+    package deu.hms.management.account;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -54,12 +54,14 @@ public class AccountService {
             // 테이블의 각 행 데이터를 파일에 작성합니다.
             for (int i = 0; i < model.getRowCount(); i++) {
                 StringBuilder rowBuilder = new StringBuilder();
+                
                 for (int j = 0; j < model.getColumnCount(); j++) {
                     rowBuilder.append(model.getValueAt(i, j).toString()); // 각 셀의 값을 가져옵니다.
                     if (j < model.getColumnCount() - 1) {
                         rowBuilder.append(","); // 각 값은 쉼표로 구분합니다.
                     }
                 }
+                
                 bufferedWriter.write(rowBuilder.toString()); // 행 데이터를 파일에 작성합니다.
                 bufferedWriter.newLine(); // 다음 행을 작성하기 위해 줄 바꿈을 추가합니다.
             }

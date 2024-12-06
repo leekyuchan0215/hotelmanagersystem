@@ -525,16 +525,6 @@ public class Management_Room extends javax.swing.JFrame {
         registrationDialog.dispose();
     }//GEN-LAST:event_backRegistrationBtnActionPerformed
 
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-        }
-
-        java.awt.EventQueue.invokeLater(() -> {
-            new Management_Room().setVisible(true);
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;

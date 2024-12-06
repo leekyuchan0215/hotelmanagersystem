@@ -62,11 +62,14 @@ public class CheckoutFrame extends javax.swing.JFrame {
     // 서비스 및 식당 요금 계산
     int roomServiceCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
     int diningCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "식당");
+    
+    // 예약한 서비스 및 식당 요금 계산
     int reservedRoomServiceCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
     int reservedDiningCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "식당");
 
     // 총 금액 계산
-    totalAmount = currentCustomer.getPaymentAmount() + extraFee + roomServiceCharge + diningCharge + reservedRoomServiceCharge + reservedDiningCharge;
+    totalAmount = currentCustomer.getPaymentAmount() + extraFee + roomServiceCharge + diningCharge
+            + reservedRoomServiceCharge + reservedDiningCharge;
 
     // 객실 정보 표시
     String roomInfo = String.format(
@@ -553,7 +556,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "해당 고객은 이미 체크아웃되었습니다.", "오류", JOptionPane.WARNING_MESSAGE);
         return;
     }
-
+    
     // 체크인된 고객 정보 가져오기
     currentCustomer = findCheckInCustomer(nameOrID);
     if (currentCustomer == null) {
@@ -589,7 +592,8 @@ public class CheckoutFrame extends javax.swing.JFrame {
 
         // 입력된 체크아웃 날짜가 기존 체크아웃 날짜보다 빠를 경우 경고 메시지를 표시하고 종료
         if (checkOutDateTime.toLocalDate().isBefore(existingCheckOutDate)) {
-            JOptionPane.showMessageDialog(this, "입력된 체크아웃 날짜가 기존 체크아웃 날짜보다 빠릅니다. 체크아웃 불가!", "오류", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "입력된 체크아웃 날짜가 기존 체크아웃 날짜보다 빠릅니다. 체크아웃 불가!", "오류",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -842,37 +846,6 @@ public class CheckoutFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CheckoutFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CheckoutFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CheckoutFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CheckoutFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CheckoutFrame("master").setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CheckOutButton;

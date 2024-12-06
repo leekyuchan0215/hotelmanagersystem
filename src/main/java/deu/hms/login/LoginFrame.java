@@ -8,6 +8,7 @@ import java.io.IOException;
 public class LoginFrame extends javax.swing.JFrame {
 
     public LoginFrame() {
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
         initComponents();
     }
 
@@ -139,14 +140,14 @@ public class LoginFrame extends javax.swing.JFrame {
         } catch (IOException e) {
             // 파일 입출력 과정에서 오류 발생
             JOptionPane.showMessageDialog(this, "파일을 읽는 중 오류가 발생했습니다.");
-        }
+        }   
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void pwTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pwTextActionPerformed
 
     }//GEN-LAST:event_pwTextActionPerformed
 
-    private boolean validateLogin(String id, String pw) throws IOException {
+    private boolean validateLogin(String id, String pw) throws IOException {    
         try (BufferedReader reader = new BufferedReader(new FileReader("id_pw.txt")) // "id_pw.txt"를 읽어 reader 변수에 저장
         ) {
             String line;
@@ -157,7 +158,7 @@ public class LoginFrame extends javax.swing.JFrame {
                     String storedId = parts[1];  // 배열 두번째 인덱스에 있는 아이디를 storedId 변수에 저장
                     String storedPw = parts[2]; // 배열 세 번째 인덱스에 있는 비밀번호를 storedPw 변수에 저장
                     String role = parts[3];  // 배열 네 번째 인덱스에 있는 권한(M or S)을 role 변수에 저장
-                    
+                        
                     if (storedId.equals(id) && storedPw.equals(pw)) {   // 입력한 id,pw와 텍스트 파일에 있던 storedId, storedPw가 일치한다면
                         
                         JOptionPane.showMessageDialog(this, "ID : " + id + " 확인되었습니다.");

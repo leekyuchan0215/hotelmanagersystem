@@ -31,13 +31,6 @@ public class Management_Service extends javax.swing.JFrame {
         serviceService.readFileAndPopulateTable(model);   // 파일에서 읽어와 테이블에 데이터 채우기
     }
 
-    // JTable 데이터를 파일에 저장하는 메서드입니다.
-    private void saveTableDataToFile() {
-        DefaultTableModel model = (DefaultTableModel) serviceTable.getModel();
-        serviceService.saveTableDataToFile(model);
-        JOptionPane.showMessageDialog(this, "변경 사항이 저장되었습니다.", "성공", JOptionPane.INFORMATION_MESSAGE);
-    }
-
     private void backToManagementFrame() {
         JOptionPane.showMessageDialog(this, "이전 화면으로 돌아갑니다.");
         // ManagementFrame을 생성하고 표시
@@ -50,7 +43,7 @@ public class Management_Service extends javax.swing.JFrame {
         this.dispose();
     }
 
-    private void clearRegistrationDialog() {
+    private void clearRegistrationDialog() {    
         registrationDialog.dispose(); // 다이얼로그 닫기
         foodText.setText("");         // 음식 필드 초기화
         priceText.setText("");        // 가격 필드 초기화
@@ -446,20 +439,6 @@ public class Management_Service extends javax.swing.JFrame {
         // TODO add your handling code here:
         editDialog.dispose();
     }//GEN-LAST:event_backDialogBtnActionPerformed
-
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Management_Service().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;
