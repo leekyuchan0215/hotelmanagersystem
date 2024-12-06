@@ -20,6 +20,7 @@ public class CreditCardGUI extends javax.swing.JFrame {
         cardInfoValid = 0;
     }
     public CreditCardGUI() {
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
         initComponents();
         setUpInputValidation();
     }

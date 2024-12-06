@@ -25,6 +25,7 @@ public class Service_RestaurantFrame extends javax.swing.JFrame {
         initComponents();
         loadMenuList(); // 메뉴 데이터 로드
         loadCheckedInRooms();  // 체크인한 객실 번호 로드
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
     }
 
     // 메뉴 리스트를 파일에서 불러와 테이블에 로드하는 메소드

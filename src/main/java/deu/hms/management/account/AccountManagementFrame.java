@@ -19,10 +19,12 @@ public class AccountManagementFrame extends javax.swing.JFrame {
      * AccountDialogManager를 초기화합니다.
      */
     public AccountManagementFrame() {
+        
         initComponents();
         accountService = new AccountService("id_pw.txt"); // 파일 경로를 이용해 AccountService를 초기화합니다.
         dialogManager = new AccountDialogManager(editDialog, registrationDialog, accountTable, editTable); // 다이얼로그 관리 객체를 초기화합니다.
         loadTableData(); // JTable 초기화 시 데이터 로드
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
     }
 
     /**

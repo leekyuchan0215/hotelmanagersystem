@@ -30,6 +30,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
     private Customer currentCustomer;  // 현재 체크아웃 중인 고객 정보
 
     public CheckoutFrame(String userType) {
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
         initComponents();       // GUI 컴포넌트 초기화
         loadCheckInList();      // 체크인된 고객 리스트 로드
         checkInListArea.setFont(new Font("Monospaced", Font.PLAIN, 12));

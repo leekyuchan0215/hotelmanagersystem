@@ -25,6 +25,7 @@ public class ReservationGUI extends javax.swing.JFrame {
         loadReservationsFromFile();
         initializeFloorOptions();
         initializeDatePickers();
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
     }
     private void initializeDatePickers() {
     // 현재 연도, 월, 일로 콤보박스 초기화

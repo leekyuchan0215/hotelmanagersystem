@@ -8,8 +8,9 @@ import java.io.IOException;
 public class LoginFrame extends javax.swing.JFrame {
 
     public LoginFrame() {
-        setLocationRelativeTo(null);  // 화면 가운데 띄우기
+        
         initComponents();
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
     }
 
     @SuppressWarnings("unchecked")

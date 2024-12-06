@@ -22,6 +22,7 @@ public class Management_Service extends javax.swing.JFrame {
         // 다이얼로그 및 테이블을 관리하기 위한 ServiceDialogManager 생성
         dialogManager = new ServiceDialogManager(editDialog, registrationDialog, serviceTable, editTable);
         loadTableData();  // 테이블 데이터 로드
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
     }
     
     // 테이블 데이터를 로드하는 메서드
