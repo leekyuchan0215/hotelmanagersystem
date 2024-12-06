@@ -28,6 +28,7 @@ public class Management_Room extends javax.swing.JFrame {
          // 다이얼로그 및 테이블을 관리하기 위한 RoomDialogManager 생성
         dialogManager = new RoomDialogManager(editDialog, registrationDialog, roomTable, editTable);
         loadTableData();  // 테이블에 데이터 로드
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
     }
     
     // 테이블 데이터를 로드하는 메서드

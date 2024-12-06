@@ -2,23 +2,19 @@ package deu.hms.serviceroom;
 
 import deu.hms.login.MainFrame_Master;
 import deu.hms.login.MainFrame_Staff;
-import deu.hms.management.ManagementFrame;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 
 public class Service_RoomFrame extends javax.swing.JFrame {
 
-    private String userType;  // "manager" 또는 "staff"를 저장하는 변수
+    private final String userType;  // "manager" 또는 "staff"를 저장하는 변수
 
     public Service_RoomFrame(String userType) {
         // 생성자의 매개변수로 전달된 사용자 유형(userType)을 클래스 필드에 저장
@@ -29,6 +25,7 @@ public class Service_RoomFrame extends javax.swing.JFrame {
         loadMenuList();
         // 체크인된 객실 번호 목록을 로드하여 콤보박스에 표시
         loadCheckedInRooms();
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
     }
 
     // 메뉴 리스트 파일을 로드하여 테이블에 표시

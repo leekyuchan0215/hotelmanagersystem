@@ -13,10 +13,12 @@ public class ManagementFrame extends javax.swing.JFrame {
     
      // 생성자: 필요한 서비스들을 받아서 프레임을 초기화합니다.
     public ManagementFrame(AccountManagementService accountService, RoomManagementService roomService, ServiceManagementService serviceService) {
+        
         this.accountService = accountService;
         this.roomService = roomService;
         this.serviceService = serviceService;
         initComponents();  // 컴포넌트들을 초기화하는 메소드입니다.
+        setLocationRelativeTo(null);  // 화면 가운데 띄우기
     }
 
     @SuppressWarnings("unchecked")

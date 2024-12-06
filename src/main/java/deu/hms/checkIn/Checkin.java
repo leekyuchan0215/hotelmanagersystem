@@ -16,6 +16,7 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 //Checkin 클래스 : 호텔 체크인 시스템의 GUI와 로직으로 구성
 
 public class Checkin extends JFrame {
+    
      private String userType;  // "manager" 또는 "staff"를 저장하는 변수
     private Map<String, Customer> customerMap; // 예약 고객 정보를 저장할 Map
     private Map<Integer, RoomData> roomDataMap; // 객실 정보를 저장할 Map
