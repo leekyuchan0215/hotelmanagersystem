@@ -185,7 +185,7 @@ public class LoginFrame extends javax.swing.JFrame {
         return false;
     }
 
-    public static void main(String args[]) {
+    /*public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
@@ -193,8 +193,7 @@ public class LoginFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             new LoginFrame().setVisible(true);
         });
-    }
-
+    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel idLabel;

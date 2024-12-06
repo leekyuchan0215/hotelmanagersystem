@@ -35,7 +35,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
         checkInListArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         this.userType = userType;
     }
-    
+
     //입력 필드 초기화
     private void resetFields() {
         idField.setText(""); // ID 필드 초기화
@@ -45,51 +45,52 @@ public class CheckoutFrame extends javax.swing.JFrame {
         checkOutDateTime = null; // 체크아웃 시간 초기화
         extraFee = 0; // 추가 요금 초기화
     }
+
     private void calculateAndDisplayRoomInfo(String nameOrID, LocalDate existingCheckOutDate) {
-    // 초과 날짜 계산
-    long overdueDays = java.time.temporal.ChronoUnit.DAYS.between(existingCheckOutDate, checkOutDateTime.toLocalDate());
-    overdueDays = Math.max(overdueDays, 0); // 음수 방지
+        // 초과 날짜 계산
+        long overdueDays = java.time.temporal.ChronoUnit.DAYS.between(existingCheckOutDate, checkOutDateTime.toLocalDate());
+        overdueDays = Math.max(overdueDays, 0); // 음수 방지
 
-    // 기준 체크아웃 시간 설정 (11:00 AM)
-    LocalTime standardCheckOutTime = LocalTime.of(11, 0);
-    boolean isLateCheckOut = checkOutDateTime.toLocalTime().isAfter(standardCheckOutTime) && overdueDays == 0;
+        // 기준 체크아웃 시간 설정 (11:00 AM)
+        LocalTime standardCheckOutTime = LocalTime.of(11, 0);
+        boolean isLateCheckOut = checkOutDateTime.toLocalTime().isAfter(standardCheckOutTime) && overdueDays == 0;
 
-    // 초과 요금 계산
-    int lateCheckOutFee = isLateCheckOut ? 20000 : 0; // 시간 초과 요금
-    int overdueFee = (int) overdueDays * 50000;      // 날짜 초과 요금
-    extraFee = lateCheckOutFee + overdueFee;
+        // 초과 요금 계산
+        int lateCheckOutFee = isLateCheckOut ? 20000 : 0; // 시간 초과 요금
+        int overdueFee = (int) overdueDays * 50000;      // 날짜 초과 요금
+        extraFee = lateCheckOutFee + overdueFee;
 
-    // 서비스 및 식당 요금 계산
-    int roomServiceCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
-    int diningCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "식당");
-    
-    // 예약한 서비스 및 식당 요금 계산
-    int reservedRoomServiceCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
-    int reservedDiningCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "식당");
+        // 서비스 및 식당 요금 계산
+        int roomServiceCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
+        int diningCharge = calculateServiceCharges(currentCustomer.getRoomNumber(), "식당");
 
-    // 총 금액 계산
-    totalAmount = currentCustomer.getPaymentAmount() + extraFee + roomServiceCharge + diningCharge
-            + reservedRoomServiceCharge + reservedDiningCharge;
+        // 예약한 서비스 및 식당 요금 계산
+        int reservedRoomServiceCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "룸서비스");
+        int reservedDiningCharge = calculateReservedServiceCharges(currentCustomer.getRoomNumber(), "식당");
 
-    // 객실 정보 표시
-    String roomInfo = String.format(
-            "객실: %s\n기본 요금: %d원\n체크아웃 시간 초과 요금: %d원\n체크아웃 날짜 초과 요금: %d원\n"
-                    + "룸 서비스 금액: %d원\n식당 금액: %d원\n"
-                    + "예약한 룸 서비스 금액: %d원\n예약한 식당 금액: %d원\n"
-                    + "총 금액: %d원",
-            currentCustomer.getRoomNumber(),
-            currentCustomer.getPaymentAmount(),
-            lateCheckOutFee,
-            overdueFee,
-            roomServiceCharge,
-            diningCharge,
-            reservedRoomServiceCharge,
-            reservedDiningCharge,
-            totalAmount
-    );
-    RoomArea.setText(roomInfo); // 객실 정보 텍스트 영역에 표시
-}
-    
+        // 총 금액 계산
+        totalAmount = currentCustomer.getPaymentAmount() + extraFee + roomServiceCharge + diningCharge
+                + reservedRoomServiceCharge + reservedDiningCharge;
+
+        // 객실 정보 표시
+        String roomInfo = String.format(
+                "객실: %s\n기본 요금: %d원\n체크아웃 시간 초과 요금: %d원\n체크아웃 날짜 초과 요금: %d원\n"
+                + "룸 서비스 금액: %d원\n식당 금액: %d원\n"
+                + "예약한 룸 서비스 금액: %d원\n예약한 식당 금액: %d원\n"
+                + "총 금액: %d원",
+                currentCustomer.getRoomNumber(),
+                currentCustomer.getPaymentAmount(),
+                lateCheckOutFee,
+                overdueFee,
+                roomServiceCharge,
+                diningCharge,
+                reservedRoomServiceCharge,
+                reservedDiningCharge,
+                totalAmount
+        );
+        RoomArea.setText(roomInfo); // 객실 정보 텍스트 영역에 표시
+    }
+
     //특정 객실의 서비스 사용 금액을 계산(룸 서비스, 식당)
     private int calculateServiceCharges(String roomNumber, String serviceType) {
         String filePath = "use_service.txt";
@@ -121,7 +122,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
                         } catch (NumberFormatException e) {
                             System.out.println("금액 파싱 오류: " + priceStr);
                         }
-                    }    
+                    }
                 }
             }
         } catch (IOException e) {
@@ -174,10 +175,11 @@ public class CheckoutFrame extends javax.swing.JFrame {
         }
         return total;
     }
+
     // 체크인된 고객 명단에서 특정 고객을 삭제하는 메서드
     private void removeCustomerFromCheckInList(Customer customer) {
         String inputFile = "checked_in_customers.txt";  // 체크인 명단 파일 경로
-        String tempFile = "C:\\Users\\rlarh\\OneDrive\\바탕 화면\\호텔관리시스템\\hotelmanagersystem\\temp_checked_in_customers.txt";
+        String tempFile = "temp_checked_in_customers.txt";
 
         boolean customerFound = false; // 삭제 대상 고객이 발견되었는지 여부
 
@@ -219,30 +221,30 @@ public class CheckoutFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "체크인 명단 파일 삭제 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     // 체크인된 고객 명단을 파일에서 읽어와 화면에 표시하는 메서드
     private void loadCheckInList() {
         String filePath = "checked_in_customers.txt";   // 체크인 명단 파일 경로
-        
+
         // 파일 객체 생성
         File file = new File(filePath);
 
         // 파일 존재 여부 확인
         if (!file.exists()) {
             // 파일이 존재하지 않을 경우, 텍스트 영역에 메시지 출력
-            checkInListArea.setText("체크인된 고객이 없습니다."); 
+            checkInListArea.setText("체크인된 고객이 없습니다.");
             return;
         }
-        
-         // 파일 읽기
+
+        // 파일 읽기
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             checkInListArea.setText(""); // 기존 내용을 초기화
             String line;
-            
+
             // 파일의 각 줄을 읽어서 처리
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(", "); 
-                
+                String[] parts = line.split(", ");
+
                 if (parts.length >= 5) { // 데이터 구성 검증 (최소 5개의 필드)
                     // 고유 번호, 이름, 객실 번호, 체크인 날짜, 체크아웃 날짜, 결제 유형 추출
                     String id = parts[0].split(": ")[1].trim(); // 고유 번호
@@ -268,32 +270,33 @@ public class CheckoutFrame extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
-    
+
     // 고객 피드백을 파일에 저장하는 메서드, feedback 저장할 피드백 내용
     private void saveFeedbackToFile(String feedback) {
         String filePath = "feedback_list.txt";  // 피드백 저장 파일 경로
 
-        try (FileWriter writer = new FileWriter(filePath, true)) { 
+        try (FileWriter writer = new FileWriter(filePath, true)) {
             // 저장할 피드백 내용 생성 (시간 포함)
             String contentToSave = String.format("피드백 시간: %s\n%s\n\n",
                     LocalDateTime.now().toString(), feedback);
             writer.write(contentToSave); // 파일에 피드백 내용 저장
-            
-             // 저장 완료 메시지 표시
+
+            // 저장 완료 메시지 표시
             JOptionPane.showMessageDialog(this, "피드백이 파일에 저장되었습니다.", "저장 완료", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {
             // 파일 쓰기 중 오류 발생 시 사용자에게 알림
             JOptionPane.showMessageDialog(this, "파일 저장 중 오류 발생: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
         }
     }
+
     // 특정 고객이 체크아웃 상태인지 확인하는 메서드
     // nameOrID 고객의 이름 또는 예약 번호
     // 체크아웃된 고객이면 true, 그렇지 않으면 false
     private boolean isCheckedOut(String nameOrID) {
-         // 체크아웃 명단 파일을 읽기
+        // 체크아웃 명단 파일을 읽기
         try (BufferedReader reader = new BufferedReader(new FileReader("checked_out_customers.txt"))) {
             String line;
-             // 파일의 각 줄을 읽어 확인
+            // 파일의 각 줄을 읽어 확인
             while ((line = reader.readLine()) != null) {
                 // 현재 줄에 고객의 이름 또는 예약 번호가 포함되어 있는지 확인
                 if (line.contains("예약 번호: " + nameOrID) || line.contains("고객 이름: " + nameOrID)) {
@@ -370,7 +373,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
 
         PaymentLabel.setText("결제 유형 선택 :");
 
-        ChooseComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "카드", "현금" }));
+        ChooseComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "카드 선결제", "카드", "현금" }));
         ChooseComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ChooseComboBoxActionPerformed(evt);
@@ -532,8 +535,8 @@ public class CheckoutFrame extends javax.swing.JFrame {
     private void InitializationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InitializationButtonActionPerformed
         // 입력 필드와 UI 요소를 초기 상태로 리셋
         resetFields();
-        
-         // 사용자에게 초기화 완료 메시지 표시
+
+        // 사용자에게 초기화 완료 메시지 표시
         JOptionPane.showMessageDialog(this, "모든 입력이 초기화되었습니다.", "초기화", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_InitializationButtonActionPerformed
 
@@ -543,74 +546,73 @@ public class CheckoutFrame extends javax.swing.JFrame {
     // 객실 정보 조회 버튼 동작
     private void RoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RoomButtonActionPerformed
         // ID 필드에서 입력된 고객 이름 또는 고유 번호를 가져옴
-    String nameOrID = idField.getText().trim();
+        String nameOrID = idField.getText().trim();
 
-    // 입력값이 비어 있으면 경고 메시지를 표시하고 종료
-    if (nameOrID.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "이름 또는 고유 번호를 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    // 이미 체크아웃된 고객인지 확인
-    if (isCheckedOut(nameOrID)) {
-        JOptionPane.showMessageDialog(this, "해당 고객은 이미 체크아웃되었습니다.", "오류", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-    
-    // 체크인된 고객 정보 가져오기
-    currentCustomer = findCheckInCustomer(nameOrID);
-    if (currentCustomer == null) {
-        JOptionPane.showMessageDialog(this, "해당 고객의 체크인 정보를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    try {
-        // 체크아웃 날짜 및 시간 GUI에서 입력값 가져오기
-        int selectedYear = Integer.parseInt(jComboBox1.getSelectedItem().toString());
-        int selectedMonth = Integer.parseInt(jComboBox2.getSelectedItem().toString());
-        int selectedDay = Integer.parseInt(jComboBox3.getSelectedItem().toString());
-        int selectedHour = (int) jSpinner1.getValue();
-        int selectedMinute = (int) jSpinner2.getValue();
-
-        // 월과 일이 선택되지 않았을 경우 예외 처리
-        if (selectedMonth == 0 || selectedDay == 0) {
-            throw new IllegalArgumentException("날짜가 선택되지 않았습니다.");
-        }
-
-        // 입력된 체크아웃 시간 설정
-        checkOutDateTime = LocalDateTime.of(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
-
-        // 기존 체크아웃 날짜를 파일에서 가져옴
-        String checkOutDateString = findCheckOutDate(nameOrID);
-        if (checkOutDateString == null) {
-            JOptionPane.showMessageDialog(this, "체크아웃 날짜를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+        // 입력값이 비어 있으면 경고 메시지를 표시하고 종료
+        if (nameOrID.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "이름 또는 고유 번호를 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // 기존 체크아웃 날짜를 LocalDate로 변환
-        LocalDate existingCheckOutDate = LocalDate.parse(checkOutDateString);
-
-        // 입력된 체크아웃 날짜가 기존 체크아웃 날짜보다 빠를 경우 경고 메시지를 표시하고 종료
-        if (checkOutDateTime.toLocalDate().isBefore(existingCheckOutDate)) {
-            JOptionPane.showMessageDialog(this, "입력된 체크아웃 날짜가 기존 체크아웃 날짜보다 빠릅니다. 체크아웃 불가!", "오류",
-                    JOptionPane.WARNING_MESSAGE);
+        // 이미 체크아웃된 고객인지 확인
+        if (isCheckedOut(nameOrID)) {
+            JOptionPane.showMessageDialog(this, "해당 고객은 이미 체크아웃되었습니다.", "오류", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 초과 요금 계산 및 객실 정보 표시
-        calculateAndDisplayRoomInfo(nameOrID, existingCheckOutDate);
+        // 체크인된 고객 정보 가져오기
+        currentCustomer = findCheckInCustomer(nameOrID);
+        if (currentCustomer == null) {
+            JOptionPane.showMessageDialog(this, "해당 고객의 체크인 정보를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    } catch (NumberFormatException e) {
-        // 잘못된 숫자 형식 입력 시 오류 메시지 표시
-        JOptionPane.showMessageDialog(this, "잘못된 날짜 또는 시간 형식입니다. 다시 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
-    } catch (Exception e) {
-        // 기타 예외 발생 시 오류 메시지 표시
-        JOptionPane.showMessageDialog(this, "오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
+        try {
+            // 체크아웃 날짜 및 시간 GUI에서 입력값 가져오기
+            int selectedYear = Integer.parseInt(jComboBox1.getSelectedItem().toString());
+            int selectedMonth = Integer.parseInt(jComboBox2.getSelectedItem().toString());
+            int selectedDay = Integer.parseInt(jComboBox3.getSelectedItem().toString());
+            int selectedHour = (int) jSpinner1.getValue();
+            int selectedMinute = (int) jSpinner2.getValue();
+
+            // 월과 일이 선택되지 않았을 경우 예외 처리
+            if (selectedMonth == 0 || selectedDay == 0) {
+                throw new IllegalArgumentException("날짜가 선택되지 않았습니다.");
+            }
+
+            // 입력된 체크아웃 시간 설정
+            checkOutDateTime = LocalDateTime.of(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
+
+            // 기존 체크아웃 날짜를 파일에서 가져옴
+            String checkOutDateString = findCheckOutDate(nameOrID);
+            if (checkOutDateString == null) {
+                JOptionPane.showMessageDialog(this, "체크아웃 날짜를 찾을 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // 기존 체크아웃 날짜를 LocalDate로 변환
+            LocalDate existingCheckOutDate = LocalDate.parse(checkOutDateString);
+
+            // 입력된 체크아웃 날짜가 기존 체크아웃 날짜보다 빠를 경우 경고 메시지를 표시하고 종료
+            if (checkOutDateTime.toLocalDate().isBefore(existingCheckOutDate)) {
+                JOptionPane.showMessageDialog(this, "입력된 체크아웃 날짜가 기존 체크아웃 날짜보다 빠릅니다. 체크아웃 불가!", "오류",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // 초과 요금 계산 및 객실 정보 표시
+            calculateAndDisplayRoomInfo(nameOrID, existingCheckOutDate);
+
+        } catch (NumberFormatException e) {
+            // 잘못된 숫자 형식 입력 시 오류 메시지 표시
+            JOptionPane.showMessageDialog(this, "잘못된 날짜 또는 시간 형식입니다. 다시 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            // 기타 예외 발생 시 오류 메시지 표시
+            JOptionPane.showMessageDialog(this, "오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
-}
 
-    
     // 체크인된 고객 명단에서 특정 고객을 검색하는 메서드
     private Customer findCheckInCustomer(String nameOrID) {
         String filePath = "checked_in_customers.txt";   // 체크인된 고객 정보가 저장된 파일 경로
@@ -652,40 +654,41 @@ public class CheckoutFrame extends javax.swing.JFrame {
         // 고객 정보를 찾지 못한 경우 null 반환
         return null;
     }
+
     private String findCheckInDate(String nameOrID) {
-    String filePath = "checked_in_customers.txt";
+        String filePath = "checked_in_customers.txt";
 
-    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-        String line;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
 
-        while ((line = reader.readLine()) != null) {
-            // 현재 줄에 고객의 고유번호 또는 이름이 포함되어 있는지 확인
-            if (line.contains("고유번호: " + nameOrID) || line.contains("이름: " + nameOrID)) {
-                System.out.println("일치하는 줄 발견: " + line);
+            while ((line = reader.readLine()) != null) {
+                // 현재 줄에 고객의 고유번호 또는 이름이 포함되어 있는지 확인
+                if (line.contains("고유번호: " + nameOrID) || line.contains("이름: " + nameOrID)) {
+                    System.out.println("일치하는 줄 발견: " + line);
 
-                // "체크인 날짜:" 필드 검색
-                String[] parts = line.split(", ");
-                for (String part : parts) {
-                    if (part.trim().startsWith("체크인 날짜:")) {
-                        return part.split(": ")[1].trim(); // 체크인 날짜 반환
+                    // "체크인 날짜:" 필드 검색
+                    String[] parts = line.split(", ");
+                    for (String part : parts) {
+                        if (part.trim().startsWith("체크인 날짜:")) {
+                            return part.split(": ")[1].trim(); // 체크인 날짜 반환
+                        }
                     }
                 }
             }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "파일 읽기 오류: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
         }
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "파일 읽기 오류: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
+        return null; // 체크인 날짜를 찾지 못한 경우
     }
-    return null; // 체크인 날짜를 찾지 못한 경우
-}
-    
+
     // 고객의 체크아웃 날짜를 검색하는 메서드
     private String findCheckOutDate(String nameOrID) {
         String filePath = "checked_in_customers.txt";   // 체크인된 고객 정보가 저장된 파일 경로
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
-            
-             // 파일의 각 줄을 읽으며 고객 정보를 확인
+
+            // 파일의 각 줄을 읽으며 고객 정보를 확인
             while ((line = reader.readLine()) != null) {
                 System.out.println("읽은 데이터: " + line); // 디버깅용 출력
 
@@ -715,7 +718,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
     private Map<String, String> parseCustomerData(String line) {
         Map<String, String> dataMap = new HashMap<>();  // 결과를 저장할 Map 생성
         String[] parts = line.split(", ");              // 쉼표와 공백 기준으로 문자열 분리
-        
+
         // 각 부분을 "키: 값" 형태로 파싱
         for (String part : parts) {
             String[] keyValue = part.split(": ");
@@ -728,73 +731,74 @@ public class CheckoutFrame extends javax.swing.JFrame {
     // 체크아웃 버튼 클릭 동작
     private void CheckOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckOutButtonActionPerformed
         // 체크아웃 시간 또는 현재 고객 정보가 없는 경우 경고 메시지를 표시하고 종료
-    if (checkOutDateTime == null || currentCustomer == null) {
-        JOptionPane.showMessageDialog(this, "먼저 객실 정보를 불러오세요.", "오류", JOptionPane.WARNING_MESSAGE);
-        return;
+        if (checkOutDateTime == null || currentCustomer == null) {
+            JOptionPane.showMessageDialog(this, "먼저 객실 정보를 불러오세요.", "오류", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 결제 유형 및 피드백 입력값 가져오기
+        String paymentType = (String) ChooseComboBox.getSelectedItem(); // 선택된 결제 유형
+        String feedback = FeedbackArea.getText().trim();                // 피드백 텍스트
+        String roomNumber = currentCustomer.getRoomNumber();             // 객실 번호
+        String customerNameOrID = idField.getText().trim();             // 입력된 고객 이름 또는 고유 번호
+
+        // 객실 정보 및 요금 세부사항 메시지 생성
+        String message = String.format(
+                "객실: %s\n"
+                + "기본 요금: %d원\n"
+                + "체크아웃 시간 초과 요금: %d원\n"
+                + "체크아웃 날짜 초과 요금: %d원\n"
+                + "룸 서비스 금액: %d원\n"
+                + "식당 금액: %d원\n"
+                + "예약한 룸 서비스 금액: %d원\n"
+                + "예약한 식당 금액: %d원\n"
+                + "총 금액: %d원\n\n"
+                + "결제 방식: %s\n",
+                roomNumber, // 고객이 이용한 객실 번호
+                currentCustomer.getPaymentAmount(), // 기본 객실 요금
+                (extraFee > 20000 ? 20000 : 0), // 시간 초과 요금
+                (extraFee > 20000 ? extraFee - 20000 : extraFee), // 날짜 초과 요금
+                calculateServiceCharges(roomNumber, "룸서비스"), // 룸 서비스 요금
+                calculateServiceCharges(roomNumber, "식당"), // 식당 요금
+                calculateReservedServiceCharges(roomNumber, "룸서비스"), // 예약한 룸 서비스 요금
+                calculateReservedServiceCharges(roomNumber, "식당"), // 예약한 식당 요금
+                totalAmount, // 총 요금
+                paymentType // 결제 유형
+        );
+
+        // 체크아웃 완료 메시지 표시
+        JOptionPane.showMessageDialog(this, message, "체크아웃 완료!", JOptionPane.INFORMATION_MESSAGE);
+
+        // 체크아웃 고객 정보를 파일에 저장
+        saveCheckedOutCustomer(currentCustomer);
+
+        // 체크아웃 완료 후 고객 정보를 체크인 명단에서 삭제
+        removeCustomerFromCheckInList(currentCustomer);
+
+        // 체크인 명단 새로고침
+        loadCheckInList();
+
+        // 고객 피드백 파일에 저장
+        saveFeedbackToFile("feedback_list.txt", feedback, roomNumber, customerNameOrID);
+
+        // 입력 필드 및 상태 초기화
+        resetFields();
     }
 
-    // 결제 유형 및 피드백 입력값 가져오기
-    String paymentType = (String) ChooseComboBox.getSelectedItem(); // 선택된 결제 유형
-    String feedback = FeedbackArea.getText().trim();                // 피드백 텍스트
-    String roomNumber = currentCustomer.getRoomNumber();             // 객실 번호
-    String customerNameOrID = idField.getText().trim();             // 입력된 고객 이름 또는 고유 번호
-
-    // 객실 정보 및 요금 세부사항 메시지 생성
-    String message = String.format(
-            "객실: %s\n"
-            + "기본 요금: %d원\n"
-            + "체크아웃 시간 초과 요금: %d원\n"
-            + "체크아웃 날짜 초과 요금: %d원\n"
-            + "룸 서비스 금액: %d원\n"
-            + "식당 금액: %d원\n"
-            + "예약한 룸 서비스 금액: %d원\n"
-            + "예약한 식당 금액: %d원\n"
-            + "총 금액: %d원\n\n"
-            + "결제 방식: %s\n",
-            roomNumber,                                       // 고객이 이용한 객실 번호
-            currentCustomer.getPaymentAmount(),               // 기본 객실 요금
-            (extraFee > 20000 ? 20000 : 0),                   // 시간 초과 요금
-            (extraFee > 20000 ? extraFee - 20000 : extraFee), // 날짜 초과 요금
-            calculateServiceCharges(roomNumber, "룸서비스"),   // 룸 서비스 요금
-            calculateServiceCharges(roomNumber, "식당"),       // 식당 요금
-            calculateReservedServiceCharges(roomNumber, "룸서비스"), // 예약한 룸 서비스 요금
-            calculateReservedServiceCharges(roomNumber, "식당"),     // 예약한 식당 요금
-            totalAmount,    // 총 요금
-            paymentType     // 결제 유형
-    );
-
-    // 체크아웃 완료 메시지 표시
-    JOptionPane.showMessageDialog(this, message, "체크아웃 완료!", JOptionPane.INFORMATION_MESSAGE);
-
-    // 체크아웃 고객 정보를 파일에 저장
-    saveCheckedOutCustomer(currentCustomer);
-
-    // 체크아웃 완료 후 고객 정보를 체크인 명단에서 삭제
-    removeCustomerFromCheckInList(currentCustomer);
-
-    // 체크인 명단 새로고침
-    loadCheckInList();
-
-    // 고객 피드백 파일에 저장
-    saveFeedbackToFile("feedback_list.txt", feedback, roomNumber, customerNameOrID);
-
-    // 입력 필드 및 상태 초기화
-    resetFields();
-}
-    
     // 체크아웃된 고객 정보를 파일에 저장하는 메서드
     private void saveCheckedOutCustomer(Customer customer) {
         // 파일 쓰기: checked_out_customers.txt에 데이터를 추가
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("checked_out_customers.txt", true))) {
             // 고객 정보를 파일에 작성
-            writer.write("고객 이름: " + customer.getName()          // 고객 이름
-                    + ", 예약 번호: " + customer.getReservationId()  // 고객 예약 번호
+            writer.write("고객 이름: " + customer.getName() // 고객 이름
+                    + ", 예약 번호: " + customer.getReservationId() // 고객 예약 번호
                     + ", 객실 번호: " + customer.getRoomNumber());   // 고객 객실 번호
             writer.newLine();   // 줄바꿈 추가
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "체크아웃 정보를 저장하는 중 오류가 발생했습니다: " + e.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
         }
     }
+
     //고객 피드백을 파일에 저장하는 메서드
     private void saveFeedbackToFile(String filePath, String feedback, String roomNumber, String customerNameOrID) {
         if (feedback.isEmpty()) {
@@ -846,6 +850,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CheckOutButton;
