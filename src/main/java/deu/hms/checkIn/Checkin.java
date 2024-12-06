@@ -324,6 +324,7 @@ public class Checkin extends JFrame {
 
     // 현장 체크인 다이얼로그
    private void showOnSiteCheckInDialog() {
+    setLocationRelativeTo(null);  // 화면 가운데 띄우기
     JDialog onSiteDialog = new JDialog(this, "현장 체크인", true);
     onSiteDialog.setSize(700, 600);
     onSiteDialog.setLayout(new GridBagLayout());
