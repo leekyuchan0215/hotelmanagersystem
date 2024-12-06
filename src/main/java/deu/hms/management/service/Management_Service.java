@@ -66,7 +66,7 @@ public class Management_Service extends javax.swing.JFrame {
         // 파일에 데이터 저장
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("menu_list.txt", true))) {
             writer.write(service + "," + food + "," + price);
-            writer.newLine();
+            writer.write("\n");
         } catch (IOException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "파일 저장 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
