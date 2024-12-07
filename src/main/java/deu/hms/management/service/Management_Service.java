@@ -68,7 +68,6 @@ public class Management_Service extends javax.swing.JFrame {
             writer.write(service + "," + food + "," + price);
             writer.write("\n");
         } catch (IOException ex) {
-            ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "파일 저장 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
             return;
         }
