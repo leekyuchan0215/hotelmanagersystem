@@ -729,7 +729,9 @@ public class CheckoutFrame extends javax.swing.JFrame {
         }
         return dataMap;
     }//GEN-LAST:event_RoomButtonActionPerformed
-    // 체크아웃 버튼 클릭 동작
+
+
+// 체크아웃 버튼 클릭 동작
     private void CheckOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckOutButtonActionPerformed
         // 체크아웃 시간 또는 현재 고객 정보가 없는 경우 경고 메시지를 표시하고 종료
         if (checkOutDateTime == null || currentCustomer == null) {
@@ -742,6 +744,7 @@ public class CheckoutFrame extends javax.swing.JFrame {
         String feedback = FeedbackArea.getText().trim();                // 피드백 텍스트
         String roomNumber = currentCustomer.getRoomNumber();             // 객실 번호
         String customerNameOrID = idField.getText().trim();             // 입력된 고객 이름 또는 고유 번호
+        // reservations.txt에서 해당 데이터 삭제
 
         // 객실 정보 및 요금 세부사항 메시지 생성
         String message = String.format(
@@ -851,7 +854,6 @@ public class CheckoutFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CheckOutButton;
